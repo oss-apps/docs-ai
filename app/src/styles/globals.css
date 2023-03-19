@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,body {
+  @apply bg-white h-full;
+}
+
+#__next {
+  @apply h-full;
+}
+
+.markdown {
+  @apply text-gray-900  leading-loose;
+}
+
+.markdown a{
+  @apply text-blue-600 font-semibold;
+}
+
+.markdown code {
+  @apply text-orange-700 font-mono p-0.5 rounded bg-orange-100
+}
+
+.markdown ul {
+  @apply list-disc list-inside m-1;
+}
+
+.markdown ol {
+  @apply list-decimal list-inside m-1;
+}

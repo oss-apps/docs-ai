@@ -1,0 +1,4 @@
+{
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.extraPaths": ["/document_loaders", "/prompt_templates"]
+}

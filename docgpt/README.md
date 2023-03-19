@@ -1,0 +1,1 @@
+# A python service for generating text based on documents using GPT-3, milvus and Langchain
