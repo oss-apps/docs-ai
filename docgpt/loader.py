@@ -4,6 +4,7 @@ from transformers import BertTokenizer
 from langchain.docstore.document import Document
 from .document_loaders.docusaurus import DocusaurusLoader
 from .document_loaders.documentation import DocumentationLoader
+import os
 
 tokenizer = BertTokenizer.from_pretrained(
     "sentence-transformers/all-MiniLM-L6-v2")
@@ -23,6 +24,13 @@ def get_url_loader(url: str, type: str, load_all_paths: bool):
         loader.load_all_paths = load_all_paths
     return loader
 
+def get_text_splitter():
+    text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tokenizer=tokenizer,
+                                                                              chunk_size=200, chunk_overlap=50)
+    if os.getenv("ENV") == "prod":
+        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=1000, chunk_overlap=100)
+
+    return text_splitter
 
 def load_document(url: str, type, document_id: str, load_all_paths=True):
     loader = get_url_loader(url, type, True)
@@ -30,8 +38,7 @@ def load_document(url: str, type, document_id: str, load_all_paths=True):
     for doc in all_pages_data:
         doc.metadata["document_id"] = document_id
         doc.metadata["type"] = "URL"
-    text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tokenizer=tokenizer,
-                                                                              chunk_size=200, chunk_overlap=50)
+    text_splitter = get_text_splitter()
     docs = text_splitter.split_documents(all_pages_data)
     print("Loaded", len(docs), "docs")
     return docs
@@ -41,7 +48,7 @@ def load_text_document(content: str, title: str, document_id: str):
     metadata = {"source": "manual", "document_id": document_id,
                 "title": title, "type": "TEXT"}
     data = [Document(page_content=title+"\n"+content, metadata=metadata)]
-    text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tokenizer=tokenizer,
-                                                                              chunk_size=200, chunk_overlap=50)
+    text_splitter = get_text_splitter()
+
     docs = text_splitter.split_documents(data)
     return docs

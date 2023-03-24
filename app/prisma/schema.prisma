@@ -123,6 +123,7 @@ model Document {
     documentType DocumentType
     indexed      Boolean      @default(false)
     projectId    String
+    details      Json?
     project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 

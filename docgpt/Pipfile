@@ -10,9 +10,11 @@ python-dotenv = "*"
 chromadb = "*"
 flask = "*"
 bs4 = "*"
+pymilvus = "*"
+tiktoken = "*"
 
 [dev-packages]
 autopep8 = "*"
 
 [requires]
-python_version = "3.10.10"
+python_version = "3.10.9"

@@ -1,0 +1,5 @@
+export enum URLType {
+  GITBOOK = 'GITBOOK',
+  DOCUSARUS = 'DOCUSARUS',
+  DEFAULT = 'DEFAULT'
+}

@@ -34,6 +34,7 @@ export async function getGPTChat(projectId: string, question: string, chatHistor
 
 export async function indexUrlDocument(url: string, type: string, projectId: string, documentId: string) {
 
+  console.log(`Fetching ${env.DOC_GPT_SERVICE_URL}/index_url_document`)
   const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/index_url_document`, {
     method: "POST",
     headers: {

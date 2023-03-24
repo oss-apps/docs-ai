@@ -48,7 +48,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
 
   return (
     <div className="h-full">
-      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[45rem] h-[85vh]  lg:max-h-[45rem] lg:mb-10 overflow-auto border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[75vh] h-[85vh]  lg:max-h-[45rem] lg:mb-10 overflow-auto border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
         <div className="flex lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
           <div className="mt-1 text-xl">
             {'🤖'}

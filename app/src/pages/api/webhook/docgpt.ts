@@ -12,6 +12,7 @@ const docgptHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { documentId, title } = req.body as { documentId: string, title: string };
+
   await prisma.document.update({
     where: { id: documentId },
     data: {
