@@ -29,3 +29,15 @@ html,body {
 .markdown ol {
   @apply list-decimal list-inside m-1;
 }
+
+.bg-pattern {
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent) 0 0;
+  background-size: 40px 40px;
+  background-color: #f0f0f0;
+}
+
+.heading-text {
+  @apply bg-gradient-to-r from-sky-500 to-indigo-500;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -59,9 +59,9 @@ def index_text():
 @app.route("/qna", methods=['POST'])
 def query():
     req_data = request.get_json()
-    answer = get_answer_for_query(
+    result = get_answer_for_query(
         req_data.get('projectId'), req_data.get('question'))
-    return {"answer": answer}
+    return result
 
 
 @app.route("/chat", methods=['POST'])

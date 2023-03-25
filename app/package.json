@@ -10,7 +10,9 @@
     "start": "next start",
     "prisma:push": "prisma db push",
     "prisma:codegen": "prisma generate",
-    "prisma:studio": "npx prisma studio"
+    "prisma:studio": "npx prisma studio",
+    "prisma:dev": "prisma migrate dev",
+    "prisma:prod": "prisma migrate deploy"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.12",

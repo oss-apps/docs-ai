@@ -35,11 +35,11 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
             Agent
           </SecondaryButton>
         </Link>
-        <Link href={`/dashboard/${org.name}/${project.slug}/QnA`} className="w-full">
+        {/* <Link href={`/dashboard/${org.name}/${project.slug}/QnA`} className="w-full">
           <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/QnA' ? 'bg-gray-100' : 'bg-white'}`}>
             QnA
           </SecondaryButton>
-        </Link>
+        </Link> */}
         <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full mt-4">
           <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
             Documents

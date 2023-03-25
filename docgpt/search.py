@@ -42,21 +42,23 @@ def get_vector_db(procject_id: str):
 
 
 def get_answer_for_query(project_id: str, query: str):
-    vector_db = get_vector_db(project_id)
-    docs = vector_db.similarity_search(query, 4)
+    with get_openai_callback() as cb:
+        vector_db = get_vector_db(project_id)
+        docs = vector_db.similarity_search(query, 4)
 
-    llm = OpenAIChat(temperature=0)
-    chain = load_qa_chain(llm, chain_type="stuff",
-                          prompt=QA_PROMPT.partial(bot_name="Jarvis"))
+        llm = OpenAIChat(temperature=0)
+        chain = load_qa_chain(llm, chain_type="stuff",
+                            prompt=QA_PROMPT.partial(bot_name="Jarvis"))
 
-    result = chain(
-        {"input_documents": docs, "question": query}, return_only_outputs=False
-    )
-    print(result)
-    print("running query against Q&A chain.\n")
-    answer = result["output_text"]
+        result = chain(
+            {"input_documents": docs, "question": query}, return_only_outputs=False
+        )
+        print(result)
+        print("running query against Q&A chain.\n")
+        answer = result["output_text"]
+        tokens_used = cb.total_tokens
 
-    return answer
+    return { "answer": answer, "tokens": tokens_used }
 
 
 def get_standalone_question(chat_history, question):
@@ -115,16 +117,18 @@ def get_answer_for_chat(project_id: str, query: str, chat_history):
 
 
 def summarize_chat(chat_history: str):
-    llm = OpenAIChat(temperature=0)
+    with get_openai_callback() as cb:
+        llm = OpenAIChat(temperature=0)
 
-    llm_chain = LLMChain(
-        llm=llm, prompt=SUMMARY_EXTRACTION_PROMPT, output_key="output_text"
-    )
+        llm_chain = LLMChain(
+            llm=llm, prompt=SUMMARY_EXTRACTION_PROMPT, output_key="output_text"
+        )
 
-    result = llm_chain(
-        {"chat_history": chat_history}, return_only_outputs=False
-    )
-    print("running summary chain")
-    answer = result["output_text"]
+        result = llm_chain(
+            {"chat_history": chat_history}, return_only_outputs=False
+        )
+        print("running summary chain")
+        answer = result["output_text"]
+        tokens_used = cb.total_tokens
 
-    return answer
+    return { "answer": answer, "tokens": tokens_used }
