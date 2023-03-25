@@ -53,33 +53,12 @@ class DocsMilvus:
         collection_name = collection_name
         fields = []
         # Determine metadata schema
-        if metadatas:
-            # Check if all metadata keys line up
-            key = metadatas[0].keys()
-            for x in metadatas:
-                if key != x.keys():
-                    raise ValueError(
-                        "Mismatched metadata. "
-                        "Make sure all metadata has the same keys and datatype."
-                    )
-            # Create FieldSchema for each entry in singular metadata.
-            for key, value in metadatas[0].items():
-                # Infer the corresponding datatype of the metadata
-                dtype = infer_dtype_bydata(value)
-                if dtype == DataType.UNKNOWN:
-                    raise ValueError(f"Unrecognized datatype for {key}.")
-                elif dtype == DataType.VARCHAR:
-                    # Find out max length text based metadata
-                    max_length = 0
-                    for subvalues in metadatas:
-                        max_length = max(max_length, len(subvalues[key]))
-                    fields.append(
-                        FieldSchema(key, DataType.VARCHAR, max_length=max_length + 1)
-                    )
-                else:
-                    fields.append(FieldSchema(key, dtype))
-
         
+
+        fields.append(FieldSchema("source", DataType.VARCHAR, max_length=2048))
+        fields.append(FieldSchema("title", DataType.VARCHAR, max_length=2048))
+        fields.append(FieldSchema("document_id", DataType.VARCHAR, max_length=30))
+        fields.append(FieldSchema("type", DataType.VARCHAR, max_length=20))
         # Create the text field
         fields.append(
             FieldSchema(text_field, DataType.VARCHAR, max_length=65535)
@@ -96,14 +75,15 @@ class DocsMilvus:
         collection = Collection(collection_name, schema)
         # Index parameters for the collection
         index = {
-            "index_type": "HNSW",
+            "index_type": "AUTOINDEX",
             "metric_type": "L2",
             "params": {"M": 8, "efConstruction": 64},
         }
         # Create the index
-        collection.create_index(vector_field, index)
+        if not collection.has_index(index_name=vector_field):
+            collection.create_index(vector_field, index)
         # Create the VectorStore
-        milvus = cls(
+        milvus = Milvus(
             embedding,
             kwargs.get("connection_args", {"port": 19530}),
             collection_name,

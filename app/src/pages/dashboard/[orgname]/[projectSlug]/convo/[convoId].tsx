@@ -49,7 +49,7 @@ const ConvoPage: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   </>
                 ) : null}
 
-                <div className="mt-5 mx-auto border border-gray-200 rounded-md  max-h-[45rem] overflow-auto">
+                <div className="mt-5 mx-auto border border-gray-200 rounded-md lg:h-[75vh] h-[85vh] mb-5 overflow-auto">
                   {isLoading ? <div>Loading...</div> : data?.conversation?.messages.map(m => (
                     <div key={m.id} className="flex mt-4 items-start even:bg-gray-100 p-2 px-4">
                       <div className="mt-1 text-xl">

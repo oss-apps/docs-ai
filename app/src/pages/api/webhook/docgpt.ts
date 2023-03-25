@@ -4,8 +4,6 @@ import { prisma } from "~/server/db";
 
 
 const docgptHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log(JSON.stringify(req.body))
-
   const secret = req.headers.authorization
   if (secret !== process.env.DOCGPT_SECRET) {
     return res.status(401).send({ message: 'Wrong secret key provided' })

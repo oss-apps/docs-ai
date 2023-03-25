@@ -100,6 +100,7 @@ model Project {
     defaultQuestion String         @default("How to use Jarvis?") @db.Text
     enableSummary   Boolean        @default(true)
     org             Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    tokensUsed      Int            @default(0)
     documents       Document[]
     Conversation    Conversation[]
 

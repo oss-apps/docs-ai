@@ -26,9 +26,9 @@ def get_url_loader(url: str, type: str, load_all_paths: bool):
 
 def get_text_splitter():
     text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tokenizer=tokenizer,
-                                                                              chunk_size=200, chunk_overlap=50)
+                                                                              chunk_size=500, chunk_overlap=50)
     if os.getenv("ENV") == "prod":
-        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=1000, chunk_overlap=100)
+        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=500, chunk_overlap=50)
 
     return text_splitter
 
