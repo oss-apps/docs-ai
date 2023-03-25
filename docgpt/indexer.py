@@ -36,7 +36,6 @@ def index_documents(docs, project_id):
         for d in docs:
             metadatas.append(d.metadata)
             texts.append(d.page_content)
-        print(os.getenv("MILVUS_USER"), os.getenv("MILVUS_PASSWORD"), os.getenv("MILVUS_URI"))
         db = DocsMilvus.create_collection(
             collection_name=project_id,
             embedding=embeddings,

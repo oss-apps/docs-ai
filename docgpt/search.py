@@ -86,7 +86,7 @@ def get_answer_for_chat(project_id: str, query: str, chat_history):
         print("No TEXT data found")
 
     docs = docs + \
-        vector_db.similarity_search(consolidated_question, 2, {"type": "URL"})
+        vector_db.similarity_search(consolidated_question, 2 if len(docs) > 0 else 4, {"type": "URL"})
 
     llm = OpenAIChat(
         temperature=0, prefix_messages=prefix_messages + chat_history)
