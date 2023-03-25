@@ -67,9 +67,9 @@ def query():
 @app.route("/chat", methods=['POST'])
 def chat():
     req_data = request.get_json()
-    answer = get_answer_for_chat(
+    result = get_answer_for_chat(
         req_data.get('projectId'), req_data.get('question'), req_data.get('chatHistory'))
-    return {"answer": answer}
+    return result
 
 
 @app.route("/summarize", methods=['POST'])

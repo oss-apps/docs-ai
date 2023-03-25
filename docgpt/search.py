@@ -10,6 +10,7 @@ from langchain.chains.qa_with_sources.map_reduce_prompt import (
 from .prompt_templates.chat_template import SYSTEM_PROMPT, SIMPLE_CHAT_PROMPT, SUMMARY_EXTRACTION_PROMPT, CONDENSE_QUESTION_PROMPT, QA_PROMPT
 from langchain.vectorstores import Milvus
 import os
+from langchain.callbacks import get_openai_callback
 
 embeddings = HuggingFaceEmbeddings()
 if os.getenv("ENV") == "prod":
@@ -74,41 +75,43 @@ def get_standalone_question(chat_history, question):
 
 
 def get_answer_for_chat(project_id: str, query: str, chat_history):
-    consolidated_question = get_standalone_question(chat_history, query)
-    vector_db = get_vector_db(project_id)
+    with get_openai_callback() as cb:
+        consolidated_question = get_standalone_question(chat_history, query)
+        vector_db = get_vector_db(project_id)
 
-    print("Question: ", consolidated_question)
-    docs = []
-    try:
-        docs = vector_db.similarity_search(
-            consolidated_question, 2, {"type": "TEXT"})
-    except:
-        print("No TEXT data found")
+        print("Question: ", consolidated_question)
+        docs = []
+        try:
+            docs = vector_db.similarity_search(
+                consolidated_question, 2, {"type": "TEXT"})
+        except:
+            print("No TEXT data found")
 
-    docs = docs + \
-        vector_db.similarity_search(consolidated_question, 2 if len(docs) > 0 else 4, {"type": "URL"})
+        docs = docs + \
+            vector_db.similarity_search(consolidated_question, 2 if len(docs) > 0 else 4, {"type": "URL"})
 
-    llm = OpenAIChat(
-        temperature=0, prefix_messages=prefix_messages + chat_history)
+        llm = OpenAIChat(
+            temperature=0, prefix_messages=prefix_messages + chat_history)
 
-    llm_chain = LLMChain(
-        llm=llm, prompt=SIMPLE_CHAT_PROMPT,
-    )
+        llm_chain = LLMChain(
+            llm=llm, prompt=SIMPLE_CHAT_PROMPT,
+        )
 
-    # To get document with source links
-    chain = StuffDocumentsChain(
-        llm_chain=llm_chain,
-        document_variable_name="summaries",
-        document_prompt=EXAMPLE_PROMPT,
-    )
+        # To get document with source links
+        chain = StuffDocumentsChain(
+            llm_chain=llm_chain,
+            document_variable_name="summaries",
+            document_prompt=EXAMPLE_PROMPT,
+        )
 
-    result = chain(
-        {"input_documents": docs, "question": query}, return_only_outputs=False
-    )
-    print("running query against Q&A chain.\n")
-    answer = result["output_text"]
+        result = chain(
+            {"input_documents": docs, "question": query}, return_only_outputs=False
+        )
+        print("running query against Q&A chain.\n")
+        answer = result["output_text"]
+        tokens_used = cb.total_tokens
 
-    return answer
+    return { "answer": answer, "tokens": tokens_used }
 
 
 def summarize_chat(chat_history: str):

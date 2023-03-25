@@ -1,4 +1,4 @@
-import { ConvoRating } from "@prisma/client";
+import { Conversation, ConvoRating } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -14,9 +14,9 @@ export const docGPTRouter = createTRPCRouter({
   getAnswer: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), saveConvo: z.boolean().optional(), convoId: z.string().optional() }))
     .query(async ({ input }) => {
-      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string};
+      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string, tokens: number };
       
-      const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, input.convoId) : null
+      const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId) : null
 
       return {
         ...result,
@@ -30,8 +30,8 @@ export const docGPTRouter = createTRPCRouter({
       if (!project || !project.public) {
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
-      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string};
-      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, input.convoId)
+      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string, tokens: number };
+      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
       return {
         ...result,
         conversationId: convo?.id,
@@ -45,15 +45,16 @@ export const docGPTRouter = createTRPCRouter({
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
-      const result = await docGPT.getGPTChat(input.projectId, input.question, chatHistory) as { answer: string};
-      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, input.convoId)
+      const result = await docGPT.getGPTChat(input.projectId, input.question, chatHistory) as { answer: string, tokens: number };
+      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
       return {
         conversation: convo,
       };
     }),
 });
 
-export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, convoId?: string) => {
+export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, tokens: number, convoId?: string) => {
+  let conversation: Conversation
   if (convoId) {
     await prisma.messages.createMany({
       data: [{
@@ -67,13 +68,25 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
       }]
     })
 
-    return await prisma.conversation.findUnique({ where: { id: convoId }, include: { messages: true } })
+    conversation = await prisma.conversation.update({
+      where: { id: convoId },
+      data: {
+        tokensUsed: {
+          increment: tokens
+        }
+      },
+      include: {
+        messages: true
+      }
+    })
+
   } else {
-    const conversation = await prisma.conversation.create({
+    conversation = await prisma.conversation.create({
       data: {
         projectId,
         rating: ConvoRating.NEUTRAL,
         firstMsg: question,
+        tokensUsed: tokens,
         messages: {
           create: [{
             user: 'user',
@@ -88,9 +101,18 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
         messages: true,
       }
     })
-  
-    return conversation
   }
+
+  await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      tokensUsed: {
+        increment: tokens
+      }
+    }
+  })
+
+  return conversation
 }
 
 export const getHistoryForConvo = async (convoId: string) => {
