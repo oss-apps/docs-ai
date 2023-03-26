@@ -12,6 +12,7 @@ flask = "*"
 bs4 = "*"
 pymilvus = "*"
 tiktoken = "*"
+gunicorn = "*"
 
 [dev-packages]
 autopep8 = "*"

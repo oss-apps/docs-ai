@@ -7,7 +7,7 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.qa_with_sources.map_reduce_prompt import (
     EXAMPLE_PROMPT,
 )
-from .prompt_templates.chat_template import SYSTEM_PROMPT, SIMPLE_CHAT_PROMPT, SUMMARY_EXTRACTION_PROMPT, CONDENSE_QUESTION_PROMPT, QA_PROMPT
+from prompt_templates.chat_template import SYSTEM_PROMPT, SIMPLE_CHAT_PROMPT, SUMMARY_EXTRACTION_PROMPT, CONDENSE_QUESTION_PROMPT, QA_PROMPT
 from langchain.vectorstores import Milvus
 import os
 from langchain.callbacks import get_openai_callback
@@ -19,12 +19,13 @@ if os.getenv("ENV") == "prod":
 prefix_messages = [
     {"role": "system", "content": SYSTEM_PROMPT.partial(bot_name="Jarvis").format()}]
 
-def get_vector_db(procject_id: str):
+def get_vector_db(project_id: str):
+    print(project_id)
     vector_db = NotImplemented
     if os.getenv("ENV") == "prod":
         vector_db =  Milvus(
             embedding_function= embeddings,
-            collection_name= procject_id,
+            collection_name= project_id,
             text_field= "text",
             connection_args= {
                 "uri": os.getenv("MILVUS_URI"),
@@ -79,6 +80,7 @@ def get_standalone_question(chat_history, question):
 def get_answer_for_chat(project_id: str, query: str, chat_history):
     with get_openai_callback() as cb:
         consolidated_question = get_standalone_question(chat_history, query)
+        print(project_id)
         vector_db = get_vector_db(project_id)
 
         print("Question: ", consolidated_question)

@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 from flask import Flask, request
 import threading
 import time
-from .indexer import index_url_document, index_text_document
-from .search import get_answer_for_query, get_answer_for_chat, summarize_chat
+from indexer import index_url_document, index_text_document
+from search import get_answer_for_query, get_answer_for_chat, summarize_chat
 
 print(__name__)
 

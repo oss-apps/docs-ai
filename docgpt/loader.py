@@ -2,8 +2,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import GitbookLoader, WebBaseLoader, TextLoader
 from transformers import BertTokenizer
 from langchain.docstore.document import Document
-from .document_loaders.docusaurus import DocusaurusLoader
-from .document_loaders.documentation import DocumentationLoader
+from document_loaders.docusaurus import DocusaurusLoader
+from document_loaders.documentation import DocumentationLoader
 import os
 
 tokenizer = BertTokenizer.from_pretrained(

@@ -1,7 +1,7 @@
 from langchain.embeddings import HuggingFaceEmbeddings, OpenAIEmbeddings
 from langchain.vectorstores import Chroma
-from .loader import load_document, load_text_document
-from .vectorstores.docs_milvus import DocsMilvus
+from loader import load_document, load_text_document
+from vectorstores.docs_milvus import DocsMilvus
 import requests
 import os
 
