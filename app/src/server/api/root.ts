@@ -4,6 +4,7 @@ import { projectRouter } from "./routers/project";
 import { documentRouter } from "./routers/document";
 import { docGPTRouter } from "./routers/docGPT";
 import { conversationRouter } from "./routers/conversation";
+import { orgRouter } from "./routers/org";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   document: documentRouter,
   docGPT: docGPTRouter,
   conversation: conversationRouter,
+  org: orgRouter,
 });
 
 // export type definition of API

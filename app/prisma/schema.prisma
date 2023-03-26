@@ -53,6 +53,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    approved      Boolean   @default(false)
     accounts      Account[]
     sessions      Session[]
     userOrgs      OrgUser[]
@@ -67,14 +68,15 @@ model VerificationToken {
 }
 
 model Org {
-    id        String    @id @default(cuid())
-    name      String    @unique
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    orgUrl    String?
-    imageUrl  String?
-    orgUsers  OrgUser[]
-    projects  Project[]
+    id          String    @id @default(cuid())
+    name        String    @unique
+    displayName String?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    orgUrl      String?
+    imageUrl    String?
+    orgUsers    OrgUser[]
+    projects    Project[]
 }
 
 model OrgUser {
