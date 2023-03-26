@@ -14,7 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
+        <meta name="description" content="Create an AI support agent with your documents." />
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <SessionProvider session={session}>
