@@ -112,7 +112,7 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
     }
   })
 
-  return conversation
+  return await prisma.conversation.findUnique({ where: { id: conversation.id }, include: { messages: true }})
 }
 
 export const getHistoryForConvo = async (convoId: string) => {

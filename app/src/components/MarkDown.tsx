@@ -3,7 +3,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 export const MarkDown: React.FC<{ markdown: string }> = ({ markdown }) => {
 
   const getUrl = (url?: string) => {
-    if (!url?.startsWith("http")) {
+    if (url && !url.startsWith("http")) {
       return `https://${url}`
     }
 
