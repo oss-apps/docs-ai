@@ -19,8 +19,8 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
-  const onShareClick = () => {
-    navigator.clipboard.writeText(`${location.origin}/chat/${project.id}`)
+  const onShareClick = async () => {
+    await navigator.clipboard.writeText(`${location.origin}/chat/${project.id}`)
     setShareText('Copied')
     setTimeout(() => {
       setShareText('Share')
