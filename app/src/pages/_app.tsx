@@ -2,9 +2,14 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { api } from "~/utils/api";
+import { initDocsAI } from "@docsai/chat-sdk";
 
 import "~/styles/globals.css";
 import Head from "next/head";
+
+if (typeof window !== "undefined") {
+  initDocsAI("clfp5tn2a0007mc0ub8qch4x2", "#000")
+}
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

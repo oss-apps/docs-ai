@@ -15,6 +15,7 @@
     "prisma:prod": "prisma migrate deploy"
   },
   "dependencies": {
+    "@docsai/chat-sdk": "^1.0.3",
     "@headlessui/react": "^1.7.12",
     "@hookform/resolvers": "^2.9.11",
     "@next-auth/prisma-adapter": "^1.0.5",

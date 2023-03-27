@@ -9,6 +9,11 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@docsai/chat-sdk@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@docsai/chat-sdk/-/chat-sdk-1.0.3.tgz#b8e013444e98274a43831c287f3bb269029d14c6"
+  integrity sha512-cVb7WpxUh0M0oF1kuAmqNpucB5SDMy2uh0RkNvpWVXsb+4RF+iYMrdMeachbZnw7CvvNWDBgoANE5OZsKPkZeA==
+
 "@eslint/eslintrc@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.4.1.tgz#af58772019a2d271b7e2d4c23ff4ddcba3ccfb3e"
