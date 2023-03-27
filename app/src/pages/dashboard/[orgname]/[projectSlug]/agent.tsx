@@ -8,13 +8,24 @@ import superjson from "superjson";
 import AppNav from "~/containers/AppNav/AppNav";
 import { QnA } from "~/containers/QnA/QnA";
 import { ChatBox } from "~/containers/Chat/Chat";
+import PrimaryButton, { SmallButton } from "~/components/form/button";
+import { env } from "~/env.mjs";
+import { useState } from "react";
 
 
 const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+  const [shareText, setShareText] = useState('Share')
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
+  const onShareClick = () => {
+    navigator.clipboard.writeText(`${location.origin}/chat/${project.id}`)
+    setShareText('Copied')
+    setTimeout(() => {
+      setShareText('Share')
+    }, 2000)
+  }
 
   return (
     <>
@@ -26,8 +37,13 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full">
-            <div className="mt-10 p-5 px-10">
+            <div className="mt-5 p-5 px-10">
               <div className="max-w-5xl mx-auto">
+                <div className="flex justify-end">
+                  <SmallButton onClick={onShareClick} className="mb-5 w-20">
+                    {shareText}
+                  </SmallButton>
+                </div>
                 <ChatBox org={org} project={project} />
               </div>
             </div>

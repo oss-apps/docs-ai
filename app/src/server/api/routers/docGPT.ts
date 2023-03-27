@@ -37,7 +37,7 @@ export const docGPTRouter = createTRPCRouter({
         conversationId: convo?.id,
       };
     }),
-  getPublicChatbotAnswer: orgMemberProcedure
+  getPublicChatbotAnswer: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), convoId: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
       const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });

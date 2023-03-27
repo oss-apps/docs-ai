@@ -15,7 +15,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
   return (
     <nav className="w-64 border border-r p-5">
       <div className="flex justify-between items-center">
-        <Link href="/" className="flex items-center">
+        <Link href="/dashboard" className="flex items-center">
           <Avatar square size={24} src={org.imageUrl} uid={org.id} />
           <span className="ml-2">
             {org.name}
