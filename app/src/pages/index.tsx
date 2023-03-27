@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       <body className="min-h-screen">
         <nav className="flex p-5 px-10 items-center justify-between">
           <div className="flex items-center">
-            <Image src="/images/newlogo.png" width={40} height={40} alt="logo" className="rounded-lg"></Image>
+            <Image src="/images/logo.png" width={40} height={40} alt="logo" className="rounded-lg"></Image>
             <h2 className="ml-2 text-2xl">DocsAI</h2>
           </div>
           <AuthShowcase />

@@ -6,6 +6,15 @@ import superjson from "superjson";
 import { QnA } from "~/containers/QnA/QnA";
 import Avatar from "~/components/Avatar";
 import { ChatBox } from "~/containers/Chat/Chat";
+import { useEffect } from "react";
+
+// Hide chat widget for chat page
+if (typeof window !== "undefined") {
+  const root = document.getElementById('docsai-root');
+  if (root) {
+    root.style.display = 'none';
+  }
+}
 
 const QnAPage: NextPage<{ orgJson: string | null, projectJson: string | null }> = ({ orgJson, projectJson }) => {
 
