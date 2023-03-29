@@ -35,7 +35,9 @@ def index_url():
         request_data.get('type'),
         request_data.get('projectId'),
         request_data.get('documentId'),
-        request_data.get('webhookUrl')))
+        request_data.get('webhookUrl'),
+        request_data.get('loadAllPath'),
+        request_data.get('skipPaths')))
     thread.start()
 
     return {"message": "Success"}

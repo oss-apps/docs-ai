@@ -32,7 +32,7 @@ export async function getGPTChat(projectId: string, question: string, chatHistor
 }
 
 
-export async function indexUrlDocument(url: string, type: string, projectId: string, documentId: string) {
+export async function indexUrlDocument(url: string, type: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
 
   console.log(`Fetching ${env.DOC_GPT_SERVICE_URL}/index_url_document`)
   const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/index_url_document`, {
@@ -41,7 +41,7 @@ export async function indexUrlDocument(url: string, type: string, projectId: str
       "Content-Type": "application/json",
       "Authorization": `Bearer ${env.DOC_GPT_SECRET}`,
     },
-    body: JSON.stringify({ url, type, projectId, documentId, webhookUrl }),
+    body: JSON.stringify({ url, type, projectId, documentId, webhookUrl, loadAllPath, skipPaths }),
   })
   
   return response.json()

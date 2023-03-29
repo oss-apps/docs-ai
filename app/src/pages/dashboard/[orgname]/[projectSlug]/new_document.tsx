@@ -11,6 +11,8 @@ import classNames from "classnames";
 import { URLDocument } from "~/containers/NewDocument/URLDocument";
 import { useRouter } from 'next/router'
 import { TextDocument } from "~/containers/NewDocument/TextDocument";
+import NavBack from "~/components/NavBack";
+import { useState } from "react";
 
 
 function getDocType(type: number) {
@@ -19,12 +21,20 @@ function getDocType(type: number) {
   return DocumentType.URL
 }
 
+enum NewDocumentType {
+  URL= 1,
+  GITBOOK,
+  TEXT,
+}
+
 const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+  const router = useRouter()
+  const { docType, orgname, projectSlug } = router.query as { docType: string, orgname: string, projectSlug: string }
+
+
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
-  const router = useRouter()
 
-  const { docType, orgname, projectSlug } = router.query as { docType: string, orgname: string, projectSlug: string }
 
   return (
     <>
@@ -36,36 +46,23 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full">
-            <div className="max-w-4xl mx-auto mt-20">
-              <div className="mx-auto">
-                <Tab.Group defaultIndex={docType === DocumentType.TEXT ? 1 : 0} onChange={index => router.push(`/dashboard/${orgname}/${projectSlug}/new_document?docType=${getDocType(index)}`, undefined, { shallow: true })} >
-                  <Tab.List className="flex space-x-2 rounded-md border p-2 border-black max-w-sm mx-auto">
-                    <Tab className={({ selected }) =>
-                      classNames(
-                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                        'ring-white ring-opacity-60 ring-offset-2 ring-offset-white focus:outline-none focus:ring-2',
-                        selected
-                          ? 'bg-black shadow text-white'
-                          : 'text-black hover:bg-gray-100'
-                      )
-                    }>URL</Tab>
-                    <Tab className={({ selected }) =>
-                      classNames(
-                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
-                        'ring-white ring-opacity-60 ring-offset-2 ring-offset-white focus:outline-none focus:ring-2',
-                        selected
-                          ? 'bg-black shadow text-white'
-                          : 'text-black hover:bg-gray-100'
-                      )
-                    }>Text</Tab>
-                  </Tab.List>
-                  <Tab.Panels>
-                    <Tab.Panel className="mt-10"><URLDocument org={org} project={project} /></Tab.Panel>
-                    <Tab.Panel className="mt-10"><TextDocument org={org} project={project} /></Tab.Panel>
-                  </Tab.Panels>
-                </Tab.Group>
-              </div>
+            <div className="max-w-4xl mx-auto mt-5">
+              <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
+              <p className="mt-10 text-lg text-gray-800">{!docType ? 'Available sources' : null}</p>
+              { docType ? (
+                <div className="max-w-2xl mx-auto">
+                  <CreateDocumentForm org={org} project={project} docType={Number(docType)} />
+                </div>
+              ) : (
 
+                <div className="flex gap-12 flex-wrap mt-10">
+                  <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.URL}`} />
+                  <DocumentSource name="Gitbook" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.GITBOOK}`} />
+                  <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.TEXT}`} />
+                  <DocumentSource name="Notion" />
+                  <DocumentSource name="PDF" />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -73,6 +70,30 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
     </>
   );
 };
+
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: NewDocumentType }> = ({ org, project, docType}) => {
+  if (docType === NewDocumentType.GITBOOK) {
+    return <URLDocument org={org} project={project} urlType="gitbook" />
+  }
+
+  if (docType === NewDocumentType.TEXT) {
+    return <TextDocument org={org} project={project} />
+  }
+
+  return <URLDocument org={org} project={project} />
+}
+
+
+const DocumentSource: React.FC<{ name: string, url?: string }> = ({ name, url }) => {
+  const router = useRouter()
+
+  return (
+    <button className="border rounded-md h-32 w-32 flex justify-center items-center flex-col" onClick={() => url ? router.push(url) : null}>
+      <div className="text-3xl font-light text-gray-800">{name}</div>
+      <p className="text-xs text-gray-600">{!url ? 'Comming soon' : ''}</p>
+    </button>
+  )
+}
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

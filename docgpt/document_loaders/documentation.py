@@ -12,10 +12,11 @@ class DocumentationLoader(WebBaseLoader):
     2. load all (relative) paths in the navbar.
     """
 
-    def __init__(self, web_page: str, load_all_paths: bool = False):
+    def __init__(self, web_page: str, load_all_paths: bool = False, skip_paths: str = None):
         """Initialize with web page and whether to load all paths."""
         super().__init__(web_page)
         self.load_all_paths = load_all_paths
+        self.skip_paths = skip_paths
 
     def load(self) -> List[Document]:
         """Fetch text from one single Docusaurus page."""
@@ -27,14 +28,26 @@ class DocumentationLoader(WebBaseLoader):
             u = urlparse(self.web_path)
             self.web_path = u.scheme + "://" + u.netloc
             for path in relative_paths:
-                url = self.web_path + path
-                print(f"Fetching text from {url}")
-                soup_info = self._scrape(url)
-                documents.append(self._get_document(soup_info, url))
+                if not self._is_skipped(path):
+                    url = self.web_path + path
+                    print(f"Fetching text from {url}")
+                    soup_info = self._scrape(url)
+                    documents.append(self._get_document(soup_info, url))
             return documents
         else:
             soup_info = self.scrape()
             return [self._get_document(soup_info, self.web_path)]
+
+    def _is_skipped(self, path: str):
+        if not self.skip_paths or self.skip_paths == "":
+            return False
+        skipped = False
+        for skip_path in self.skip_paths.split(','):
+            if path.startswith(skip_path):
+                skipped = True
+                break
+        
+        return skipped
 
     def _get_document(self, soup: Any, custom_url: Optional[str] = None) -> Document:
         """Fetch content from page and return Document."""

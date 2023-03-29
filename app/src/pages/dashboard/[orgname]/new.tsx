@@ -13,6 +13,10 @@ import { api } from "~/utils/api";
 import { type FieldValues, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
+import Snackbar from "~/components/SnackBar";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 
 const projectSchema = z.object({
@@ -22,6 +26,8 @@ const projectSchema = z.object({
 
 
 const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
+  const router = useRouter()
+  const [showError, setShowError] = useState(false)
 
   const org: (OrgUser & {
     org: Org
@@ -31,25 +37,31 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(projectSchema) });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { name, description } = data as any as z.input<typeof projectSchema>
-    createProject.mutate({ name, description, orgId: org.org.id })
+    const { project } = await createProject.mutateAsync({ name, description, orgId: org.org.id })
+    await router.push(`/dashboard/${org.org.name}/${project.slug}`)
   };
 
+  useEffect(() => {
+    setShowError(createProject.isError)
+  }, [createProject.isError])
 
   return (
-    <>
+    <div className="h-full">
       <Head>
-        <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
+        <title>New Project</title>
       </Head>
       <Nav />
-      <main className="h-full p-5">
-        <div className="max-w-6xl mx-auto mt-10">
-          <p className="text-center text-4xl">
+      <main>
+        <div className="max-w-2xl mx-auto mt-5">
+          <Link href={`/dashboard/${org.org.name}`}>
+            <button className="text-blue-500">&lt; Back</button>
+          </Link>
+          <p className="text-center text-4xl mt-10">
             New project
           </p>
-          <div className="max-w-2xl mx-auto mt-20 ">
+          <div className="max-w-2xl mx-auto mt-10 ">
             <form onSubmit={handleSubmit(onSubmit)}>
               <Label>Project name</Label>
               <Input
@@ -65,12 +77,15 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
                 {...register('description')}
               />
 
-              <PrimaryButton disabled={createProject.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
+              <PrimaryButton disabled={createProject.isLoading} loading={createProject.isLoading} className="mx-auto mt-6">
+                Create
+              </PrimaryButton>
             </form>
           </div>
         </div>
+        <Snackbar isError message={createProject.error?.message || ''} show={showError} setShow={setShowError} />
       </main>
-    </>
+    </div>
   );
 };
 

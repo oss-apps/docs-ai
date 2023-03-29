@@ -3,7 +3,6 @@ import { type Conversation, type Messages, type Org, type Project } from "@prism
 import { useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form";
 import { z } from "zod";
-import ReactMarkdown from 'react-markdown'
 
 import { api } from "~/utils/api";
 import { MarkDown } from "~/components/MarkDown";

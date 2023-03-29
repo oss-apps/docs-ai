@@ -42,6 +42,13 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
             <div className="p-5 px-10 overflow-auto h-full flex">
               <div className=" w-1/2">
                 <div className="text-gray-600">Recent conversations</div>
+                {convoData?.conversations.length === 0 ? (
+                  <div className="border p-4 mt-2 rounded-md bg-gray-50 pb-8">
+                    <p className="text-center">
+                    There&apos;s no conversations yet!
+                    </p>
+                  </div>
+                ) : null}
                 {convoData?.conversations.map((conversation) => (
                   <Link key={conversation.id} href={`/dashboard/${org.name}/${project.slug}/convo/${conversation.id}`}>
                     <div className="border p-4 mt-2 flex justify-between items-center rounded-md bg-gray-50 w-full">
@@ -51,30 +58,15 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                         </div>
                         <div className="text-sm text-gray-600 mt-2">{conversation.createdAt.toLocaleString()}</div>
                       </div>
-                      <div className="text-xl"><Rating rating={conversation.rating} /></div>
                     </div>
                   </Link>
                 ))}
               </div>
               <div className=" w-1/2 px-20">
-                <div>
-                  <div className="text-gray-600">Rating</div>
-                  {ratingData ? (
-                    <div className="flex justify-between items-center py-10 mt-2">
-                      <div className=" bg-green-50 border border-green-400  justify-center flex flex-col text-center rounded-2xl p-5 px-10">
-                        <div className="text-2xl">😃</div>
-                        <div className="mt-2 text-green-600">{(ratingData.ratings.POSITIVE / ratingData.total * 100).toFixed(0)}%</div>
-                      </div>
-                      <div className="bg-gray-50 border border-gray-400  justify-center flex flex-col text-center rounded-2xl p-5 px-10">
-                        <div className="text-2xl">😐</div>
-                        <div className="mt-2 text-gray-500">{(ratingData.ratings.NEUTRAL / ratingData.total * 100).toFixed(0)}%</div>
-                      </div>
-                      <div className="bg-red-50 border border-red-400  justify-center flex flex-col text-center rounded-2xl p-5 px-10">
-                        <div className="text-2xl">😢</div>
-                        <div className="mt-2 text-red-500">{(ratingData.ratings.NEGATIVE / ratingData.total * 100).toFixed(0)}%</div>
-                      </div>
-                    </div>
-                  ) : null}
+                <div className="text-gray-600">Usage</div>
+                <div className="mt-2 bg-gray-100 rounded-md p-2 w-64">
+                  <p className="text-center text-3xl">${(project.tokensUsed / 1000 * .002).toFixed(2)}</p>
+                  <p className="text-center text-sm text-gray-600">{project.tokensUsed} tokens</p>
                 </div>
               </div>
             </div>

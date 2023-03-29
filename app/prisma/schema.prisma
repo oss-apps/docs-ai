@@ -116,6 +116,12 @@ enum DocumentType {
     PDF
 }
 
+enum IndexStatus {
+    INDEXING
+    SUCCESS
+    FAILED
+}
+
 model Document {
     id           String       @id @default(cuid())
     src          String       @db.Text
@@ -125,6 +131,7 @@ model Document {
     updatedAt    DateTime     @updatedAt
     documentType DocumentType
     indexed      Boolean      @default(false)
+    indexStatus  IndexStatus  @default(INDEXING)
     projectId    String
     details      Json?
     project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)

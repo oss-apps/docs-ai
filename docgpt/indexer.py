@@ -11,8 +11,8 @@ if os.getenv("ENV") == "prod":
     embeddings = OpenAIEmbeddings()
 
 
-def index_url_document(url: str, type: str, project_id: str, document_id: str, webhook_url: str):
-    docs = load_document(url, type, document_id)
+def index_url_document(url: str, type: str, project_id: str, document_id: str, webhook_url: str, load_all_paths: bool, skip_paths: str):
+    docs = load_document(url, type, document_id, load_all_paths, skip_paths)
     db = index_documents(docs, project_id)
     # Make a request to webhook_url
     title = docs[0].metadata["title"]

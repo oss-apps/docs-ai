@@ -1,4 +1,5 @@
 // src/pages/api/examples.ts
+import { IndexStatus } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/server/db";
 
@@ -9,13 +10,13 @@ const docgptHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).send({ message: 'Wrong secret key provided' })
   }
 
-  const { documentId, title } = req.body as { documentId: string, title: string };
+  const { documentId, title, error } = req.body as { documentId: string, title: string, error?: string };
 
   await prisma.document.update({
     where: { id: documentId },
     data: {
-      indexed: true,
       title,
+      indexStatus: error ? IndexStatus.FAILED : IndexStatus.SUCCESS
     },
   })
   

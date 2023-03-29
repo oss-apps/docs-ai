@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -12,14 +14,22 @@ export const projectRouter = createTRPCRouter({
   createProject: orgMemberProcedure
     .input(z.object({ name: z.string(), description: z.string().optional(), orgId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const result = await ctx.prisma.project.create({
-        data: {
-          ...input,
-          slug: slugify(input.name),
+      try {
+        const result = await ctx.prisma.project.create({
+          data: {
+            ...input,
+            slug: slugify(input.name),
+          }
+        })
+        return {
+          project: result,
+        };
+      } catch(e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+            throw new TRPCError({ message: 'This project already exist', code: 'BAD_REQUEST' });
         }
-      })
-      return {
-        project: result,
-      };
+
+        else throw e
+      }
     }),
 });

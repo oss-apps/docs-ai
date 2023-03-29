@@ -36,7 +36,7 @@ const ConvoPage: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   <Link className="text-gray-500 hover:underline" href={`/dashboard/${org.name}/${project.slug}`}>
                     Back
                   </Link>
-                  <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=TEXT&convoId=${convoId}`}>
+                  <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId}`}>
                     Suggest answer
                   </Link>
                 </div>
