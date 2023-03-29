@@ -64,5 +64,7 @@ class DocumentationLoader(WebBaseLoader):
     def _get_paths(self, soup: Any) -> List[str]:
         """Fetch all relative paths in the navbar."""
         links = soup.findAll("a")
+        if not links or len(links) == 0:
+            return []
         # only return relative links
         return [link.get("href") for link in links if link.get("href")[0] == "/"]
