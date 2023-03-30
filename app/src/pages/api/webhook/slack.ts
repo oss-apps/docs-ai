@@ -6,6 +6,7 @@ import crypto from "crypto"
 import { env } from "~/env.mjs";
 import { WebClient } from '@slack/web-api'
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
+import slackify from "slackify-markdown";
 
 const verifySlackMessage = (timestamp: number, reqBody: string, signature: string) => {
 	if ((Date.now() / 1000 - timestamp) > 60 * 5) {
@@ -53,7 +54,7 @@ const handleEvent = async (event: any) => {
 					type: 'section',
 					text: {
 						type: 'mrkdwn',
-						text: answer,
+						text: slackify(answer),
 					}
 				}],
 				channel: event.channel, 
