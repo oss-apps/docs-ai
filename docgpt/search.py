@@ -116,6 +116,8 @@ def get_answer_for_chat(project_id: str, query: str, chat_history):
             document_prompt=EXAMPLE_PROMPT,
         )
 
+        print(docs)
+
         result = chain(
             {"input_documents": docs, "question": query}, return_only_outputs=False
         )
