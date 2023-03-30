@@ -45,7 +45,15 @@ def get_vector_db(project_id: str):
 def get_answer_for_query(project_id: str, query: str):
     with get_openai_callback() as cb:
         vector_db = get_vector_db(project_id)
-        docs = vector_db.similarity_search(query, 4)
+        docs = []
+        try:
+            docs = vector_db.similarity_search(
+                query, 2, {"type": "TEXT"})
+        except:
+            print("No TEXT data found")
+
+        docs = docs + \
+            vector_db.similarity_search(query, 2 if len(docs) > 0 else 4, {"type": "URL"})
 
         llm = OpenAIChat(temperature=0)
         chain = load_qa_chain(llm, chain_type="stuff",
