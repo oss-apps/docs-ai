@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";

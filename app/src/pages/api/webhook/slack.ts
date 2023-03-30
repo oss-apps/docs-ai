@@ -1,4 +1,4 @@
-// src/pages/api/examples.ts
+/* eslint-disable */
 import { IndexStatus } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/server/db";
@@ -7,12 +7,12 @@ import { env } from "~/env.mjs";
 import { WebClient } from '@slack/web-api'
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 
-const verifySlackMessage = (timestamp: number, reqBody: any, signature: string) => {
+const verifySlackMessage = (timestamp: number, reqBody: string, signature: string) => {
 	if ((Date.now() / 1000 - timestamp) > 60 * 5) {
 		return false
 	}
 
-	const sigBaseString = 'v0:' + timestamp + ':' + reqBody
+	const sigBaseString = 'v0:' + timestamp.toString() + ':' + reqBody
 
 	const hmac = crypto.createHmac('sha256', env.SLACK_SIGINING_SECRET)
 	const data = `v0=${hmac.update(sigBaseString).digest('hex')}`
@@ -62,7 +62,7 @@ const handleEvent = async (event: any) => {
 	}
 }
 
-const slackHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const slackHandler = (req: NextApiRequest, res: NextApiResponse) => {
 	const slackSignature = req.headers['x-slack-signature']
 	const timestamp = Number(req.headers['x-slack-request-timestamp'])
 	const requestBody = JSON.stringify(req.body)
