@@ -45,6 +45,11 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
             Documents
           </SecondaryButton>
         </Link>
+        <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full mt-4">
+          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+            Settings
+          </SecondaryButton>
+        </Link>
       </div>
     </nav >
   )

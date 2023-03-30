@@ -65,7 +65,7 @@ def get_answer_for_query(project_id: str, query: str):
 def get_standalone_question(chat_history, question):
     if len(chat_history) == 0:
         return question
-    llm = OpenAIChat(temperature=0)
+    llm = OpenAIChat(temperature=0, prefix_messages=prefix_messages)
     llm_chain = LLMChain(
         llm=llm, prompt=CONDENSE_QUESTION_PROMPT, output_key="output_text")
     history_str = ""

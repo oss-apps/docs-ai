@@ -23,6 +23,9 @@ const server = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   DOC_GPT_SECRET: z.string().min(1),
   DOC_GPT_SERVICE_URL: z.string().url(),
+  SLACK_SIGINING_SECRET: z.string(),
+  SLACK_CLIENT_ID: z.string(),
+  SLACK_CLIENT_SECRET: z.string(),
 });
 
 /**
@@ -49,6 +52,9 @@ const processEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   DOC_GPT_SECRET: process.env.DOC_GPT_SECRET,
   DOC_GPT_SERVICE_URL: process.env.DOC_GPT_SERVICE_URL,
+  SLACK_SIGINING_SECRET: process.env.SLACK_SIGINING_SECRET,
+  SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
+  SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
 };
 
 // Don't touch the part below

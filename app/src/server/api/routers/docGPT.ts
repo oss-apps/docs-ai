@@ -30,12 +30,7 @@ export const docGPTRouter = createTRPCRouter({
       if (!project || !project.public) {
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
-      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string, tokens: number };
-      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
-      return {
-        ...result,
-        conversationId: convo?.id,
-      };
+      return await getAnswerFromProject(input.projectId, input.question, input.convoId)
     }),
   getPublicChatbotAnswer: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), convoId: z.string().optional() }))
@@ -52,6 +47,17 @@ export const docGPTRouter = createTRPCRouter({
       };
     }),
 });
+
+export const getAnswerFromProject = async (projectId: string, question: string, convoId?: string) => {
+  const result = await docGPT.getGPTAnswer(projectId, question) as { answer: string, tokens: number };
+      
+  const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId)
+
+  return {
+    ...result,
+    conversationId: convo?.id,
+  };
+}
 
 export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, tokens: number, convoId?: string) => {
   let conversation: Conversation
