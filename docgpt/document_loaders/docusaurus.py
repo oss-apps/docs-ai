@@ -32,7 +32,7 @@ class DocusaurusLoader(WebBaseLoader):
                     url = self.web_path + path
                     print(f"Fetching text from {url}")
                     soup_info = self._scrape(url)
-                    documents.append(self._get_document(soup_info, url))
+                    #documents.append(self._get_document(soup_info, url))
             return documents
         else:
             soup_info = self.scrape()
@@ -43,7 +43,8 @@ class DocusaurusLoader(WebBaseLoader):
             return False
         skipped = False
         for skip_path in self.skip_paths.split(','):
-            if path.startswith(skip_path):
+            print(path, skip_path)
+            if skip_path.endswith('*') and path.startswith(skip_path[:-1]) or path == skip_path:
                 skipped = True
                 break
         

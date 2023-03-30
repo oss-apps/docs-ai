@@ -43,7 +43,7 @@ class DocumentationLoader(WebBaseLoader):
             return False
         skipped = False
         for skip_path in self.skip_paths.split(','):
-            if path.startswith(skip_path):
+            if skip_path.endswith('*') and path.startswith(skip_path[:-1]) or path == skip_path:
                 skipped = True
                 break
         
@@ -66,5 +66,12 @@ class DocumentationLoader(WebBaseLoader):
         links = soup.findAll("a")
         if not links or len(links) == 0:
             return []
+
+        final_links = []
+        link_map = {}
+        for link in links:
+            if link.get("href")[0] == "/" and not link_map.get(link.get("href")):
+                link_map[link.get("href")] = True
+                final_links.append(link.get("href"))
         # only return relative links
-        return [link.get("href") for link in links if link.get("href")[0] == "/"]
+        return final_links

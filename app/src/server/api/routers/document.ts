@@ -28,7 +28,7 @@ export const documentRouter = createTRPCRouter({
           }
         }
       })
-      await indexUrlDocument(input.src, type, input.projectId, result.id, input.loadAllPath)
+      await indexUrlDocument(input.src, type, input.projectId, result.id, input.loadAllPath, input.skipPaths)
 
       return {
         document: result,

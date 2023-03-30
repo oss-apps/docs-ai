@@ -58,7 +58,7 @@ class GitbookLoader(WebBaseLoader):
             return False
         skipped = False
         for skip_path in self.skip_paths.split(','):
-            if path.startswith(skip_path):
+            if skip_path.endswith('*') and path.startswith(skip_path[:-1]) or path == skip_path:
                 skipped = True
                 break
         
