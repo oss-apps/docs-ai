@@ -33,13 +33,13 @@ Format of the answer below:
 <detailed answer only in markdown>
 sourc: [<related_text>](<link>)
 
-{context}
+{summaries}
 
 Question: {question}
 Helpful Answer in Markdown:"""
 
 QA_PROMPT = PromptTemplate(
-    template=qa_template, input_variables=["bot_name", "context", "question"])
+    template=qa_template, input_variables=["bot_name", "summaries", "question"])
 
 
 simple_chat_template = """{summaries}

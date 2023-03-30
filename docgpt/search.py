@@ -56,8 +56,17 @@ def get_answer_for_query(project_id: str, query: str):
             vector_db.similarity_search(query, 2 if len(docs) > 0 else 4, {"type": "URL"})
 
         llm = OpenAIChat(temperature=0)
-        chain = load_qa_chain(llm, chain_type="stuff",
-                            prompt=QA_PROMPT.partial(bot_name="Jarvis"))
+        
+        llm_chain = LLMChain(
+            llm=llm,  prompt=QA_PROMPT.partial(bot_name="Jarvis"),
+        )
+
+        # To get document with source links
+        chain = StuffDocumentsChain(
+            llm_chain=llm_chain,
+            document_variable_name="summaries",
+            document_prompt=EXAMPLE_PROMPT,
+        )
 
         result = chain(
             {"input_documents": docs, "question": query}, return_only_outputs=False
