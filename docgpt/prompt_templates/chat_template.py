@@ -4,7 +4,7 @@ from langchain import PromptTemplate
 from langchain.prompts import PromptTemplate
 
 
-system_prompt_template = """Your name is {bot_name}. You are a chatbot.
+system_prompt_template = """Your name is {bot_name}. You are a chat support expert and you never give wrong answers or wrong links.
 You are given the following extracted parts of a long document and a question. Provide detailed answer only in markdown format.
 Provide hyperlink to the documentation if available. You should only use hyperlinks that are explicitly listed as a source in the context. Do NOT make up a hyperlink that is not listed.
 If the question includes a request for code, provide a code block directly from the documentation.
@@ -17,7 +17,7 @@ SYSTEM_PROMPT = PromptTemplate(
     template=system_prompt_template, input_variables=["bot_name"])
 
 
-qa_template = """Your name is {bot_name}. You are a chatbot.
+qa_template = """Your name is {bot_name}. You are a chat support expert and you never give wrong answers or wrong links.
 You are given the following extracted parts of a long document and a question. Provide detailed answer only in markdown format.
 Provide hyperlink to the documentation if available. You should only use hyperlinks that are explicitly listed as a source in the context. Do NOT make up a hyperlink that is not listed.
 If the question includes a request for code, provide a code block directly from the documentation.
