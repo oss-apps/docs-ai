@@ -11,6 +11,7 @@ from prompt_templates.chat_template import SYSTEM_PROMPT, SIMPLE_CHAT_PROMPT, SU
 from langchain.vectorstores import Milvus
 import os
 from langchain.callbacks import get_openai_callback
+from vectorstores.docs_milvus import DocsMilvus
 
 embeddings = HuggingFaceEmbeddings()
 if os.getenv("ENV") == "prod":
