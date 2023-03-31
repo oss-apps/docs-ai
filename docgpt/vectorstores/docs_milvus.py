@@ -8,6 +8,29 @@ from langchain.vectorstores.base import VectorStore
 class DocsMilvus:
 
     @classmethod
+    def release_collection(cls, collection_name, **kwargs):
+        try:
+            from pymilvus import (
+                Collection,
+                CollectionSchema,
+                DataType,
+                FieldSchema,
+                connections,
+            )
+            from pymilvus.orm.types import infer_dtype_bydata
+        except ImportError:
+            raise ValueError(
+                "Could not import pymilvus python package. "
+                "Please install it with `pip install pymilvus`."
+            )
+        if not connections.has_connection("default"):
+            connections.connect(**kwargs.get("connection_args", {"port": 19530}))
+
+        collection = Collection(collection_name, schema)
+        collection.release()
+
+
+    @classmethod
     def create_collection(
         cls,
         collection_name: str,

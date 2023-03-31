@@ -40,6 +40,18 @@ def get_vector_db(project_id: str):
     return vector_db
 
 
+def release_collection(project_id):
+    if os.getenv("ENV") == "prod":
+        DocsMilvus.release_collection(
+            collection_name=project_id,
+            connection_args={
+                "uri": os.getenv("MILVUS_URI"),
+                "user": os.getenv("MILVUS_USER"),
+                "password": os.getenv("MILVUS_PASSWORD"),
+                "secure": True
+            })
+
+
 
 
 def get_answer_for_query(project_id: str, query: str):
@@ -75,6 +87,7 @@ def get_answer_for_query(project_id: str, query: str):
         print("running query against Q&A chain.\n")
         answer = result["output_text"]
         tokens_used = cb.total_tokens
+        release_collection(project_id)
 
     return { "answer": answer, "tokens": tokens_used }
 
@@ -133,6 +146,7 @@ def get_answer_for_chat(project_id: str, query: str, chat_history):
         print("running query against Q&A chain.\n")
         answer = result["output_text"]
         tokens_used = cb.total_tokens
+        release_collection(project_id)
 
     return { "answer": answer, "tokens": tokens_used }
 
