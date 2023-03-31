@@ -26,7 +26,7 @@ class DocsMilvus:
         if not connections.has_connection("default"):
             connections.connect(**kwargs.get("connection_args", {"port": 19530}))
 
-        collection = Collection(collection_name, schema)
+        collection = Collection(collection_name)
         collection.release()
 
 
