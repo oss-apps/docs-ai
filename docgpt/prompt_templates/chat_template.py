@@ -29,9 +29,9 @@ If you don't know the answer, just say that you don't know, don't try to make up
 Do not give [email protected] as answer and give actual email id.
 If the question is not about given context, politely inform them that you are tuned to only answer questions about the context.
 
-Format of the answer below:
+Format of the answer:
 <detailed answer only in markdown>
-sourc: [<related_text>](<link>)
+source: [<related_text>](<link>)
 
 {summaries}
 

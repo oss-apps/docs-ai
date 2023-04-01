@@ -3,6 +3,7 @@ import { type Conversation, type Messages, type Org, type Project } from "@prism
 import { useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form";
 import { z } from "zod";
+import { Loading } from "~/components/loading/Loading"
 
 import { api } from "~/utils/api";
 import { MarkDown } from "~/components/MarkDown";
@@ -25,6 +26,10 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { question } = data as any as z.input<typeof qnaSchema>
+    await getAnswer(question)
+  };
+
+  const getAnswer = async (question: string) => {
     setLatestQuestion(question)
     try {
       reset()
@@ -36,7 +41,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
       console.log(e)
     }
     setLatestQuestion(null)
-  };
+  }
 
   useEffect(() => {
     const myDiv = chatBox.current;
@@ -47,7 +52,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
 
   return (
     <div className="h-full">
-      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem] lg:mb-10 overflow-auto border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[80vh]  lg:max-h-[45rem] mb-2 overflow-auto border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
         <div className="flex lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
           <div className="mt-1 text-xl">
             {'🤖'}
@@ -87,17 +92,25 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
           </div>
         ) : null}
       </div>
+      <div className="mb-2 flex gap-3 px-2 overflow-y-auto">
+        {project.defaultQuestion.split(',').map(q => (
+          <button onClick={() => getAnswer(q)} key={q} className="text-sm text-gray-600 bg-gray-100 rounded-md p-1 border border-gray-300">
+            {q}
+          </button>
+        ))}
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex w-full lg:border lg:border-gray-300 rounded-md p-1">
-          <textarea
-            rows={1}
-            className="w-full p-2 outline-none max-h-12 resize-none"
-            placeholder={project.defaultQuestion}
-            {...register('question', { required: 'Question is required', minLength: 3 })}></textarea>
-          <button type="submit" className="p-1 py-0.5 hover:bg-gray-100 rounded-md disabled:bg-gray-200 text-gray-500 " disabled={getPublicChatbotAnswer.isLoading}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 ">
-              <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-            </svg>
+        <div className="flex w-full lg:border lg:border-gray-300 rounded-md lg:p-1">
+          <input
+            className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
+            placeholder="Ask anything"
+            {...register('question', { required: 'Question is required', minLength: 3 })}></input>
+          <button type="submit" className="p-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500 " disabled={getPublicChatbotAnswer.isLoading}>
+            {getPublicChatbotAnswer.isLoading ? <Loading /> : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 ">
+                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+              </svg>
+            )}
           </button>
         </div>
       </form>

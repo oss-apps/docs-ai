@@ -6,9 +6,26 @@ import { getServerAuthSession } from "~/server/auth";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/AppNav/AppNav";
+import { Input, Label } from "~/components/form/input";
+import PrimaryButton from "~/components/form/button";
+import { z } from "zod";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "~/utils/api";
+import Snackbar from "~/components/SnackBar";
+import { useEffect, useState } from "react";
+
+
+const projectSchema = z.object({
+  name: z.string().min(3).max(50),
+  description: z.string().optional(),
+  defaultQuestion: z.string(),
+})
 
 
 const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+  const [showSuccess, setShowSuccess] = useState(false)
+
   const org: Org = superjson.parse(orgJson)
   const project: Project & {
     slackInstalation: {
@@ -16,6 +33,18 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
         teamName: string;
     } | null } = superjson.parse(projectJson)
 
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(projectSchema) });
+
+  const updateProject = api.project.updateProject.useMutation()
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const { name, description, defaultQuestion } = data as any as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion })
+  };
+
+  useEffect(() => {
+    setShowSuccess(updateProject.isSuccess)
+  }, [updateProject.isSuccess])
 
   return (
     <>
@@ -29,26 +58,69 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
           <div className="w-full">
             <div className="mt-10 p-5 px-10">
               <div className="max-w-5xl mx-auto">
-								<p className="text-gray-800 text-lg">Integrations</p>
-								<div className="mt-4 border-t" />
-								<div className="mt-4 flex p-4 bg-gray-100 rounded-md items-center justify-between">
-									{ project.slackInstalation ? (
-										<div>
-											Slack connected with the workspace <span className="bg-orange-100 text-orange-500 p-1 rounded">{project.slackInstalation.teamName}</span>
-										</div>
-									) : (
-										<>
-											<p>Connect slack to ask questions in your channels</p>
-											<a href={`https://slack.com/oauth/v2/authorize?client_id=5026673231779.5023868711141&scope=app_mentions:read,chat:write,commands&state=${project.id}`}>
-												<img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-											</a>
-										</>
-									)}
+                <div>
+                  <p className="text-gray-800 text-lg">Integrations</p>
+                  <div className="mt-4 border-t" />
+                  <div className="mt-4 flex p-4 bg-gray-100 rounded-md items-center justify-between">
+                    { project.slackInstalation ? (
+                      <div>
+                        Slack connected with the workspace <span className="bg-orange-100 text-orange-500 p-1 rounded">{project.slackInstalation.teamName}</span>
+                      </div>
+                    ) : (
+                      <>
+                        <p>Connect slack to ask questions in your channels</p>
+                        <a href={`https://slack.com/oauth/v2/authorize?client_id=5026673231779.5023868711141&scope=app_mentions:read,chat:write,commands&state=${project.id}`}>
+                          <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+                        </a>
+                      </>
+                    )}
+                </div>
+                <div className="mt-10">
+                  <p className="text-gray-800 text-lg">Project settings</p>
+                  <div className="mt-4 border-t" />
+                  <div className="w-1/2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex p-4 rounded-md items-center justify-between flex-col">
+                      <div className="w-full mt-4">
+                        <Label>Name</Label>
+                        <Input
+                          defaultValue={project.name} 
+                          placeholder="A good name" 
+                          {...register('name')} 
+                          error={errors.name?.message?.toString()}
+                        />
+                      </div>
+                      <div className="w-full mt-4">
+                        <Label>Question sugesstions</Label>
+                        <Input
+                          defaultValue={project.defaultQuestion} 
+                          placeholder="How to use DocsAI?, How to add project?" 
+                          {...register('defaultQuestion')}
+                          error={errors.defaultQuestion?.message?.toString()}
+                        />
+                      </div>
+                      <div className="w-full mt-4">
+                        <Label>Project description</Label>
+                        <Input
+                          defaultValue={project.description || ''} 
+                          placeholder="A nice description for project"  
+                          {...register('description')} 
+                          error={errors.description?.message?.toString()}
+                        />
+                      </div>
+                      <div className="mt-4">
+                        <PrimaryButton disabled={updateProject.isLoading} loading={updateProject.isLoading}>
+                          Update
+                        </PrimaryButton>
+                      </div>
+                    </form>
+                  </div>
+                </div>
 								</div>
               </div>
             </div>
           </div>
         </div>
+        <Snackbar isError={false}  message={'Succefully updated'} show={showSuccess} setShow={setShowSuccess} />
       </main>
     </>
   );

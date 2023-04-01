@@ -12,7 +12,7 @@ import { getHistoryForConvo } from "./docGPT";
 
 export const conversationRouter = createTRPCRouter({
   getConversations: orgMemberProcedure
-    .input(z.object({ projectId: z.string(), orgId: z.string() }))
+    .input(z.object({ projectId: z.string(), orgId: z.string(), cursor: z.string().nullish() }))
     .query(async ({ input, ctx }) => {
       const conversations = await ctx.prisma.conversation.findMany({
         where: {
@@ -21,10 +21,18 @@ export const conversationRouter = createTRPCRouter({
         orderBy: {
           id: 'desc',
         },
-        take: 10,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        take: 11,
       })
+
+      let nextCursor: string | undefined = undefined;
+      if (conversations.length > 10) {
+        const nextItem = conversations.pop()
+        nextCursor = nextItem!.id
+      }
       return {
         conversations,
+        nextCursor,
       };
     }),
   getConversationRatings: orgMemberProcedure

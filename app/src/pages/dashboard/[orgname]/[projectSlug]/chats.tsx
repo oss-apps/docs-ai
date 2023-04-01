@@ -30,9 +30,14 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
 	const router = useRouter()
   const { convoId } = router.query as { convoId: string | undefined }
 
-  const { data: convoData, isLoading: isConvoLoading } = api.conversation.getConversations.useQuery({ orgId: org.id, projectId: project.id })
+  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage } = 
+    api.conversation.getConversations.useInfiniteQuery({ 
+      orgId: org.id, projectId: project.id 
+    }, {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    })
   const { data: currentChat, isLoading } = api.conversation.getConversation.useQuery({
-    convoId: (convoId ?? convoData?.conversations[0]?.id) || '',
+    convoId: (convoId ?? convoData?.pages[0]?.conversations[0]?.id) || '',
     orgId: org.id,
     projectId: project.id
 	})
@@ -48,25 +53,30 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full h-full">
-            {convoData?.conversations.length ? (
+            {convoData?.pages[0]?.conversations.length ? (
               <div className="px-0 h-full flex">
                 <div className="w-1/3 border-r overflow-auto ">
                   <div className="text-gray-600 p-4 border-b">Chats</div>
-                  {convoData?.conversations.map((conversation) => (
+                  {convoData.pages.map(p => p?.conversations.map((conversation) => (
                     <button className="w-full" key={conversation.id} onClick={() => router.replace(`/dashboard/${org.name}/${project.slug}/chats?convoId=${conversation.id}`)}>
                       <div className="p-4 flex justify-between items-center  border-b w-full">
                         <div>
-                          <div>
+                          <div className="text-start">
                             {conversation.firstMsg}
                           </div>
                           <div className="text-sm text-gray-600 mt-2 text-start">{conversation.createdAt.toLocaleString()}</div>
                         </div>
                       </div>
                     </button>
-                  ))}
+                  )))}
+                  {hasNextPage ? (
+                    <div className="flex p-4 justify-center">
+                      <button onClick={() => fetchNextPage()} className="text-gray-700 hover:underline underline-offset-2">Load more</button>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="w-2/3 overflow-auto">
-                  <div className="flex justify-start items-center p-2">
+                  <div className="flex justify-start items-center p-2 px-4">
                     <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest answer
                     </Link>
@@ -92,7 +102,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
                   </svg>
                   <p className="text-center text-2xl text-gray-600">
-                    No chats yet!
+                    {isConvoLoading ? 'Loading...' : 'No chats yet!'}
                   </p>
                 </div>
               </div>
