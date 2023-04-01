@@ -16,6 +16,7 @@ export const MarkDown: React.FC<{ markdown: string }> = ({ markdown }) => {
         components={{ a: ({ node, ...props }) => <a {...props} href={getUrl(props.href)} target="_blank" rel="noreferrer" /> }}>
         {markdown}
       </ReactMarkdown>
+      {/* {markdown} */}
     </div>
   );
 };

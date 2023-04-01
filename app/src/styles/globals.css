@@ -18,8 +18,12 @@ html,body {
   @apply text-blue-600 font-semibold;
 }
 
+.markdown pre {
+  @apply rounded bg-orange-100 p-1 px-5
+}
+
 .markdown code {
-  @apply text-orange-700 font-mono p-0.5 rounded bg-orange-100
+  @apply  font-mono text-orange-700 bg-orange-100 rounded p-0.5
 }
 
 .markdown ul {
@@ -28,6 +32,10 @@ html,body {
 
 .markdown ol {
   @apply list-decimal list-inside m-1;
+}
+
+pre {
+  white-space: pre-wrap;
 }
 
 .bg-pattern {
