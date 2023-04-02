@@ -58,7 +58,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
             {'🤖'}
           </div>
           <div className="markdown ml-4 lg:ml-10">
-            <div>Hi, I am Jarvis. How can I help you?</div>
+            <div>Hi, I am {project.botName}. How can I help you?</div>
           </div>
         </div>
         {conversation?.messages.map((m) => (
@@ -92,9 +92,9 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
           </div>
         ) : null}
       </div>
-      <div className="mb-2 flex gap-3 px-2 overflow-y-auto">
+      <div className="mb-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0">
         {project.defaultQuestion.split(',').map(q => (
-          <button onClick={() => getAnswer(q)} key={q} className="text-sm text-gray-600 bg-gray-100 rounded-md p-1 border border-gray-300">
+          <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md p-0.5 px-1 border border-gray-300">
             {q}
           </button>
         ))}

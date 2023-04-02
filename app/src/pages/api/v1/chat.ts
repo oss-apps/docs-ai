@@ -19,7 +19,7 @@ const chatHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const chatHistory = convoId ? await getHistoryForConvo(convoId) : []
-    const result = await docGPT.getGPTChat(projectId, question, chatHistory) as { answer: string, tokens: number };
+    const result = await docGPT.getGPTChat(projectId, question, chatHistory, project.botName) as { answer: string, tokens: number };
     const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId)
     
     return res.status(200).send({

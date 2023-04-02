@@ -70,7 +70,7 @@ def query():
 def chat():
     req_data = request.get_json()
     result = get_answer_for_chat(
-        req_data.get('projectId'), req_data.get('question'), req_data.get('chatHistory'))
+        req_data.get('projectId'), req_data.get('question'), req_data.get('chatHistory'), req_data.get('botName'))
     return result
 
 

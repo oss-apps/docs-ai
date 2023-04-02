@@ -20,6 +20,7 @@ const projectSchema = z.object({
   name: z.string().min(3).max(50),
   description: z.string().optional(),
   defaultQuestion: z.string(),
+  botName: z.string(),
 })
 
 
@@ -38,8 +39,8 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   const updateProject = api.project.updateProject.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { name, description, defaultQuestion } = data as any as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion })
+    const { name, description, defaultQuestion, botName } = data as any as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion, botName })
   };
 
   useEffect(() => {
@@ -86,6 +87,15 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                           defaultValue={project.name} 
                           placeholder="A good name" 
                           {...register('name')} 
+                          error={errors.name?.message?.toString()}
+                        />
+                      </div>
+                      <div className="w-full mt-4">
+                        <Label>Bot Name</Label>
+                        <Input
+                          defaultValue={project.botName} 
+                          placeholder="Jarvis" 
+                          {...register('botName')} 
                           error={errors.name?.message?.toString()}
                         />
                       </div>

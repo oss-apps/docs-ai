@@ -33,7 +33,14 @@ export const projectRouter = createTRPCRouter({
       }
     }),
   updateProject: orgMemberProcedure
-    .input(z.object({ name: z.string(), description: z.string().optional(), defaultQuestion: z.string().optional(), orgId: z.string(), projectId: z.string() }))
+    .input(z.object({ 
+      name: z.string(),
+      description: z.string().optional(),
+      defaultQuestion: z.string().optional(),
+      orgId: z.string(),
+      projectId: z.string(),
+      botName: z.string(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         const result = await ctx.prisma.project.update({
@@ -43,7 +50,8 @@ export const projectRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
-            defaultQuestion: input.defaultQuestion
+            defaultQuestion: input.defaultQuestion,
+            botName: input.botName,
           }
         })
         return {

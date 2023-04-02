@@ -10,11 +10,14 @@ import { QnA } from "~/containers/QnA/QnA";
 import { ChatBox } from "~/containers/Chat/Chat";
 import PrimaryButton, { SmallButton } from "~/components/form/button";
 import { env } from "~/env.mjs";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { MarkDown } from "~/components/MarkDown";
 
 
 const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const [shareText, setShareText] = useState('Share')
+  const [isEmbedOpen, setIsEmbedOpen] = useState(false)
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
@@ -26,6 +29,17 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
       setShareText('Share')
     }, 2000)
   }
+
+  function closeModal() {
+    setIsEmbedOpen(false)
+  }
+
+  function openModal() {
+    setIsEmbedOpen(true)
+  }
+
+  const installMsg = "```\nyarn add @docsai/chat-sdk \n```\nor\n```\nnpm install @docsai/chat-sdk\n```"
+  const initialiseMsg = `\`\`\`\nimport { initDocsAI } from \"@docsai/chat-sdk\";\n\n// Second argument will be the primary color of the chat widget\ninitDocsAI(\"${project.id}\", \"#000\");\n`
 
   return (
     <>
@@ -40,6 +54,9 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className="mt-5 p-5 px-10">
               <div className="max-w-5xl mx-auto">
                 <div className="flex justify-end">
+                  <SmallButton onClick={openModal} className="mb-5 w-20 mr-5">
+                    Embed
+                  </SmallButton>
                   <SmallButton onClick={onShareClick} className="mb-5 w-20">
                     {shareText}
                   </SmallButton>
@@ -49,6 +66,66 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             </div>
           </div>
         </div>
+        <Transition appear show={isEmbedOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
+                  >
+                    Install SDK
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <MarkDown markdown={installMsg} />
+                  </div>
+
+                  <div className="mt-5 text-lg font-medium leading-6 text-gray-900">
+                    <p>Initialise SDK</p>
+                  </div>
+
+                  <div>
+                    <MarkDown markdown={initialiseMsg} />
+                  </div>
+
+
+                  <div className="mt-4 mx-auto">
+                    <PrimaryButton
+                      type="button"
+                      onClick={closeModal}
+                      className="mx-auto"
+                    >
+                      Done
+                    </PrimaryButton>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
       </main>
     </>
   );

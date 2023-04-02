@@ -40,7 +40,7 @@ export const docGPTRouter = createTRPCRouter({
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
-      const result = await docGPT.getGPTChat(input.projectId, input.question, chatHistory) as { answer: string, tokens: number };
+      const result = await docGPT.getGPTChat(input.projectId, input.question, chatHistory, project.botName) as { answer: string, tokens: number };
       const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
       return {
         conversation: convo,

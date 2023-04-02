@@ -18,14 +18,14 @@ export async function getGPTAnswer(projectId: string, question: string) {
 return response.json()
 }
 
-export async function getGPTChat(projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>) {
+export async function getGPTChat(projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string}>, botName: string) {
   const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${env.DOC_GPT_SECRET}`,
     },
-    body: JSON.stringify({  projectId, question, chatHistory }),
+    body: JSON.stringify({  projectId, question, chatHistory, botName }),
   })
 
   return response.json()

@@ -17,9 +17,6 @@ embeddings = HuggingFaceEmbeddings()
 if os.getenv("ENV") == "prod":
     embeddings = OpenAIEmbeddings()
 
-prefix_messages = [
-    {"role": "system", "content": SYSTEM_PROMPT.partial(bot_name="Jarvis").format()}]
-
 def get_vector_db(project_id: str):
     print(project_id)
     vector_db = NotImplemented
@@ -108,7 +105,8 @@ def get_standalone_question(chat_history, question):
     return new_question
 
 
-def get_answer_for_chat(project_id: str, query: str, chat_history):
+def get_answer_for_chat(project_id: str, query: str, chat_history, bot_name: str):
+    prefix_messages = [{"role": "system", "content": SYSTEM_PROMPT.partial(bot_name=bot_name).format()}]
     with get_openai_callback() as cb:
         consolidated_question = get_standalone_question(chat_history, query)
         print(project_id)
