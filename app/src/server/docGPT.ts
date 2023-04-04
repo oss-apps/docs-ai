@@ -12,40 +12,25 @@ export async function getGPTAnswer(projectId: string, question: string) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${env.DOC_GPT_SECRET}`,
     },
-    body: JSON.stringify({  projectId, question }),
+    body: JSON.stringify({ projectId, question }),
   })
 
-return response.json()
+  return response.json()
 }
 
-export async function getGPTChat(projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string}>, botName: string) {
+export async function getGPTChat(projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string) {
   const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${env.DOC_GPT_SECRET}`,
     },
-    body: JSON.stringify({  projectId, question, chatHistory, botName }),
+    body: JSON.stringify({ projectId, question, chatHistory, botName }),
   })
 
   return response.json()
 }
 
-
-export async function indexUrlDocument(url: string, type: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
-
-  console.log(`Fetching ${env.DOC_GPT_SERVICE_URL}/index_url_document`)
-  const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/index_url_document`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${env.DOC_GPT_SECRET}`,
-    },
-    body: JSON.stringify({ url, type, projectId, documentId, webhookUrl, loadAllPath, skipPaths }),
-  })
-  
-  return response.json()
-}
 
 export async function indexTextDocument(content: string, title: string, projectId: string, documentId: string) {
   const response = await fetch(`${env.DOC_GPT_SERVICE_URL}/index_text`, {
@@ -56,7 +41,7 @@ export async function indexTextDocument(content: string, title: string, projectI
     },
     body: JSON.stringify({ content, title, projectId, documentId, webhookUrl }),
   })
-  
+
   return response.json()
 }
 

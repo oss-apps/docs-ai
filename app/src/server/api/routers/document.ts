@@ -1,18 +1,19 @@
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import {
   createTRPCRouter,
   orgMemberProcedure,
 } from "~/server/api/trpc";
-import { indexTextDocument, indexUrlDocument } from "~/server/docGPT";
+import { indexTextDocument } from "~/server/docGPT";
+import * as docgpt from '~/server/docgpt/index'
 
 
 
 export const documentRouter = createTRPCRouter({
   createUrlDocument: orgMemberProcedure
-    .input(z.object({ 
-      src: z.string(), projectId: z.string(), orgId: z.string(), loadAllPath: z.boolean(), type: z.string().optional(), skipPaths: z.string().optional() 
+    .input(z.object({
+      src: z.string(), projectId: z.string(), orgId: z.string(), loadAllPath: z.boolean(), type: z.string().optional(), skipPaths: z.string().optional()
     }))
     .mutation(async ({ input, ctx }) => {
       const type = !input.type ? 'documentation' : 'gitbook'
@@ -28,7 +29,8 @@ export const documentRouter = createTRPCRouter({
           }
         }
       })
-      await indexUrlDocument(input.src, type, input.projectId, result.id, input.loadAllPath, input.skipPaths)
+
+      docgpt.indexUrlDocument(input.src, type, input.projectId, result.id, input.loadAllPath, input.skipPaths).then(console.log).catch(console.error)
 
       return {
         document: result,
@@ -61,14 +63,13 @@ export const documentRouter = createTRPCRouter({
 
       if (document) {
         const details = document.details as Prisma.JsonObject
-  
+
         if (document?.documentType === 'URL') {
-          await indexUrlDocument(document.src, details.type?.toString() || 'documentation', input.projectId, document.id, !!details.loadAllPath)
+          docgpt.indexUrlDocument(document.src, details.type?.toString() || 'documentation', input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString()).then(console.log).catch(console.error)
         } else if (document?.documentType === 'TEXT') {
           await indexTextDocument(document.src, document?.title || '', input.projectId, document.id)
         }
       }
-
 
       return {
         document,

@@ -26,12 +26,20 @@ const config = {
   images: {
     remotePatterns: [
       {
-          protocol: 'https',
-          hostname: '**',
-          port: '',
-          pathname: '**',
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
       },
-  ],
+    ],
+  },
+  webpack: (config, { isServer }) => {
+    config.experiments = {
+      asyncWebAssembly: true,
+      layers: true,
+    };
+    return config
   }
 };
+
 export default config;
