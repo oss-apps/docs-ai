@@ -15,9 +15,13 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
-  const { data, isLoading } = api.document.getDocuments.useQuery({ orgId: org.id, projectId: project.id })
-
+  const { data, isLoading, refetch } = api.document.getDocuments.useQuery({ orgId: org.id, projectId: project.id })
   const retry = api.document.reIndexDocument.useMutation()
+
+  const onRetry = async (documentId: string) => {
+    await retry.mutateAsync({ orgId: org.id, projectId: project.id, documentId })
+    await refetch()
+  }
 
   return (
     <>
@@ -60,7 +64,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                     <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2">Failed</div>
                                     <SmallButton
                                       className="ml-2"
-                                      onClick={() => retry.mutate({ orgId: org.id, projectId: project.id, documentId: document.id })}>
+                                      onClick={() => onRetry(document.id)}>
                                       Retry
                                     </SmallButton>
                                   </div>

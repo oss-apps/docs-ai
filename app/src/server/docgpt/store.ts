@@ -8,7 +8,7 @@ import { env } from "~/env.mjs";
 
 const client = new PineconeClient()
 
-export const getIndex = async () => {
+export const getVectorIndex = async () => {
   await client.init({
     apiKey: env.PINECONE_API_KEY,
     environment: env.PINECONE_ENVIRONMENT,
@@ -18,8 +18,7 @@ export const getIndex = async () => {
 }
 
 export const loadDocumentsToDb = async (projectId: string, documentId: string, docType: DocumentType, docs: Array<Document>) => {
-  const pineconeIndex = await getIndex()
-
+  const pineconeIndex = await getVectorIndex()
   const documents = docs.map(d => new Document({
     pageContent: d.pageContent, metadata: { ...d.metadata, projectId, documentId, type: docType }
   }))
@@ -30,17 +29,16 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
   })
 
   const splitDocuments = await splitter.splitDocuments(documents)
-
-  await PineconeStore.fromDocuments(splitDocuments, new OpenAIEmbeddings(), { pineconeIndex })
+  await PineconeStore.fromDocuments(splitDocuments, new OpenAIEmbeddings(), { pineconeIndex, namespace: projectId })
 }
 
 
-export const getVectorDB = async () => {
-  const pineconeIndex = await getIndex()
+export const getVectorDB = async (projectId: string) => {
+  const pineconeIndex = await getVectorIndex()
 
   const vectorStore = await PineconeStore.fromExistingIndex(
     new OpenAIEmbeddings(),
-    { pineconeIndex }
+    { pineconeIndex, namespace: projectId }
   );
 
   return vectorStore

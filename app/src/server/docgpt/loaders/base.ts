@@ -21,7 +21,6 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   }
 
   public async load(): Promise<Document[]> {
-    console.log('here', this.webPath)
     const $ = await this.scrape();
 
     if (this.shouldLoadAllPaths === true) {

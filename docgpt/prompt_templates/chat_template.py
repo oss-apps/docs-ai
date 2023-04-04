@@ -80,4 +80,4 @@ Give me the summary and sentiment for this conversation.
 SUMMARY_EXTRACTION_PROMPT = PromptTemplate(
     template=summary_extraction_template, input_variables=[
         "chat_history", "result"]
-).partial(result="{ \"SUMMARY\": \"User asked about docsAI and AI answered on how it can be used to answer questions about documents.\", \"SENTIMENT\": \"POSITIVE\"}")
+).partial(result="{ \"summary\": \"User asked about docsAI and AI answered on how it can be used to answer questions about documents.\", \"sentiment\": \"POSITIVE\"}")

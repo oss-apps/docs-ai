@@ -22,3 +22,31 @@ Answer only in Markdown:
 `
 
 export const SIMPLE_CHAT_PROMPT = HumanMessagePromptTemplate.fromTemplate(SIMPLE_CHAT_TEMPLATE)
+
+
+const CONDENSE_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
+
+Chat History:
+{chat_history}
+Follow Up Input: {question}
+Standalone question:`
+
+export const CONDENSE_PROMPT = HumanMessagePromptTemplate.fromTemplate(CONDENSE_TEMPLATE)
+
+
+const SUMMARY_EXTRACTION_TEMPLATE = `
+You are AI assistant who can summarize the conversation and give a user sentiment as POSITIVE. NEGATIVE, NEUTRAL in Json format
+
+Example conversation:
+User: Hi how docAI works?
+AI: docAI is a tool that can help you to answer questions about your documents.
+User: That's helpful. Thanks.
+
+Your answer should be: { "summary": "User asked about docsAI and AI answered on how it can be used to answer questions about documents.", "sentiment": "POSITIVE"}
+END OF EXAMPLE
+
+Give me the summary and sentiment for this conversation.
+{chat_history}
+`
+
+export const SUMMARY_PROMPT = HumanMessagePromptTemplate.fromTemplate(SUMMARY_EXTRACTION_TEMPLATE)

@@ -20,8 +20,6 @@ const verifySlackMessage = (timestamp: number, reqBody: string, signature: strin
 	if (signature.length !== data.length) return false
 
 	if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(data))) return false
-
-	console.log('Verified message')
 	return true
 }
 
@@ -44,12 +42,12 @@ const handleEvent = async (event: any) => {
 		const installation = await getInstallation(event.team)
 		if (installation) {
 			const text = event.text.replace(`<@${installation?.botUserId}>`, '')
-	
+
 			const web = new WebClient(installation.accessToken);
 
-			const { answer } = await getAnswerFromProject(installation.projectId, text)
+			const { answer } = await getAnswerFromProject(installation.projectId, text, installation.project.botName)
 
-			web.chat.postMessage({ 
+			web.chat.postMessage({
 				blocks: [{
 					type: 'section',
 					text: {
@@ -57,7 +55,7 @@ const handleEvent = async (event: any) => {
 						text: slackify(answer),
 					}
 				}],
-				channel: event.channel, 
+				channel: event.channel,
 			})
 		}
 	}
@@ -68,8 +66,8 @@ const slackHandler = (req: NextApiRequest, res: NextApiResponse) => {
 	const timestamp = Number(req.headers['x-slack-request-timestamp'])
 	const requestBody = JSON.stringify(req.body)
 
-	if (!verifySlackMessage(timestamp, requestBody, slackSignature?.toString() || '')) 
-		return res.status(401).send({ message: 'unauthourised request'})
+	if (!verifySlackMessage(timestamp, requestBody, slackSignature?.toString() || ''))
+		return res.status(401).send({ message: 'unauthourised request' })
 
 	if (req.body.type === 'url_verification') {
 		return res.status(200).send({ challenge: req.body.challenge })
@@ -79,7 +77,7 @@ const slackHandler = (req: NextApiRequest, res: NextApiResponse) => {
 		if (req.body.event) handleEvent(req.body.event)
 	}
 
-  res.status(200).send({ message: 'success' })
+	res.status(200).send({ message: 'success' })
 };
 
 export default slackHandler;

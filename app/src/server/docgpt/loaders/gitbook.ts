@@ -8,12 +8,11 @@ import { WebBaseLoader, WebBaseLoaderParams } from "./base";
 
 export class GitbookLoader extends WebBaseLoader {
 
-  constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
+  constructor(webPath: string, params: WebBaseLoaderParams = {}) {
     super(webPath, params);
   }
 
   public async load(): Promise<Document[]> {
-    console.log('here gitbook', this.webPath)
     const $ = await this.scrape();
 
     if (this.shouldLoadAllPaths === true) {
@@ -47,8 +46,6 @@ export class GitbookLoader extends WebBaseLoader {
       .toArray()
       .map((element) => $(element).attr("href"))
       .filter((text) => text && text[0] === "/");
-
-    console.log(`Found ${relative_paths.length} paths.`, relative_paths);
 
     const paths = this.removeDuplicates(relative_paths)
 
