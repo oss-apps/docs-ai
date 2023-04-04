@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type Org, type Project } from "@prisma/client";
 import { useState } from "react";
 import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { z } from "zod";
 import PrimaryButton from "~/components/form/button";
 import { Input, Label } from "~/components/form/input";

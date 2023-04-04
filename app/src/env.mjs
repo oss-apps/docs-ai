@@ -26,6 +26,10 @@ const server = z.object({
   SLACK_SIGINING_SECRET: z.string(),
   SLACK_CLIENT_ID: z.string(),
   SLACK_CLIENT_SECRET: z.string(),
+  OPENAI_API_KEY: z.string(),
+  PINECONE_API_KEY: z.string(),
+  PINECONE_ENVIRONMENT: z.string(),
+  PINECONE_INDEX: z.string(),
 });
 
 /**
@@ -49,12 +53,15 @@ const processEnv = {
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   DOC_GPT_SECRET: process.env.DOC_GPT_SECRET,
   DOC_GPT_SERVICE_URL: process.env.DOC_GPT_SERVICE_URL,
   SLACK_SIGINING_SECRET: process.env.SLACK_SIGINING_SECRET,
   SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
   SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  PINECONE_API_KEY: process.env.PINECONE_API_KEY,
+  PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
+  PINECONE_INDEX: process.env.PINECONE_INDEX,
 };
 
 // Don't touch the part below

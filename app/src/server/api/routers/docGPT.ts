@@ -1,4 +1,4 @@
-import { Conversation, ConvoRating } from "@prisma/client";
+import { type Conversation, ConvoRating } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -8,14 +8,16 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
-import * as docGPT from "~/server/docGPT";
+// import * as docGPT from "~/server/docGPT";
+import * as docgpt from "~/server/docgpt/index";
 
 export const docGPTRouter = createTRPCRouter({
   getAnswer: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), saveConvo: z.boolean().optional(), convoId: z.string().optional() }))
-    .query(async ({ input }) => {
-      const result = await docGPT.getGPTAnswer(input.projectId, input.question) as { answer: string, tokens: number };
-      
+    .query(async ({ input, ctx }) => {
+      const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
+      const result = await docgpt.getChat(input.projectId, input.question, [], project?.botName || '');
+
       const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId) : null
 
       return {
@@ -30,7 +32,7 @@ export const docGPTRouter = createTRPCRouter({
       if (!project || !project.public) {
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
-      return await getAnswerFromProject(input.projectId, input.question, input.convoId)
+      return await getAnswerFromProject(input.projectId, input.question, project.botName, input.convoId)
     }),
   getPublicChatbotAnswer: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), convoId: z.string().optional() }))
@@ -40,7 +42,7 @@ export const docGPTRouter = createTRPCRouter({
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
-      const result = await docGPT.getGPTChat(input.projectId, input.question, chatHistory, project.botName) as { answer: string, tokens: number };
+      const result = await docgpt.getChat(input.projectId, input.question, chatHistory, project.botName)
       const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
       return {
         conversation: convo,
@@ -48,9 +50,9 @@ export const docGPTRouter = createTRPCRouter({
     }),
 });
 
-export const getAnswerFromProject = async (projectId: string, question: string, convoId?: string) => {
-  const result = await docGPT.getGPTAnswer(projectId, question) as { answer: string, tokens: number };
-      
+export const getAnswerFromProject = async (projectId: string, question: string, botName: string, convoId?: string) => {
+  const result = await docgpt.getChat(projectId, question, [], botName) as { answer: string, tokens: number };
+
   const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId)
 
   return {
@@ -118,7 +120,7 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
     }
   })
 
-  return await prisma.conversation.findUnique({ where: { id: conversation.id }, include: { messages: true }})
+  return await prisma.conversation.findUnique({ where: { id: conversation.id }, include: { messages: true } })
 }
 
 export const getHistoryForConvo = async (convoId: string) => {

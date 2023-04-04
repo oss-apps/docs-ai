@@ -15,9 +15,13 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
-  const { data, isLoading } = api.document.getDocuments.useQuery({ orgId: org.id, projectId: project.id })
-
+  const { data, isLoading, refetch } = api.document.getDocuments.useQuery({ orgId: org.id, projectId: project.id })
   const retry = api.document.reIndexDocument.useMutation()
+
+  const onRetry = async (documentId: string) => {
+    await retry.mutateAsync({ orgId: org.id, projectId: project.id, documentId })
+    await refetch()
+  }
 
   return (
     <>
@@ -36,40 +40,41 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   <PrimaryButton>+ Add document</PrimaryButton>
                 </Link>
               </div>
-              {isLoading ? <div>Loading...</div> : 
+              {isLoading ? <div>Loading...</div> :
                 data?.documents?.length === 0 ? (
-                    <div className="mt-4 border-t">
-                      <p className="text-center mt-10">No documents added yet!</p>
-                    </div>
-                  ) : (
-                    <div className="border mt-4  rounded-md">
-                      <ul>
-                        {data?.documents.map((document) => (
-                          <li key={document.id} className="p-5 flex justify-between items-center border-b last:border-none">
-                            <div>
-                              <div className="font-semibold">{document.title}</div>
-                              <div className="text-sm text-gray-500 truncate max-w-2xl">{document.src}</div>
-                            </div>
-                            <div>
-                              {document.indexStatus === IndexStatus.SUCCESS ?
+                  <div className="mt-4 border-t">
+                    <p className="text-center mt-10">No documents added yet!</p>
+                  </div>
+                ) : (
+                  <div className="border mt-4  rounded-md">
+                    <ul>
+                      {data?.documents.map((document) => (
+                        <li key={document.id} className="p-5 flex justify-between items-center border-b last:border-none">
+                          <div>
+                            <div className="font-semibold">{document.title}</div>
+                            <div className="text-sm text-gray-500 truncate max-w-2xl">{document.src}</div>
+                          </div>
+                          <div>
+                            {
+                              document.indexStatus === IndexStatus.SUCCESS ?
                                 <div className="text-sm text-green-600 bg-green-200 p-0.5 rounded-md px-2">Indexed</div> :
                                 document.indexStatus === IndexStatus.INDEXING ?
-                                <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2">Indexing</div> :
-                                <div className="flex">
-                                  <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2">Failed</div>
-                                  <SmallButton
-                                    className="ml-2"
-                                    onClick={() => retry.mutate({ orgId: org.id, projectId: project.id, documentId: document.id })}>
-                                    Retry
-                                  </SmallButton>
-                                </div>
-                              }
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )
+                                  <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2">Indexing</div> :
+                                  <div className="flex">
+                                    <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2">Failed</div>
+                                    <SmallButton
+                                      className="ml-2"
+                                      onClick={() => onRetry(document.id)}>
+                                      Retry
+                                    </SmallButton>
+                                  </div>
+                            }
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
               }
             </div>
           </div>
