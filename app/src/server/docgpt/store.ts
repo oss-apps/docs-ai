@@ -25,7 +25,7 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 500,
-    chunkOverlap: 25,
+    chunkOverlap: 50,
   })
 
   const splitDocuments = await splitter.splitDocuments(documents)

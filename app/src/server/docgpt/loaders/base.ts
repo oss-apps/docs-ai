@@ -30,6 +30,9 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   }
 
   loadPath($: CheerioAPI, url?: string): Document[] {
+    $('script').remove()
+    $('styles').remove()
+
     const pageContent = $("body *")
       .contents()
       .toArray()

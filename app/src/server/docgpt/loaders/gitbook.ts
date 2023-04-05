@@ -22,11 +22,14 @@ export class GitbookLoader extends WebBaseLoader {
   }
 
   loadPath($: CheerioAPI, url?: string): Document[] {
+    $('script').remove()
+    $('styles').remove()
+
     const pageContent = $("main *")
       .contents()
       .toArray()
       .map((element) =>
-        element.type === "text" ? $(element).text().trim() : null
+        element.type === "text" ? $(element).prop('innerText')?.trim() : null
       )
       .filter((text) => text)
       .join("\n");
