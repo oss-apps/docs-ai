@@ -29,7 +29,7 @@ export class GitbookLoader extends WebBaseLoader {
       .contents()
       .toArray()
       .map((element) =>
-        element.type === "text" ? $(element).prop('innerText')?.trim() : null
+        element.type === "text" ? $(element).text().trim() : null
       )
       .filter((text) => text)
       .join("\n");
