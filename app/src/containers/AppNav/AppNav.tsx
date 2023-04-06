@@ -18,7 +18,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         <Link href="/dashboard" className="flex items-center">
           <Avatar square size={24} src={org.imageUrl} uid={org.id} />
           <span className="ml-2">
-            {org.name}
+            {org.name} / {project.name}
           </span>
         </Link>
         {/* <Avatar size={24} src={user?.image} uid={user.id} /> */}
@@ -26,12 +26,12 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
       <div className="mt-10">
         <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full">
-          <SecondaryButton className={`w-full text-left shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 w-full text-left shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100' : 'bg-white'}`}>
             Dashboard
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
-          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
             Agent
           </SecondaryButton>
         </Link>
@@ -41,17 +41,17 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </SecondaryButton>
         </Link> */}
         <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full mt-4">
-          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
             Documents
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full mt-4">
-          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
             Chats
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full mt-4">
-          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
             Settings
           </SecondaryButton>
         </Link>

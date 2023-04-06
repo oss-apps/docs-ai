@@ -4,19 +4,17 @@ import Image from "next/image";
 import Nav from "~/containers/Nav";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { User, type Org } from "@prisma/client";
+import { type User, type Org } from "@prisma/client";
 import { CreateOrg } from "~/containers/CreateOrg";
 
 
 const Dashboard: NextPage<{ user: User }> = ({ user }) => {
-  console.log(user)
-
   return (
     <div className="h-full">
       <Nav />
       <main className="p-5">
         <div className="max-w-6xl mx-auto mt-10">
-          { !user.approved ? (
+          {!user.approved ? (
             <div className="flex items-center">
               <span className="text-2xl">
                 Hello, {user.name}
@@ -24,7 +22,7 @@ const Dashboard: NextPage<{ user: User }> = ({ user }) => {
             </div>
           ) : null}
           <div className="mt-10">
-            { !user.approved ? (
+            {!user.approved ? (
               <div className="text-xl">
                 You are still on waiting list. Hang tight, we will let you in!
               </div>
@@ -32,7 +30,7 @@ const Dashboard: NextPage<{ user: User }> = ({ user }) => {
               <div className=" max-w-2xl mx-auto">
                 <CreateOrg />
               </div>
-            )  }
+            )}
           </div>
         </div>
       </main>
@@ -65,8 +63,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       id: session.user.id
     }
   })
-
-  console.log(user)
 
   if (org) {
     return {

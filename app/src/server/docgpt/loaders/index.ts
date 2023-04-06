@@ -28,8 +28,9 @@ export async function indexUrlDocument(url: string, type: string, projectId: str
 
   try {
     const docs = await loader.load()
-    console.log(docs)
     title = docs[0]?.metadata.title as string
+    console.log(docs[0])
+    return;
     await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
   } catch (e) {
     console.error(e)

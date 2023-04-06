@@ -17,6 +17,7 @@ import Snackbar from "~/components/SnackBar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import NavBack from "~/components/NavBack";
 
 
 const projectSchema = z.object({
@@ -55,9 +56,7 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
       <Nav />
       <main>
         <div className="max-w-2xl mx-auto mt-5">
-          <Link href={`/dashboard/${org.org.name}`}>
-            <button className="text-blue-500">&lt; Back</button>
-          </Link>
+          <NavBack href="/dashboard" ></NavBack>
           <p className="text-center text-4xl mt-10">
             New project
           </p>

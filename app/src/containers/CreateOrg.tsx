@@ -22,27 +22,25 @@ export const CreateOrg: React.FC = () => {
     const { name } = data as z.input<typeof orgSchema>
 
     try {
-			const result = await createOrg.mutateAsync({ name })
-			await router.push(`/dashboard/${result.org.name}`)    
-    } catch(e) {
+      const result = await createOrg.mutateAsync({ name })
+      await router.push(`/dashboard/${result.org.name}`)
+    } catch (e) {
       console.log(e)
     }
   };
 
-  console.log(errors)
-
   return (
     <div>
-			<p className="mb-10 text-center text-xl">Create organaisation</p>
-			<form onSubmit={handleSubmit(onSubmit)}>
-			<Label>Organisation name</Label>
-			<Input
-				error={errors.name?.message?.toString()}
-				placeholder="Org name"
-				{...register('name', { required: 'Org name is required' })}
-			/>
-			<PrimaryButton loading={createOrg.isLoading} disabled={createOrg.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
-			</form>
+      <p className="mb-10 text-center text-xl">Create organaisation</p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Label>Organisation name</Label>
+        <Input
+          error={errors.name?.message?.toString()}
+          placeholder="Org name"
+          {...register('name', { required: 'Org name is required' })}
+        />
+        <PrimaryButton loading={createOrg.isLoading} disabled={createOrg.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
+      </form>
     </div>
   )
 }

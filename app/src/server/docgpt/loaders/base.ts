@@ -87,9 +87,10 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     const paths = this.removeDuplicates(relative_paths)
 
     const documents: Document[] = [];
+    const basePath = new URL(this.webPath).origin
     for (const path of paths) {
       if (path && !this.isSkipped(path)) {
-        const url = this.webPath + path;
+        const url = basePath + path;
         console.log(`Fetching text from ${url}`);
         const html = await WebBaseLoader._scrape(url);
         documents.push(...this.loadPath(html, url));

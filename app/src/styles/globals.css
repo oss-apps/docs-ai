@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html,body {
-  @apply bg-white h-full;
+html,
+body {
+  @apply bg-white h-full text-gray-800;
 }
 
 #__next {
@@ -11,10 +12,10 @@ html,body {
 }
 
 .markdown {
-  @apply text-gray-900  leading-loose;
+  @apply text-gray-900 leading-loose;
 }
 
-.markdown a{
+.markdown a {
   @apply text-blue-600 font-semibold;
 }
 
@@ -23,7 +24,7 @@ html,body {
 }
 
 .markdown code {
-  @apply  font-mono text-orange-700 bg-orange-100 rounded p-0.5
+  @apply font-mono text-orange-700 bg-orange-100 rounded p-0.5
 }
 
 .markdown ul {

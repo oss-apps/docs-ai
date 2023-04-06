@@ -73,7 +73,6 @@ const slackHandler = (req: NextApiRequest, res: NextApiResponse) => {
 		return res.status(200).send({ challenge: req.body.challenge })
 	}
 	else {
-		console.log(req.body.event)
 		if (req.body.event) handleEvent(req.body.event)
 	}
 

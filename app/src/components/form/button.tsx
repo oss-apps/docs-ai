@@ -19,7 +19,7 @@ export default PrimaryButton
 export const SecondaryButton: React.FC<PrimaryButtonProps> = ({ children, className, ...rest }) => {
 
   return (
-    <button className={classNames('min-w-[120px] px-4 py-1 border border-transparent rounded-md shadow-md hover:bg-gray-100', className)} {...rest}>
+    <button className={classNames('min-w-[120px] px-4 py-1 border  rounded-md shadow-md hover:bg-gray-100', className)} {...rest}>
       {children}
     </button>
   )
