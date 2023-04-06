@@ -3,7 +3,7 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { IndexStatus, type Org, type Project } from "@prisma/client";
+import { DocumentType, IndexStatus, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import PrimaryButton, { SmallButton } from "~/components/form/button";
 import AppNav from "~/containers/AppNav/AppNav";
@@ -52,7 +52,13 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                         <li key={document.id} className="p-5 flex justify-between items-center border-b last:border-none">
                           <div>
                             <div className="font-semibold">{document.title}</div>
-                            <div className="text-sm text-gray-500 truncate max-w-2xl">{document.src}</div>
+                            <div className="text-sm text-gray-500 truncate max-w-2xl">
+                              {document.documentType === DocumentType.URL ?
+                                <a href={document.src} className="hover:underline underline-offset-1" target="_blank" rel="noreferrer">
+                                  {document.src}
+                                </a> :
+                                document.src}
+                            </div>
                           </div>
                           <div>
                             {

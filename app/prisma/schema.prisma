@@ -89,20 +89,20 @@ model OrgUser {
 }
 
 model Project {
-    id               String         @id @default(cuid())
+    id               String             @id @default(cuid())
     name             String
     slug             String
-    description      String?        @db.Text
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
+    description      String?            @db.Text
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
     orgId            String
-    initialised      Boolean        @default(false)
-    public           Boolean        @default(true)
-    botName          String         @default("Jarvis")
-    defaultQuestion  String         @default("How to use Jarvis?") @db.Text
-    enableSummary    Boolean        @default(true)
-    org              Org            @relation(fields: [orgId], references: [id], onDelete: Cascade)
-    tokensUsed       Int            @default(0)
+    initialised      Boolean            @default(false)
+    public           Boolean            @default(true)
+    botName          String             @default("Jarvis")
+    defaultQuestion  String             @default("How to use Jarvis?") @db.Text
+    enableSummary    Boolean            @default(true)
+    org              Org                @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    tokensUsed       Int                @default(0)
     documents        Document[]
     Conversation     Conversation[]
     slackInstalation SlackInstallation?
@@ -173,11 +173,11 @@ model Messages {
 }
 
 model SlackInstallation {
-    id           String    @id @default(cuid())
-    projectId    String    @unique()
-    accessToken  String    @db.Text
-    teamId       String    
-    teamName     String
-    botUserId    String
-    project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    id          String  @id @default(cuid())
+    projectId   String  @unique()
+    accessToken String  @db.Text
+    teamId      String
+    teamName    String
+    botUserId   String
+    project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

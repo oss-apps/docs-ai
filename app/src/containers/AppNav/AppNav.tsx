@@ -17,7 +17,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
       <div className="flex justify-between items-center">
         <Link href="/dashboard" className="flex items-center">
           <Avatar square size={24} src={org.imageUrl} uid={org.id} />
-          <span className="ml-2">
+          <span className="text-sm ml-2  w-36 whitespace-nowrap text-ellipsis overflow-hidden">
             {org.name} / {project.name}
           </span>
         </Link>
