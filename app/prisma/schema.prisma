@@ -169,6 +169,7 @@ model Messages {
     message String       @db.Text
     user    MessageUser
     convoId String
+    sources String?      @db.Text
     convo   Conversation @relation(fields: [convoId], references: [id], onDelete: Cascade)
 }
 

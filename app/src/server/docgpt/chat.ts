@@ -2,12 +2,11 @@
 import { type ConvoRating, MessageUser } from "@prisma/client"
 import { getVectorDB } from "./store"
 import { ChatOpenAI } from "langchain/chat_models";
-import { SYSTEM_PROMPT, SIMPLE_CHAT_PROMPT, CONDENSE_PROMPT, SUMMARY_PROMPT } from "./templates";
+import { SIMPLE_CHAT_PROMPT, CONDENSE_PROMPT, SUMMARY_PROMPT } from "./templates";
 import { StuffDocumentsChain } from "./chains/combineDocumentChain";
 import { Tiktoken } from "@dqbd/tiktoken/lite";
 import cl100k_base from "@dqbd/tiktoken/encoders/cl100k_base.json";
-import { CallbackManager } from "langchain/callbacks";
-import { AIChatMessage, HumanChatMessage, SystemChatMessage } from "langchain/schema";
+import { AIChatMessage, HumanChatMessage } from "langchain/schema";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -48,6 +47,8 @@ export const getChat = async (projectId: string, question: string, chatHistory: 
 
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })
 
+  documents.map(d => console.log(d.pageContent))
+
   const history = chatHistory.map(({ role, content }) => {
     if (role === MessageUser.user) {
       return new HumanChatMessage(content);
@@ -68,13 +69,17 @@ export const getChat = async (projectId: string, question: string, chatHistory: 
   const chain = new StuffDocumentsChain({ documentVariableName: 'summaries' });
   const { summaries } = await chain.call({ input_documents: documents, question: stdQuestion }) as { summaries: string }
 
-  const systemPrompt = (await SYSTEM_PROMPT.format({ bot_name: botName })).text;
-  const questionPrompt = (await SIMPLE_CHAT_PROMPT.format({ question: stdQuestion, summaries })).text;
+  const questionPrompt = (await SIMPLE_CHAT_PROMPT.format({ question: stdQuestion, summaries, bot_name: botName })).text;
 
-  const result = await chat.call([new SystemChatMessage(systemPrompt), ...history, new HumanChatMessage(questionPrompt)])
-  const { inputTokens, outputTokens } = getTokens(systemPrompt, questionPrompt, result.text);
+  const result = await chat.call([...history, new HumanChatMessage(questionPrompt)])
+  const { inputTokens, outputTokens } = getTokens('', questionPrompt, result.text);
 
-  return { tokens: inputTokens + outputTokens + stdTokens, answer: result.text }
+  const sources = documents.reduce((acc, d) => {
+    acc[d.metadata.source as string] = true
+    return acc
+  }, {} as Record<string, boolean>)
+
+  return { tokens: inputTokens + outputTokens + stdTokens, answer: result.text, sources: Object.keys(sources).join(',') }
 }
 
 

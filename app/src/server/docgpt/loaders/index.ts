@@ -2,7 +2,6 @@ import { Document } from "langchain/document"
 import { WebBaseLoader } from "./base"
 import { GitbookLoader } from "./gitbook"
 import { IndexStatus, DocumentType } from "@prisma/client"
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"
 import { loadDocumentsToDb } from "../store"
 import { prisma } from "~/server/db"
 

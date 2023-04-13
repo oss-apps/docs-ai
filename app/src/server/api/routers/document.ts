@@ -7,6 +7,7 @@ import {
 } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import * as docgpt from '~/server/docgpt/index'
+import { deleteDocumentVector } from "~/server/docgpt/store";
 
 
 
@@ -81,6 +82,10 @@ export const documentRouter = createTRPCRouter({
           }
         })
 
+        console.log('Deleting document')
+
+        await deleteDocumentVector(input.projectId, input.documentId)
+
         if (document?.documentType === 'URL') {
           docgpt.indexUrlDocument(document.src, details.type?.toString() || 'documentation', input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString())
             .then(console.log)
@@ -95,6 +100,13 @@ export const documentRouter = createTRPCRouter({
       return {
         document,
       };
+    }),
+
+  deleteDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), documentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await deleteDocumentVector(input.projectId, input.documentId)
+      await ctx.prisma.document.delete({ where: { id: input.documentId } })
     }),
 
 

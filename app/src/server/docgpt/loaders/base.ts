@@ -2,6 +2,7 @@
 import type { CheerioAPI } from "cheerio";
 import { Document } from "langchain/document"
 import { CheerioWebBaseLoader } from "langchain/document_loaders";
+import { render } from './cheerioToText'
 
 export interface WebBaseLoaderParams {
   shouldLoadAllPaths?: boolean
@@ -33,14 +34,9 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     $('script').remove()
     $('styles').remove()
 
-    const pageContent = $("body *")
-      .contents()
-      .toArray()
-      .map((element) =>
-        element.type === "text" ? $(element).text().trim() : null
-      )
-      .filter((text) => text)
-      .join("\n");
+    const pageContent = $("body main")[0] ? render($("body main")[0], true) : render($("body"), true)
+
+    console.log(pageContent)
 
     const title = $("html h1").first().text().trim();
 

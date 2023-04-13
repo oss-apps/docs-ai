@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MarkDown } from "~/components/MarkDown";
+import { getLinkDirectory } from "~/utils/link";
 
 const Rating: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
@@ -27,12 +28,12 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
-	const router = useRouter()
+  const router = useRouter()
   const { convoId } = router.query as { convoId: string | undefined }
 
-  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage } = 
-    api.conversation.getConversations.useInfiniteQuery({ 
-      orgId: org.id, projectId: project.id 
+  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage } =
+    api.conversation.getConversations.useInfiniteQuery({
+      orgId: org.id, projectId: project.id
     }, {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     })
@@ -40,7 +41,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
     convoId: (convoId ?? convoData?.pages[0]?.conversations[0]?.id) || '',
     orgId: org.id,
     projectId: project.id
-	})
+  })
 
 
   return (
@@ -75,7 +76,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   ) : null}
                 </div>
-                <div className="w-2/3 overflow-auto">
+                <div className="w-2/3 overflow-auto pb-5">
                   <div className="flex justify-start items-center p-2 px-4">
                     <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest answer
@@ -89,6 +90,23 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                         </div>
                         <div className="ml-10">
                           <MarkDown markdown={m.message} />
+                          {m.sources ? (
+                            <div className="pt-4">
+                              <div className="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-green-500">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                </svg>
+                                <span>Sources: </span>
+                              </div>
+                              <div className="flex gap-3 mt-1">
+                                {m.sources?.split(',').map(s =>
+                                  <a className="border border-gray-300 hover:bg-gray-100 shrink-0 flex-wrap text-sm p-0.5 rounded-md px-2" href={s} target="_blank" key={s} rel="noreferrer">
+                                    {getLinkDirectory(s)}
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ) : null}
                         </div>
                       </div>))
                   }
@@ -157,11 +175,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  const props = { 
-    props: { 
+  const props = {
+    props: {
       user: session.user,
       orgJson: superjson.stringify(org.org),
-      projectJson: superjson.stringify(org.org.projects[0]) 
+      projectJson: superjson.stringify(org.org.projects[0])
     }
   }
   return props

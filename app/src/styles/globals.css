@@ -12,7 +12,7 @@ body {
 }
 
 .markdown {
-  @apply text-gray-900 leading-loose;
+  @apply text-gray-800 leading-8;
 }
 
 .markdown a {
@@ -28,11 +28,15 @@ body {
 }
 
 .markdown ul {
-  @apply list-disc list-inside m-1;
+  @apply list-disc list-outside m-1 ml-5;
 }
 
 .markdown ol {
-  @apply list-decimal list-inside m-1;
+  @apply list-decimal list-outside m-1 ml-5;
+}
+
+.markdown img {
+  @apply rounded-lg border border-gray-300 m-2
 }
 
 pre {

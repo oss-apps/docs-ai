@@ -18,7 +18,7 @@ export const docGPTRouter = createTRPCRouter({
       const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
       const result = await docgpt.getChat(input.projectId, input.question, [], project?.botName || '');
 
-      const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId) : null
+      const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId, result.sources) : null
 
       return {
         ...result,
@@ -43,7 +43,7 @@ export const docGPTRouter = createTRPCRouter({
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
       const result = await docgpt.getChat(input.projectId, input.question, chatHistory, project.botName)
-      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId)
+      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId, result.sources)
       return {
         conversation: convo,
       };
@@ -51,9 +51,9 @@ export const docGPTRouter = createTRPCRouter({
 });
 
 export const getAnswerFromProject = async (projectId: string, question: string, botName: string, convoId?: string) => {
-  const result = await docgpt.getChat(projectId, question, [], botName) as { answer: string, tokens: number };
+  const result = await docgpt.getChat(projectId, question, [], botName)
 
-  const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId)
+  const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId, result.sources)
 
   return {
     ...result,
@@ -61,8 +61,8 @@ export const getAnswerFromProject = async (projectId: string, question: string, 
   };
 }
 
-export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, tokens: number, convoId?: string) => {
-  let conversation: Conversation
+export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, tokens: number, convoId?: string, sources?: string) => {
+  let conversation: Conversation;
   if (convoId) {
     await prisma.messages.createMany({
       data: [{
@@ -73,6 +73,7 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
         convoId,
         user: 'assistant',
         message: answer,
+        sources,
       }]
     })
 
@@ -102,6 +103,7 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
           }, {
             user: 'assistant',
             message: answer,
+            sources,
           }]
         }
       },
