@@ -8,7 +8,7 @@ import "~/styles/globals.css";
 import Head from "next/head";
 
 if (typeof window !== "undefined") {
-  initDocsAI("clgh8iyk70003u1r664vfrtv0", "#000")
+  initDocsAI("clfp5tn2a0007mc0ub8qch4x2", "#000")
 }
 
 const MyApp: AppType<{ session: Session | null }> = ({
