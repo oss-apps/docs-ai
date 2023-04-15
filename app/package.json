@@ -15,7 +15,7 @@
     "prisma:prod": "prisma migrate deploy"
   },
   "dependencies": {
-    "@docsai/chat-sdk": "^1.0.3",
+    "@docsai/chat-sdk": "^1.0.4",
     "@dqbd/tiktoken": "^1.0.2",
     "@headlessui/react": "^1.7.12",
     "@hookform/resolvers": "^2.9.11",
