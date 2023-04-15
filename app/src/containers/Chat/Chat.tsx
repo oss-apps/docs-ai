@@ -14,7 +14,7 @@ const qnaSchema = z.object({
 })
 
 
-export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean }> = ({ org, project, isPublic }) => {
+export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean, embed?: boolean }> = ({ org, project, isPublic, embed }) => {
   const [conversation, setConversation] = useState<(Conversation & {
     messages: Messages[];
   }) | null>(null)
@@ -36,7 +36,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
     try {
       reset()
       const convo = await getPublicChatbotAnswer.mutateAsync({
-        projectId: project.id, orgId: org.id, question, convoId: getPublicChatbotAnswer.data?.conversation?.id
+        projectId: project.id, orgId: org.id, question, convoId: conversation?.id
       })
       setConversation(convo.conversation)
     } catch (e) {
@@ -52,9 +52,35 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
     }
   }, [latestQuestion, conversation])
 
+  const onClose = () => {
+    if (window.parent) {
+      window.parent.postMessage({ source: 'docsai', message: 'close' }, '*')
+    }
+  }
+
   return (
     <div className="h-full">
-      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[80vh]  lg:max-h-[45rem] mb-2 overflow-auto border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[80vh]  lg:max-h-[45rem] mb-2 overflow-auto lg:border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+        {embed ? (
+          <div className="p-2 items-center px-4 flex justify-between text-lg">
+            <p>
+              {project.botName}
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setConversation(null)} className="flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+              </button>
+              <button onClick={onClose} className="flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+            </div>
+          </div>
+        ) : null}
         <div className="flex lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
           <div className="mt-1 text-xl">
             {'🤖'}
@@ -111,7 +137,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean 
           </div>
         ) : null}
       </div>
-      <div className="mb-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0">
+      <div className="mb-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
         {project.defaultQuestion.split(',').map(q => (
           <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md p-0.5 px-1 border border-gray-300">
             {q}

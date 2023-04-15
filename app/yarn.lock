@@ -17,10 +17,10 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@docsai/chat-sdk@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@docsai/chat-sdk/-/chat-sdk-1.0.4.tgz#397bb79a2f362ff4ec7cbb6c2d8393bb6111d396"
-  integrity sha512-5KN5f0qMlxq54N8VArO13tU/Nt44xFBTqnj/bXPc5MdsYsuKO468YMFXM1Qhz6DDJanwF6YD3pB4PXn1aASz3Q==
+"@docsai/chat-sdk@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@docsai/chat-sdk/-/chat-sdk-1.0.6.tgz#875497cee038f121f3bbccb7520fac0db58664f0"
+  integrity sha512-fMEgdKqQWs1BC0t/cT9eNEMwF6kAx3wnqs3ynsnBDl2I3Jta4bG6/N3cTZiR6XoeoX3wfRIooSsoOzH0qkEqdw==
 
 "@dqbd/tiktoken@^1.0.2":
   version "1.0.2"
