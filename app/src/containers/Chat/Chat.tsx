@@ -60,7 +60,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   return (
     <div className="h-full">
-      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[80vh]  lg:max-h-[45rem] mb-2 overflow-auto lg:border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem] mb-2 overflow-auto lg:border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
         {embed ? (
           <div className="p-2 items-center px-4 flex justify-between text-lg">
             <p>
@@ -74,7 +74,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               </button>
               <button onClick={onClose} className="flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                 </svg>
               </button>
 
