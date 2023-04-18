@@ -3,7 +3,7 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import { type User } from "next-auth";
 import Head from "next/head";
 import Image from "next/image";
-import Nav from "~/containers/Nav";
+import Nav from "~/containers/Nav/Nav";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type OrgUser, type Org, type Project } from "@prisma/client";
@@ -27,7 +27,7 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
         <title>Docs AI - Dashboard</title>
         <meta name="description" content="Create chat bot with your documents in 5 minutes" />
       </Head>
-      <Nav />
+      <Nav org={org?.org} />
       <main className="h-full p-5">
         <div className="max-w-6xl mx-auto mt-10">
           {org ? (

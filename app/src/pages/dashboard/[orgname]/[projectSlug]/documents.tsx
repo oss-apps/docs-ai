@@ -6,7 +6,7 @@ import { getServerAuthSession } from "~/server/auth";
 import { type Document, DocumentType, IndexStatus, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";

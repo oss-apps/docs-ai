@@ -5,15 +5,17 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { Input, Label } from "~/components/form/input";
 import PrimaryButton from "~/components/form/button";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/utils/api";
 import Snackbar from "~/components/SnackBar";
 import { useEffect, useState } from "react";
+import { Switch } from "@headlessui/react";
+import { isAbovePro } from "~/utils/license";
 
 
 const projectSchema = z.object({
@@ -30,9 +32,12 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   const org: Org = superjson.parse(orgJson)
   const project: Project & {
     slackInstalation: {
-        id: string;
-        teamName: string;
-    } | null } = superjson.parse(projectJson)
+      id: string;
+      teamName: string;
+    } | null
+  } = superjson.parse(projectJson)
+
+  const [generateSummary, setGenerateSummary] = useState(project.generateSummary)
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(projectSchema) });
 
@@ -40,7 +45,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { name, description, defaultQuestion, botName } = data as any as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion, botName })
+    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion, botName, generateSummary })
   };
 
   useEffect(() => {
@@ -63,7 +68,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                   <p className="text-gray-800 text-lg">Integrations</p>
                   <div className="mt-4 border-t" />
                   <div className="mt-4 flex p-4 bg-gray-100 rounded-md items-center justify-between">
-                    { project.slackInstalation ? (
+                    {project.slackInstalation ? (
                       <div>
                         Slack connected with the workspace <span className="bg-orange-100 text-orange-500 p-1 rounded">{project.slackInstalation.teamName}</span>
                       </div>
@@ -75,62 +80,79 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                         </a>
                       </>
                     )}
-                </div>
-                <div className="mt-10">
-                  <p className="text-gray-800 text-lg">Project settings</p>
-                  <div className="mt-4 border-t" />
-                  <div className="w-1/2">
-                    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex p-4 rounded-md items-center justify-between flex-col">
-                      <div className="w-full mt-4">
-                        <Label>Name</Label>
-                        <Input
-                          defaultValue={project.name} 
-                          placeholder="A good name" 
-                          {...register('name')} 
-                          error={errors.name?.message?.toString()}
-                        />
-                      </div>
-                      <div className="w-full mt-4">
-                        <Label>Bot Name</Label>
-                        <Input
-                          defaultValue={project.botName} 
-                          placeholder="Jarvis" 
-                          {...register('botName')} 
-                          error={errors.name?.message?.toString()}
-                        />
-                      </div>
-                      <div className="w-full mt-4">
-                        <Label>Question sugesstions</Label>
-                        <Input
-                          defaultValue={project.defaultQuestion} 
-                          placeholder="How to use DocsAI?, How to add project?" 
-                          {...register('defaultQuestion')}
-                          error={errors.defaultQuestion?.message?.toString()}
-                        />
-                      </div>
-                      <div className="w-full mt-4">
-                        <Label>Project description</Label>
-                        <Input
-                          defaultValue={project.description || ''} 
-                          placeholder="A nice description for project"  
-                          {...register('description')} 
-                          error={errors.description?.message?.toString()}
-                        />
-                      </div>
-                      <div className="mt-4">
-                        <PrimaryButton disabled={updateProject.isLoading} loading={updateProject.isLoading}>
-                          Update
-                        </PrimaryButton>
-                      </div>
-                    </form>
+                  </div>
+                  <div className="mt-10">
+                    <p className="text-gray-800 text-lg">Project settings</p>
+                    <div className="mt-4 border-t" />
+                    <div className="w-1/2">
+                      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 p-4 rounded-md">
+                        <div className="w-full mt-4">
+                          <Label>Name</Label>
+                          <Input
+                            defaultValue={project.name}
+                            placeholder="A good name"
+                            {...register('name')}
+                            error={errors.name?.message?.toString()}
+                          />
+                        </div>
+                        <div className="w-full mt-4">
+                          <Label>Bot Name</Label>
+                          <Input
+                            defaultValue={project.botName}
+                            placeholder="Jarvis"
+                            {...register('botName')}
+                            error={errors.name?.message?.toString()}
+                          />
+                        </div>
+                        <div className="w-full mt-4">
+                          <Label>Question sugesstions</Label>
+                          <Input
+                            defaultValue={project.defaultQuestion}
+                            placeholder="How to use DocsAI?, How to add project?"
+                            {...register('defaultQuestion')}
+                            error={errors.defaultQuestion?.message?.toString()}
+                          />
+                        </div>
+                        <div className="w-full mt-4">
+                          <Label>Project description</Label>
+                          <Input
+                            defaultValue={project.description || ''}
+                            placeholder="A nice description for project"
+                            {...register('description')}
+                            error={errors.description?.message?.toString()}
+                          />
+                        </div>
+                        <div className="flex gap-3 items-center mt-4">
+                          <Label>Generate summary</Label>
+                          <Switch
+                            className={`${generateSummary ? 'bg-blue-600' : 'bg-gray-200'
+                              } relative inline-flex h-6 w-11 items-center rounded-full`}
+                            checked={generateSummary}
+                            onChange={setGenerateSummary}
+                            disabled={!isAbovePro(org)}
+                          >
+                            <span className="sr-only">Generate summary</span>
+                            <span
+                              className={`${generateSummary ? 'translate-x-6' : 'translate-x-1'
+                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                            />
+                          </Switch>
+                          {!isAbovePro(org) ? 'You need to be at least on Pro plan' : null}
+                        </div>
+                        <div className="mt-8">
+                          <PrimaryButton className="mx-auto" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
+                            Update
+                          </PrimaryButton>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-								</div>
               </div>
             </div>
           </div>
         </div>
-        <Snackbar isError={false}  message={'Succefully updated'} show={showSuccess} setShow={setShowSuccess} />
+        <Snackbar isError={false} message={'Succefully updated'} show={showSuccess} setShow={setShowSuccess} />
       </main>
     </>
   );
@@ -164,14 +186,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             where: {
               slug: projectSlug
             },
-						include: {
-							slackInstalation: {
-								select: {
-									id: true,
-									teamName: true,
-								}
-							},
-						}
+            include: {
+              slackInstalation: {
+                select: {
+                  id: true,
+                  teamName: true,
+                }
+              },
+            }
           }
         }
       }
@@ -187,11 +209,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  const props = { props: { 
-    user: session.user,
-    orgJson: superjson.stringify(org.org),
-    projectJson: superjson.stringify(org.org.projects[0]),
-	}}
+  const props = {
+    props: {
+      user: session.user,
+      orgJson: superjson.stringify(org.org),
+      projectJson: superjson.stringify(org.org.projects[0]),
+    }
+  }
   return props
 }
 

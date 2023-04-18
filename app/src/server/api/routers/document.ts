@@ -31,7 +31,7 @@ export const documentRouter = createTRPCRouter({
         }
       })
 
-      docgpt.indexUrlDocument(input.src, type, input.projectId, result.id, input.loadAllPath, input.skipPaths)
+      docgpt.indexUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths)
         .then(console.log)
         .catch(console.error)
 
@@ -52,7 +52,7 @@ export const documentRouter = createTRPCRouter({
           title: input.title,
         }
       })
-      docgpt.indexTextDocument(input.content, input.title, input.projectId, result.id)
+      docgpt.indexTextDocument(input.content, input.title, input.orgId, input.projectId, result.id)
         .then(console.log)
         .catch(console.error)
       return {
@@ -82,16 +82,35 @@ export const documentRouter = createTRPCRouter({
           }
         })
 
-        console.log('Deleting document')
+        if (document.tokens) {
+          const p1 = ctx.prisma.project.update({
+            where: { id: input.projectId },
+            data: {
+              documentTokens: {
+                decrement: document.tokens
+              }
+            }
+          })
+          const p2 = await ctx.prisma.org.update({
+            where: { id: input.orgId },
+            data: {
+              documentTokens: {
+                decrement: document.tokens
+              }
+            }
+          })
+
+          await Promise.all([p1, p2])
+        }
 
         await deleteDocumentVector(input.projectId, input.documentId)
 
         if (document?.documentType === 'URL') {
-          docgpt.indexUrlDocument(document.src, details.type?.toString() || 'documentation', input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString())
+          docgpt.indexUrlDocument(document.src, details.type?.toString() || 'documentation', input.orgId, input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString())
             .then(console.log)
             .catch(console.error)
         } else if (document?.documentType === 'TEXT') {
-          docgpt.indexTextDocument(document.src, document?.title || '', input.projectId, document.id)
+          docgpt.indexTextDocument(document.src, document?.title || '', input.orgId, input.projectId, document.id)
             .then(console.log)
             .catch(console.error)
         }

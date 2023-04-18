@@ -35,9 +35,14 @@ type CreateContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
+  const org: Org | null = null;
+  const project: Project | null = null;
+
   return {
     session: opts.session,
     prisma,
+    org,
+    project,
   };
 };
 
@@ -65,6 +70,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { type Project, type Org } from "@prisma/client";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -87,6 +93,19 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
+/** Reusable middleware adds project and org to the context. */
+const setProjectAndOrg = t.middleware(async ({ ctx, next, rawInput }) => {
+  const orgId = (rawInput as Record<"orgId", string>).orgId
+  const projectId = (rawInput as Record<"projectId", string>).projectId
+
+  const org = orgId ? await ctx.prisma.org.findUnique({ where: { id: orgId } }) : null
+  const project = projectId ? await ctx.prisma.project.findUnique({ where: { id: projectId } }) : null
+
+  return next({
+    ctx: { ...ctx, org, project },
+  });
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -94,17 +113,24 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(setProjectAndOrg);
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+const enforceUserIsAuthed = t.middleware(async ({ ctx, next, rawInput }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  const orgId = (rawInput as Record<"orgId", string>).orgId
+  const projectId = (rawInput as Record<"projectId", string>).projectId
+
+  const org = orgId ? await ctx.prisma.org.findUnique({ where: { id: orgId } }) : null
+  const project = projectId ? await ctx.prisma.project.findUnique({ where: { id: projectId } }) : null
   return next({
     ctx: {
-      // infers the `session` as non-nullable
+      ...ctx,
       session: { ...ctx.session, user: ctx.session.user },
+      project,
+      org,
     },
   });
 });
@@ -128,12 +154,12 @@ export const orgMemberProcedure = protectedProcedure.use(async ({ ctx, next, raw
     where: {
       userId: ctx.session.user.id,
       orgId,
-    }
+    },
   })
 
   if (!orgUser) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not a member of this organization" });
   }
 
-  return next();
+  return next({ ctx: { ...ctx, } });
 })

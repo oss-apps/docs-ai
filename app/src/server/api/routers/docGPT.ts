@@ -16,9 +16,10 @@ export const docGPTRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), saveConvo: z.boolean().optional(), convoId: z.string().optional() }))
     .query(async ({ input, ctx }) => {
       const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
-      const result = await docgpt.getChat(input.projectId, input.question, [], project?.botName || '');
+      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, [], project?.botName || '');
 
-      const convo = input.saveConvo ? await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId, result.sources) : null
+      const convo = input.saveConvo ?
+        await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources) : null
 
       return {
         ...result,
@@ -32,7 +33,7 @@ export const docGPTRouter = createTRPCRouter({
       if (!project || !project.public) {
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
-      return await getAnswerFromProject(input.projectId, input.question, project.botName, input.convoId)
+      return await getAnswerFromProject(input.orgId, input.projectId, input.question, project.botName, input.convoId)
     }),
   getPublicChatbotAnswer: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), convoId: z.string().optional() }))
@@ -42,18 +43,18 @@ export const docGPTRouter = createTRPCRouter({
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
-      const result = await docgpt.getChat(input.projectId, input.question, chatHistory, project.botName)
-      const convo = await createOrUpdateNewConversation(input.projectId, input.question, result.answer, result.tokens, input.convoId, result.sources)
+      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, chatHistory, project.botName)
+      const convo = await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources)
       return {
         conversation: convo,
       };
     }),
 });
 
-export const getAnswerFromProject = async (projectId: string, question: string, botName: string, convoId?: string) => {
-  const result = await docgpt.getChat(projectId, question, [], botName)
+export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string) => {
+  const result = await docgpt.getChat(orgId, projectId, question, [], botName)
 
-  const convo = await createOrUpdateNewConversation(projectId, question, result.answer, result.tokens, convoId, result.sources)
+  const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, convoId, result.sources)
 
   return {
     ...result,
@@ -61,7 +62,7 @@ export const getAnswerFromProject = async (projectId: string, question: string, 
   };
 }
 
-export const createOrUpdateNewConversation = async (projectId: string, question: string, answer: string, tokens: number, convoId?: string, sources?: string) => {
+export const createOrUpdateNewConversation = async (orgId: string, projectId: string, question: string, answer: string, tokens: number, limitReached: boolean, convoId?: string, sources?: string) => {
   let conversation: Conversation;
   if (convoId) {
     await prisma.messages.createMany({
@@ -113,14 +114,31 @@ export const createOrUpdateNewConversation = async (projectId: string, question:
     })
   }
 
-  await prisma.project.update({
-    where: { id: projectId },
-    data: {
-      tokensUsed: {
-        increment: tokens
+  if (!limitReached) {
+    const p1 = prisma.project.update({
+      where: { id: projectId },
+      data: {
+        tokensUsed: {
+          increment: tokens,
+        },
+        chatUsed: {
+          increment: 1,
+        }
       }
-    }
-  })
+    })
+
+    const p2 = prisma.org.update({
+      where: { id: orgId },
+      data: {
+        chatCredits: {
+          decrement: 1,
+        },
+      }
+    })
+
+    await Promise.all([p1, p2])
+  }
+
 
   return await prisma.conversation.findUnique({ where: { id: conversation.id }, include: { messages: true } })
 }

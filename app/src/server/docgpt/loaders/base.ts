@@ -7,11 +7,13 @@ import { render } from './cheerioToText'
 export interface WebBaseLoaderParams {
   shouldLoadAllPaths?: boolean
   skipPaths?: Array<string>
+  loadImages?: boolean
 }
 
 export class WebBaseLoader extends CheerioWebBaseLoader {
   shouldLoadAllPaths = false
   skipPaths: Array<string> = []
+  loadImages = false
 
   constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
     if (webPath.endsWith('/')) webPath = webPath.slice(0, -1)
@@ -19,6 +21,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     this.shouldLoadAllPaths =
       params.shouldLoadAllPaths ?? this.shouldLoadAllPaths;
     this.skipPaths = params.skipPaths ?? this.skipPaths;
+    this.loadImages = params.loadImages ?? false;
   }
 
   public async load(): Promise<Document[]> {
@@ -34,7 +37,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     $('script').remove()
     $('styles').remove()
 
-    const pageContent = $("body main")[0] ? render($("body main")[0], true) : render($("body"), true)
+    const pageContent = $("body main")[0] ? render($("body main")[0], true) : render($("body"), this.loadImages)
 
     console.log(pageContent)
 

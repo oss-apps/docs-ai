@@ -1,44 +1,66 @@
 import { Document } from "langchain/document"
 import { WebBaseLoader } from "./base"
 import { GitbookLoader } from "./gitbook"
-import { IndexStatus, DocumentType } from "@prisma/client"
+import { IndexStatus, DocumentType, Project, Org } from "@prisma/client"
 import { loadDocumentsToDb } from "../store"
 import { prisma } from "~/server/db"
 
-async function updateStatus(documentId: string, error: boolean, title: string) {
+async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number) {
   await prisma.document.update({
     where: { id: documentId },
     data: {
       title,
-      indexStatus: error ? IndexStatus.FAILED : IndexStatus.SUCCESS
+      indexStatus: error ? IndexStatus.FAILED : IndexStatus.SUCCESS,
+      tokens,
     },
+  })
+
+  await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      documentTokens: {
+        increment: tokens
+      }
+    }
+  })
+
+  await prisma.org.update({
+    where: { id: orgId },
+    data: {
+      documentTokens: {
+        increment: tokens
+      }
+    }
   })
 }
 
 
-export async function indexUrlDocument(url: string, type: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
-  let loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(',') })
+export async function indexUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
+  let loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false })
   if (type === 'gitbook') {
     loader = new GitbookLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(',') })
   }
 
   let title = ''
   let error = false
+  let tokens = 0
 
   try {
     const docs = await loader.load()
     title = docs[0]?.metadata.title as string
     await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
+    tokens = docs.map(d => d.pageContent).join('\n').length
+    console.log(`Loaded ${docs.length} documents with ${tokens} tokens`)
   } catch (e) {
     console.error(e)
     error = true
   }
 
-  await updateStatus(documentId, error, title)
+  await updateStatus(projectId, orgId, documentId, error, title, tokens)
 }
 
 
-export async function indexTextDocument(content: string, title: string, projectId: string, documentId: string, source?: string) {
+export async function indexTextDocument(content: string, title: string, orgId: string, projectId: string, documentId: string, source?: string) {
   const document = new Document({
     pageContent: `${title}\n${content}`,
     metadata: {
@@ -47,12 +69,14 @@ export async function indexTextDocument(content: string, title: string, projectI
   })
 
   let error = false
+  let tokens = 0
   try {
     await loadDocumentsToDb(projectId, documentId, DocumentType.TEXT, [document])
+    tokens = `${title}\n${content}`.length
   } catch (e) {
     console.error(e)
     error = true
   }
 
-  await updateStatus(documentId, error, title)
+  await updateStatus(projectId, orgId, documentId, error, title, tokens)
 }

@@ -1,4 +1,5 @@
 import { ConvoRating } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -79,8 +80,14 @@ export const conversationRouter = createTRPCRouter({
   summarizeConversation: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), convoId: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      if (!ctx.org || !ctx.project) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not a member of this organization" });
+      }
+
+      if (ctx.org.chatCredits < 1 || !ctx.project.generateSummary) return
+
       const messages = await getHistoryForConvo(input.convoId)
-      const { summary, sentiment } = await docgpt.getSummary(messages)
+      const { summary, sentiment, tokens } = await docgpt.getSummary(messages)
 
       const conversation = await ctx.prisma.conversation.update({
         where: {
@@ -91,6 +98,27 @@ export const conversationRouter = createTRPCRouter({
           rating: sentiment,
         }
       })
+
+      const p1 = ctx.prisma.project.update({
+        where: { id: input.projectId },
+        data: {
+          tokensUsed: {
+            increment: tokens
+          }
+        }
+      })
+
+      const p2 = ctx.prisma.org.update({
+        where: { id: input.orgId },
+        data: {
+          chatCredits: {
+            decrement: 1
+          }
+        }
+      })
+
+      await Promise.all([p1, p2])
+
       return {
         conversation,
         summary,

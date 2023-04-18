@@ -25,6 +25,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   const { register, handleSubmit, formState: { errors }, reset } = useForm({ resolver: zodResolver(qnaSchema) });
 
   const getPublicChatbotAnswer = api.docGPT.getPublicChatbotAnswer.useMutation()
+  const summarizeConversation = api.conversation.summarizeConversation.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { question } = data as any as z.input<typeof qnaSchema>
@@ -58,6 +59,24 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     }
   }
 
+  const onResetChat = () => {
+    if (conversation) {
+      summarizeConversation.mutate({ projectId: project.id, convoId: conversation?.id, orgId: org.id })
+    }
+    setConversation(null)
+  }
+
+  useEffect(() => {
+    const cb = () => {
+      if (conversation) {
+        summarizeConversation.mutate({ projectId: project.id, convoId: conversation?.id, orgId: org.id })
+      }
+    }
+    window.addEventListener('beforeunload', cb)
+
+    return () => window.removeEventListener('beforeunload', cb)
+  }, [conversation, org.id, project.id, summarizeConversation])
+
   return (
     <div className="h-full">
       <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem] mb-2 overflow-auto lg:border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
@@ -67,7 +86,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               {project.botName}
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setConversation(null)} className="flex justify-center">
+              <button onClick={onResetChat} className="flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>
