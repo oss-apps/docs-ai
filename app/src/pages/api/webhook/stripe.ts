@@ -28,13 +28,6 @@ const stripeHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       console.log('Got event', event.type)
       switch (event.type) {
-        case 'checkout.session.completed':
-          const session = event.data.object as Stripe.Checkout.Session
-          if (session.mode === 'subscription') {
-            const subscriptionId = session.subscription as string;
-            await updateStripeSubscription(subscriptionId, session.customer as string)
-          }
-          break
         case 'invoice.payment_failed':
         case 'invoice.paid':
           console.log('Going in 2')
