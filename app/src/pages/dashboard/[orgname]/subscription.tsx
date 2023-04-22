@@ -27,11 +27,11 @@ export const getPlanToPrice = (prices: { 'month': Record<string, string>, 'year'
   const planToPrice: { 'month': Record<string, string>, 'year': Record<string, string> } = { month: {}, year: {} }
 
   Object.keys(prices.month).forEach((price) => {
-    planToPrice.month[prices.month[price]] = price
+    planToPrice.month[prices.month[price] as string] = price
   })
 
   Object.keys(prices.year).forEach((price) => {
-    planToPrice.year[prices.year[price]] = price
+    planToPrice.year[prices.year[price] as string] = price
   })
 
   return planToPrice

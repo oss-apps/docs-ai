@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import HomeNav from "~/containers/Nav/HomeNav";
 
 const Terms: NextPage = () => {
@@ -65,7 +66,7 @@ const Terms: NextPage = () => {
             7. Privacy
           </p>
           <p className="text-lg mt-1 text-zinc-600">
-            Please read our <a href="/privacy">Privacy Policy</a>
+            Please read our <Link href="/privacy">Privacy Policy</Link>
           </p>
 
           <p className="text-xl font-semibold mt-12">
