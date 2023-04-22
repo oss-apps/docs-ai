@@ -75,21 +75,22 @@ enum Plan {
 }
 
 model Org {
-    id               String         @id @default(cuid())
-    name             String         @unique
-    displayName      String?
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    orgUrl           String?
-    imageUrl         String?
-    plan             Plan           @default(FREE)
-    stripeCustomerId String?        @unique
-    isActive         Boolean        @default(false)
-    chatCredits      Int            @default(30)
-    documentTokens   Int            @default(0)
-    orgUsers         OrgUser[]
-    projects         Project[]
-    subscriptions    Subscription[]
+    id                String         @id @default(cuid())
+    name              String         @unique
+    displayName       String?
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
+    orgUrl            String?
+    imageUrl          String?
+    plan              Plan           @default(FREE)
+    stripeCustomerId  String?        @unique
+    isActive          Boolean        @default(false)
+    chatCredits       Int            @default(30)
+    documentTokens    BigInt         @default(0)
+    paymentsUpdatedAt DateTime?      @default(now())
+    orgUsers          OrgUser[]
+    projects          Project[]
+    subscriptions     Subscription[]
 }
 
 model Subscription {
@@ -130,7 +131,7 @@ model Project {
     org              Org                @relation(fields: [orgId], references: [id], onDelete: Cascade)
     tokensUsed       Int                @default(0)
     chatUsed         Int                @default(0)
-    documentTokens   Int                @default(0)
+    documentTokens   BigInt             @default(0)
     generateSummary  Boolean            @default(false)
     documents        Document[]
     Conversation     Conversation[]

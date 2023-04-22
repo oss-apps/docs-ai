@@ -1,4 +1,4 @@
-import { Plan } from '@prisma/client'
+import { type Org, Plan } from '@prisma/client'
 import Stripe from 'stripe'
 import { env } from '~/env.mjs'
 import { prisma } from './db'
@@ -22,14 +22,14 @@ export const getPrices = () => {
   } else {
     return {
       'month': {
-        'price_1MwukdK27QgSmXIJ53VVEUXJ': 'BASIC',
-        'price_1MwgHOK27QgSmXIJd009pZTU': 'PROFESSIONAL',
-        'price_1MwgHOK27QgSmXIJd009pZeU': 'ENTERPRISE',
+        'price_1Mzf08K27QgSmXIJyKzOIHsP': 'BASIC',
+        'price_1Mzf1bK27QgSmXIJUH10AFY0': 'PROFESSIONAL',
+        'price_1Mzf37K27QgSmXIJPIvcpyn1': 'ENTERPRISE',
       },
       'year': {
-        'price_1MwukdK27QgSmXIJ53VVEUXJ': 'BASIC',
-        'price_1MwgHOK27QgSmXIJd009pZTU': 'PROFESSIONAL',
-        'price_1MwgHOK27QgSmXIJd009pZeU': 'ENTERPRISE',
+        'price_1Mzf08K27QgSmXIJ7wnTVPpv': 'BASIC',
+        'price_1Mzf1bK27QgSmXIJWdoCmueH': 'PROFESSIONAL',
+        'price_1Mzf37K27QgSmXIJzw2370qR': 'ENTERPRISE',
       }
     }
   }
@@ -43,6 +43,26 @@ export const createCustomer = async (id: string) => {
     where: { id },
     data: { stripeCustomerId: customer.id }
   })
+}
+
+export const checkAndUpdateFreeAccount = async (org: Org) => {
+  if (org.paymentsUpdatedAt && org.paymentsUpdatedAt.getMonth() < new Date().getMonth()) {
+    await prisma.org.update({
+      where: { id: org.id },
+      data: {
+        chatCredits: {
+          increment: 25,
+        }
+      }
+    })
+
+    await prisma.project.updateMany({
+      where: { orgId: org.id },
+      data: {
+        chatUsed: 0
+      }
+    })
+  }
 }
 
 
@@ -96,7 +116,15 @@ export const updateStripeSubscription = async (subscriptionId: string, customerI
         plan,
         chatCredits: {
           increment: credits
-        }
+        },
+        paymentsUpdatedAt: new Date(),
+      }
+    })
+
+    await prisma.project.updateMany({
+      where: { orgId: org.id },
+      data: {
+        chatUsed: 0
       }
     })
   }

@@ -9,8 +9,9 @@ export const isPaid = (org?: Org | null) => {
 }
 
 export const getLimits = (plan: Plan) => {
-  if (plan === Plan.FREE) return { projects: 1, messages: 30, documentSize: 500_000 };
-  if (plan === Plan.BASIC) return { projects: 2, messages: 1000, documentSize: 2_000_000 };
-  if (plan === Plan.PROFESSIONAL) return { projects: 5, messages: 5000, documentSize: 4_000_000 };
-  if (plan === Plan.ENTERPRISE) return { projects: -1, messages: 12000, documentSize: 8_000_000 };
+  if (plan === Plan.BASIC) return { projects: 2, messages: 1000, documentSize: 5e6 };
+  if (plan === Plan.PROFESSIONAL) return { projects: 5, messages: 5000, documentSize: 25e6 };
+  if (plan === Plan.ENTERPRISE) return { projects: Infinity, messages: 12000, documentSize: 100e6 };
+
+  return { projects: 1, messages: 30, documentSize: 2e6 };
 }

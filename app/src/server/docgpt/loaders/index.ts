@@ -49,7 +49,8 @@ export async function indexUrlDocument(url: string, type: string, orgId: string,
     const docs = await loader.load()
     title = docs[0]?.metadata.title as string
     await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
-    tokens = docs.map(d => d.pageContent).join('\n').length
+    tokens = new Blob(docs.map(d => d.pageContent)).size
+    console.log('Hello hello')
     console.log(`Loaded ${docs.length} documents with ${tokens} tokens`)
   } catch (e) {
     console.error(e)
@@ -72,7 +73,7 @@ export async function indexTextDocument(content: string, title: string, orgId: s
   let tokens = 0
   try {
     await loadDocumentsToDb(projectId, documentId, DocumentType.TEXT, [document])
-    tokens = `${title}\n${content}`.length
+    tokens = new Blob([document.pageContent]).size
   } catch (e) {
     console.error(e)
     error = true

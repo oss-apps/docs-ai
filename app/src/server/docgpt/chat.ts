@@ -8,6 +8,7 @@ import { Tiktoken } from "@dqbd/tiktoken/lite";
 import cl100k_base from "@dqbd/tiktoken/encoders/cl100k_base.json";
 import { AIChatMessage, HumanChatMessage } from "langchain/schema";
 import { prisma } from "../db";
+import { checkAndUpdateFreeAccount } from "../stripe";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -49,8 +50,8 @@ export const getChat = async (orgId: string, projectId: string, question: string
   const vectorDb = await getVectorDB(projectId)
 
   if (org && org?.chatCredits < 1) {
-    console.log("no credits left switching to search only mode")
     if (org.plan === Plan.FREE || org.plan === Plan.BASIC) {
+      if (org.plan === Plan.FREE) await checkAndUpdateFreeAccount(org)
       console.log("Search only mode is not possible for free or basic plans")
       return { tokens: 0, answer: 'Sorry limit reached. Contact owner of the site', sources: '', limitReached: true }
     }

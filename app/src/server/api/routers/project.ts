@@ -72,4 +72,39 @@ export const projectRouter = createTRPCRouter({
         else throw e
       }
     }),
+  dashboardData: orgMemberProcedure
+    .input(z.object({ orgId: z.string(), projectId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const weeklyConversations = await ctx.prisma.conversation.groupBy({
+        by: ['rating'],
+        where: {
+          projectId: input.projectId,
+          createdAt: {
+            gte: new Date(new Date().setDate(new Date().getDate() - 7))
+          }
+        },
+        _count: {
+          rating: true,
+        }
+      })
+
+      const weeklyCount = weeklyConversations.reduce((acc, c) => acc + c._count.rating, 0)
+
+      const monthlyConversations = await ctx.prisma.conversation.groupBy({
+        by: ['rating'],
+        where: {
+          projectId: input.projectId,
+          createdAt: {
+            gte: new Date(new Date().setDate(0))
+          }
+        },
+        _count: {
+          rating: true,
+        }
+      })
+
+      const monthlyConversationCount = monthlyConversations.reduce((acc, c) => acc + c._count.rating, 0)
+
+      return { weeklyConversations, monthlyConversations, weeklyCount, monthlyConversationCount }
+    }),
 });

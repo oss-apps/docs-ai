@@ -12,6 +12,8 @@ import Nav from "~/containers/Nav/Nav";
 import { getPrices } from "~/server/stripe";
 import NavBack from "~/components/NavBack";
 import { useState } from "react";
+import { getLimits } from "~/utils/license";
+import Pricing from "~/containers/Pricing";
 
 export const getRecurring = (price: string, prices: { 'month': Record<string, string>, 'year': Record<string, string> }) => {
   if (prices.month[price]) {
@@ -35,29 +37,15 @@ export const getPlanToPrice = (prices: { 'month': Record<string, string>, 'year'
   return planToPrice
 }
 
-type BillingInterval = 'month' | 'year'
 
 const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices: { 'month': Record<string, string>, 'year': Record<string, string> } }> =
   ({ orgJson, subscriptionJson, prices }) => {
-    const [billingInterval, setBillingInterval] =
-      useState<BillingInterval>('month');
-
-    const [selectedPlan, setSelectedPlan] = useState<Plan>(Plan.PROFESSIONAL)
-
     const org: (OrgUser & { org: Org }) = superjson.parse(orgJson)
     const subscription: (Subscription | null) = subscriptionJson ? superjson.parse(subscriptionJson) : null
 
-    const planToPrice = getPlanToPrice(prices)
+    const planToPrices = getPlanToPrice(prices)
 
-    const createCheckoutSession = api.org.createCheckoutSession.useMutation()
     const createManageSession = api.org.createManageSession.useMutation()
-
-    const onSubscribeClick = async (price: string, _plan: Plan) => {
-      setSelectedPlan(_plan)
-      const session = await createCheckoutSession.mutateAsync({ orgId: org.orgId, price })
-      if (session?.url)
-        window.location.assign(session.url);
-    }
 
     const onManageClick = async () => {
       const session = await createManageSession.mutateAsync({ orgId: org.orgId })
@@ -76,7 +64,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         </Head>
         <div className="h-full">
           <Nav />
-          <main className="max-w-6xl mx-auto pt-10">
+          <main className="max-w-6xl mx-auto pt-10 pb-10">
             <NavBack href={`/dashboard/${org.org.name}`} />
             {subscription ? (
               <div className="mt-10">
@@ -89,151 +77,12 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
                 </PrimaryButton>
                 <div className="mt-20">
                   <p className="text-lg">Usage</p>
+                  <p className="mt-4">Message credits left: {org.org.chatCredits}</p>
+                  <p className="mt-4">Documents: {(Number(org.org.documentTokens) / 1e6).toFixed(2)} MB / {getLimits(org.org.plan)?.documentSize / 1e6}</p>
                 </div>
               </div>
             ) : (
-              <div className="mt-10">
-                <div className="sm:flex sm:flex-col sm:align-center">
-                  <h1 className="text-2xl font-semibold sm:text-center sm:text-2xl">
-                    Pricing Plans
-                  </h1>
-                  <div className="relative self-center mt-6  rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
-                    <button
-                      onClick={() => setBillingInterval('month')}
-                      type="button"
-                      className={`${billingInterval === 'month'
-                        ? 'relative w-1/2 bg-black border-zinc-800 shadow-sm text-white'
-                        : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-700'
-                        } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:z-10 sm:w-auto sm:px-8`}
-                    >
-                      Monthly billing
-                    </button>
-                    <button
-                      onClick={() => setBillingInterval('year')}
-                      type="button"
-                      className={`${billingInterval === 'year'
-                        ? 'relative w-1/2 bg-black border-zinc-800 shadow-sm text-white'
-                        : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-700'
-                        } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:z-10 sm:w-auto sm:px-8`}
-                    >
-                      Yearly billing
-                    </button>
-                  </div>
-                  <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
-                    <div className="bg-zinc-100 rounded-md">
-                      <div className="p-6">
-                        <h2 className="text-2xl leading-6 font-semibold">
-                          Free
-                        </h2>
-                        <p className="mt-2 text-zinc-500">You are just trying out</p>
-                        <div className="mt-5">
-                          <p>1 Project</p>
-                          <p className="mt-1">5 Pages*</p>
-                          <p className="mt-1">30 Messages*/Month</p>
-                          <p className="mt-1">Unlimited search after limit</p>
-                        </div>
-                        <p className="mt-8">
-                          <span className="text-5xl font-extrabold white">
-                            $0
-                          </span>
-                          <span className="text-base font-medium">
-                            /{billingInterval}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-zinc-100 rounded-md">
-                      <div className="p-6">
-                        <h2 className="text-2xl leading-6 font-semibold">
-                          Basic
-                        </h2>
-                        <p className="mt-2 text-zinc-500">You have a small website</p>
-                        <div className="mt-5">
-                          <p>2 Projects</p>
-                          <p className="mt-1">25 Pages*</p>
-                          <p className="mt-1">1000 Messages*/Month</p>
-                          <p className="mt-1">Unlimited search after limit</p>
-                        </div>
-                        <p className="mt-8">
-                          <span className="text-5xl font-extrabold white">
-                            ${billingInterval === 'month' ? 9 : 90}
-                          </span>
-                          <span className="text-base font-medium">
-                            /{billingInterval}
-                          </span>
-                        </p>
-                        <PrimaryButton
-                          onClick={() => onSubscribeClick(planToPrice[billingInterval]['BASIC'] || '', Plan.BASIC)}
-                          className="mt-4"
-                          loading={selectedPlan === Plan.BASIC && createCheckoutSession.isLoading}
-                          disabled={selectedPlan === Plan.BASIC && createCheckoutSession.isLoading}>
-                          Subscribe
-                        </PrimaryButton>
-                      </div>
-                    </div>
-                    <div className="bg-zinc-100 rounded-md">
-                      <div className="p-6">
-                        <h2 className="text-2xl leading-6 font-semibold">
-                          Professional
-                        </h2>
-                        <p className="mt-2 text-zinc-500">Best suited for startups</p>
-                        <div className="mt-5">
-                          <p>5 Projects</p>
-                          <p className="mt-1">100 Pages*</p>
-                          <p className="mt-1">5000 Messages*/Month</p>
-                          <p className="mt-1">Unlimited search after limit</p>
-                        </div>
-                        <p className="mt-8">
-                          <span className="text-5xl font-extrabold white">
-                            ${billingInterval === 'month' ? 49 : 490}
-                          </span>
-                          <span className="text-base font-medium">
-                            /{billingInterval}
-                          </span>
-                        </p>
-                        <PrimaryButton
-                          onClick={() => onSubscribeClick(planToPrice[billingInterval]['PROFESSIONAL'] || '', Plan.PROFESSIONAL)}
-                          className="mt-4"
-                          loading={selectedPlan === Plan.PROFESSIONAL && createCheckoutSession.isLoading}
-                          disabled={selectedPlan === Plan.PROFESSIONAL && createCheckoutSession.isLoading}>
-                          Subscribe
-                        </PrimaryButton>
-                      </div>
-
-                    </div>
-                    <div className="bg-zinc-100 rounded-md">
-                      <div className="p-6">
-                        <h2 className="text-2xl leading-6 font-semibold">
-                          Enterprise
-                        </h2>
-                        <p className="mt-2 text-zinc-500">Best suited for startups</p>
-                        <div className="mt-5">
-                          <p>unlimited Projects</p>
-                          <p className="mt-1">1000 Pages*</p>
-                          <p className="mt-1">12000 Messages*/Month</p>
-                          <p className="mt-1">Unlimited search after limit</p>
-                        </div>
-                        <p className="mt-8">
-                          <span className="text-5xl font-extrabold white">
-                            ${billingInterval === 'month' ? 129 : 1290}
-                          </span>
-                          <span className="text-base font-medium">
-                            /{billingInterval}
-                          </span>
-                        </p>
-                        <PrimaryButton
-                          onClick={() => onSubscribeClick(planToPrice[billingInterval]['ENTERPRISE'] || '', Plan.ENTERPRISE)}
-                          className="mt-4"
-                          loading={selectedPlan === Plan.ENTERPRISE && createCheckoutSession.isLoading}
-                          disabled={selectedPlan === Plan.ENTERPRISE && createCheckoutSession.isLoading}>
-                          Subscribe
-                        </PrimaryButton>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Pricing org={org.org} prices={planToPrices} />
             )}
           </main>
         </div>
