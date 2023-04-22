@@ -21,6 +21,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <title>Docs AI - Dashboard</title>
         <meta name="description" content="Create an AI support agent with your documents." />
         <link rel="icon" href="/images/favicon.ico" />
+        <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="494f02eb-86bc-460d-ac63-db4d351eea9c" async></script>
       </Head>
       <SessionProvider session={session}>
         <Component {...pageProps} />
