@@ -5,7 +5,7 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type OrgUser, type Org, type Project, DocumentType } from "@prisma/client";
 import superjson from "superjson";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { Tab } from '@headlessui/react'
 import classNames from "classnames";
 import { URLDocument } from "~/containers/NewDocument/URLDocument";

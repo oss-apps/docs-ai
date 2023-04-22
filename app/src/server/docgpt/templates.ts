@@ -36,18 +36,20 @@ export const CONDENSE_PROMPT = HumanMessagePromptTemplate.fromTemplate(CONDENSE_
 
 
 const SUMMARY_EXTRACTION_TEMPLATE = `
-You are AI assistant who can summarize the conversation and give a user sentiment as POSITIVE. NEGATIVE, NEUTRAL in Json format
+You are AI assistant who can summarize the conversation and give a user sentiment as POSITIVE. NEGATIVE in Json format
 
 Example conversation:
 User: Hi how docAI works?
 AI: docAI is a tool that can help you to answer questions about your documents.
 User: That's helpful. Thanks.
 
-Your answer should be: { "summary": "User asked about docsAI and AI answered on how it can be used to answer questions about documents.", "sentiment": "POSITIVE"}
+Your answer should be: {answer}
 END OF EXAMPLE
 
 Give me the summary and sentiment for this conversation.
 {chat_history}
 `
+
+export const SUMMARY_ANSWER = '{ "summary": "User asked about docsAI and AI answered on how it can be used to answer questions about documents.", "sentiment": "POSITIVE"}'
 
 export const SUMMARY_PROMPT = HumanMessagePromptTemplate.fromTemplate(SUMMARY_EXTRACTION_TEMPLATE)

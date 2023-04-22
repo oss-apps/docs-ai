@@ -5,7 +5,7 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { QnA } from "~/containers/QnA/QnA";
 
 

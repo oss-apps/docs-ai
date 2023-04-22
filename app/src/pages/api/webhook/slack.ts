@@ -45,7 +45,7 @@ const handleEvent = async (event: any) => {
 
 			const web = new WebClient(installation.accessToken);
 
-			const { answer } = await getAnswerFromProject(installation.projectId, text, installation.project.botName)
+			const { answer } = await getAnswerFromProject(installation.project.orgId, installation.projectId, text, installation.project.botName)
 
 			web.chat.postMessage({
 				blocks: [{

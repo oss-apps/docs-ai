@@ -4,7 +4,7 @@
 
 html,
 body {
-  @apply bg-white h-full text-gray-800;
+  @apply bg-white h-full text-zinc-800;
 }
 
 #__next {
@@ -53,4 +53,5 @@ pre {
   @apply bg-gradient-to-r from-sky-500 to-indigo-500;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  @apply bg-zinc-300
 }

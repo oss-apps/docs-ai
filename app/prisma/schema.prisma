@@ -67,16 +67,43 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum Plan {
+    FREE
+    BASIC
+    PROFESSIONAL
+    ENTERPRISE
+}
+
 model Org {
-    id          String    @id @default(cuid())
-    name        String    @unique
-    displayName String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    orgUrl      String?
-    imageUrl    String?
-    orgUsers    OrgUser[]
-    projects    Project[]
+    id                String         @id @default(cuid())
+    name              String         @unique
+    displayName       String?
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
+    orgUrl            String?
+    imageUrl          String?
+    plan              Plan           @default(FREE)
+    stripeCustomerId  String?        @unique
+    isActive          Boolean        @default(false)
+    chatCredits       Int            @default(30)
+    documentTokens    BigInt         @default(0)
+    paymentsUpdatedAt DateTime?      @default(now())
+    orgUsers          OrgUser[]
+    projects          Project[]
+    subscriptions     Subscription[]
+}
+
+model Subscription {
+    id           String    @id
+    orgId        String
+    status       String
+    priceId      String
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    amount       Int       @default(0)
+    currentStart DateTime?
+    currentEnd   DateTime?
+    org          Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
 }
 
 model OrgUser {
@@ -103,6 +130,9 @@ model Project {
     enableSummary    Boolean            @default(true)
     org              Org                @relation(fields: [orgId], references: [id], onDelete: Cascade)
     tokensUsed       Int                @default(0)
+    chatUsed         Int                @default(0)
+    documentTokens   BigInt             @default(0)
+    generateSummary  Boolean            @default(false)
     documents        Document[]
     Conversation     Conversation[]
     slackInstalation SlackInstallation?
@@ -134,6 +164,7 @@ model Document {
     indexed      Boolean      @default(false)
     indexStatus  IndexStatus  @default(INDEXING)
     projectId    String
+    tokens       Int          @default(0)
     details      Json?
     project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

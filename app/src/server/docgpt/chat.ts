@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { type ConvoRating, MessageUser } from "@prisma/client"
+import { type ConvoRating, MessageUser, Plan } from "@prisma/client"
 import { getVectorDB } from "./store"
 import { ChatOpenAI } from "langchain/chat_models";
-import { SIMPLE_CHAT_PROMPT, CONDENSE_PROMPT, SUMMARY_PROMPT } from "./templates";
+import { SIMPLE_CHAT_PROMPT, CONDENSE_PROMPT, SUMMARY_PROMPT, SUMMARY_ANSWER } from "./templates";
 import { StuffDocumentsChain } from "./chains/combineDocumentChain";
 import { Tiktoken } from "@dqbd/tiktoken/lite";
 import cl100k_base from "@dqbd/tiktoken/encoders/cl100k_base.json";
 import { AIChatMessage, HumanChatMessage } from "langchain/schema";
+import { prisma } from "../db";
+import { checkAndUpdateFreeAccount } from "../stripe";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -26,6 +28,8 @@ const getChatHistoryStr = (chatHistory: Array<{ role: MessageUser, content: stri
   for (const message of chatHistory) {
     history = `${history}\n ${message.role}:${message.content}`
   }
+
+  return history
 }
 
 export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUser, content: string }>, question: string) => {
@@ -41,13 +45,32 @@ export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUs
   return { question: result.text, tokens: inputTokens + outputTokens }
 }
 
-export const getChat = async (projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string) => {
+export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string) => {
+  const org = await prisma.org.findUnique({ where: { id: orgId } })
   const vectorDb = await getVectorDB(projectId)
+
+  if (org && org?.chatCredits < 1) {
+    if (org.plan === Plan.FREE || org.plan === Plan.BASIC) {
+      if (org.plan === Plan.FREE) await checkAndUpdateFreeAccount(org)
+      console.log("Search only mode is not possible for free or basic plans")
+      return { tokens: 0, answer: 'Sorry limit reached. Contact owner of the site', sources: '', limitReached: true }
+    }
+    else {
+      const documents = await vectorDb.similaritySearch(question, 4, { projectId })
+      const answer = documents.map(d => d.pageContent).join('\n')
+      const sources = documents.reduce((acc, d) => {
+        acc[d.metadata.source as string] = true
+        return acc
+      }, {} as Record<string, boolean>)
+
+      return { tokens: 0, answer, sources: Object.keys(sources).join(','), limitReached: true }
+    }
+  }
+
   const { question: stdQuestion, tokens: stdTokens } = await getStandaloneQuestion(chatHistory, question)
 
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })
 
-  documents.map(d => console.log(d.pageContent))
 
   const history = chatHistory.map(({ role, content }) => {
     if (role === MessageUser.user) {
@@ -79,7 +102,7 @@ export const getChat = async (projectId: string, question: string, chatHistory: 
     return acc
   }, {} as Record<string, boolean>)
 
-  return { tokens: inputTokens + outputTokens + stdTokens, answer: result.text, sources: Object.keys(sources).join(',') }
+  return { tokens: inputTokens + outputTokens + stdTokens, answer: result.text, sources: Object.keys(sources).join(','), limitReached: false }
 }
 
 
@@ -87,7 +110,7 @@ export const getSummary = async (chatHistory: Array<{ role: MessageUser, content
   const history = getChatHistoryStr(chatHistory)
 
   const chat = new ChatOpenAI({ temperature: 0, streaming: true });
-  const questionPrompt = (await SUMMARY_PROMPT.format({ chat_history: history })).text;
+  const questionPrompt = (await SUMMARY_PROMPT.format({ chat_history: history, answer: SUMMARY_ANSWER })).text;
 
   const result = await chat.call([new HumanChatMessage(questionPrompt)])
   const { inputTokens, outputTokens } = getTokens('', questionPrompt, result.text);

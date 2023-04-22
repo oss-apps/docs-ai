@@ -3,25 +3,28 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type ConvoRating, type Org, type Project } from "@prisma/client";
+import { ConvoRating, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
+import { SmallButton } from "~/components/form/button";
 
-const Rating: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
+const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
   if (rating === 'POSITIVE') {
-    return <>😃</>
+    return <span className="px-2 py-0.5 text-sm rounded-md bg-green-200 text-green-700">Positive</span>
   } else if (rating === 'NEGATIVE') {
-    return <>😢</>
+    return <p className="px-2 py-0.5 text-sm rounded-md bg-red-100 text-red-500">Negative</p>
   }
 
-  return <>😐</>
+  return <p>Neutral</p>
 }
+
+
 
 
 const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -37,11 +40,20 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
     }, {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     })
-  const { data: currentChat, isLoading } = api.conversation.getConversation.useQuery({
+  const { data: currentChat, isLoading, refetch } = api.conversation.getConversation.useQuery({
     convoId: (convoId ?? convoData?.pages[0]?.conversations[0]?.id) || '',
     orgId: org.id,
     projectId: project.id
   })
+
+  const summarizeConversation = api.conversation.summarizeConversation.useMutation()
+
+  const onGenerateClicked = async () => {
+    if (currentChat && currentChat.conversation) {
+      await summarizeConversation.mutateAsync({ projectId: project.id, orgId: org.id, convoId: currentChat?.conversation?.id })
+      await refetch()
+    }
+  }
 
 
   return (
@@ -81,6 +93,38 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest answer
                     </Link>
+                  </div>
+                  <div className="border-b pb-4 px-4">
+                    {project.generateSummary ? (
+                      currentChat?.conversation?.summary ? (
+                        <div className="bg-gray-100 rounded-md p-4 py-4 shadow-sm">
+                          <p className="font-semibold text-gray-600">Summary</p>
+                          <p className="mt-0.5 text-gray-700">{currentChat?.conversation?.summary}</p>
+                          <div className="flex gap-4 mt-4 items-center">
+                            <p className=" font-semibold text-gray-600">Sentiment</p>
+                            <Sentiment rating={currentChat?.conversation?.rating || ConvoRating.NEUTRAL} />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="bg-gray-100 rounded-md p-4 py-4 shadow-sm flex flex-col items-center">
+                          Summary not generated
+                          <SmallButton
+                            loading={summarizeConversation.isLoading}
+                            disabled={summarizeConversation.isLoading}
+                            className="mt-4"
+                            onClick={onGenerateClicked}>
+                            Generate now
+                          </SmallButton>
+                        </div>
+                      )
+                    ) : <div className="bg-gray-100 rounded-md p-4 py-4 shadow-sm flex flex-col items-center">
+                      You did not have summary enabled!
+                      <Link href={`/dashboard/${org.name}/${project.slug}/settings`}>
+                        <SmallButton className="mt-4">
+                          Enable now
+                        </SmallButton>
+                      </Link>
+                    </div>}
                   </div>
                   {
                     isLoading ? <div>Loading...</div> : currentChat?.conversation?.messages.map(m => (

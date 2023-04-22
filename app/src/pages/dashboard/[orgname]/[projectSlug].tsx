@@ -5,9 +5,10 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type ConvoRating, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import AppNav from "~/containers/AppNav/AppNav";
+import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
+import { isAbovePro } from "~/utils/license";
 
 const Rating: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
@@ -26,7 +27,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
   const project: Project = superjson.parse(projectJson)
 
   const { data: convoData, isLoading: isConvoLoading } = api.conversation.getConversations.useQuery({ orgId: org.id, projectId: project.id })
-  const { data: ratingData, isLoading } = api.conversation.getConversationRatings.useQuery({ orgId: org.id, projectId: project.id })
+  const { data: dashboardData, isLoading: isDashboardLoading } = api.project.dashboardData.useQuery({ orgId: org.id, projectId: project.id })
 
 
   return (
@@ -41,32 +42,72 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
           <div className="w-full h-full">
             <div className="p-5 px-10 overflow-auto h-full flex">
               <div className=" w-1/2">
-                <div className="text-gray-600">Recent conversations</div>
-                {convoData?.conversations.length === 0 ? (
-                  <div className="border p-4 mt-2 rounded-md bg-gray-50 pb-8">
-                    <p className="text-center">
-                    There&apos;s no conversations yet!
-                    </p>
+                <div className="text-gray-600">This week</div>
+                <div className="bg-gray-100 p-4 rounded-md mt-2 flex justify-between items-center">
+                  <div>
+                    <p className="text-zinc-500 text-center">Conversations</p>
+                    <p className="text-center text-3xl mt-2">{dashboardData?.weeklyCount}</p>
                   </div>
-                ) : null}
-                {convoData?.conversations.map((conversation) => (
-                  <Link key={conversation.id} href={`/dashboard/${org.name}/${project.slug}/convo/${conversation.id}`}>
-                    <div className="border p-4 mt-2 flex justify-between items-center rounded-md bg-gray-50 w-full">
-                      <div>
-                        <div>
-                          {conversation.firstMsg}
-                        </div>
-                        <div className="text-sm text-gray-600 mt-2">{conversation.createdAt.toLocaleString()}</div>
-                      </div>
+                  <div>
+                    <p className="text-zinc-500 text-center">Positive</p>
+                    <div className="mt-2">
+                      {isAbovePro(org) ? (
+                        <p className="text-center text-3xl">{dashboardData?.weeklyConversations[0]?._count.rating}</p>
+                      ) : (
+                        <p className="text-center">Available from Pro</p>
+                      )}
                     </div>
-                  </Link>
-                ))}
+                  </div>
+                  <div>
+                    <p className="text-zinc-500 text-center">Negative</p>
+                    <div className="mt-2">
+                      {isAbovePro(org) ? (
+                        <p className="text-center text-3xl">{dashboardData?.weeklyConversations[1]?._count.rating}</p>
+                      ) : (
+                        <p className="text-center">Available from Pro</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-gray-600 mt-10">This month</div>
+                <div className="bg-gray-100 p-4 rounded-md mt-2 flex justify-between items-center">
+                  <div>
+                    <p className="text-zinc-500 text-center">Conversations</p>
+                    <p className="text-center text-3xl mt-2">{dashboardData?.monthlyConversationCount}</p>
+                  </div>
+                  <div>
+                    <p className="text-zinc-500 text-center">Positive</p>
+                    <div className="mt-2">
+                      {isAbovePro(org) ? (
+                        <p className="text-center text-3xl">{dashboardData?.monthlyConversations[0]?._count.rating}</p>
+                      ) : (
+                        <p className="text-center">Available from Pro</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-zinc-500 text-center">Negative</p>
+                    <div className="mt-2">
+                      {isAbovePro(org) ? (
+                        <p className="text-center text-3xl">{dashboardData?.monthlyConversations[1]?._count.rating}</p>
+                      ) : (
+                        <p className="text-center">Available from Pro</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className=" w-1/2 px-20">
                 <div className="text-gray-600">Usage</div>
-                <div className="mt-2 bg-gray-100 rounded-md p-2 w-64">
-                  <p className="text-center text-3xl">${(project.tokensUsed / 1000 * .002).toFixed(2)}</p>
-                  <p className="text-center text-sm text-gray-600">{project.tokensUsed} tokens</p>
+                <div className="mt-2 bg-gray-100 rounded-md p-4 w-72">
+                  <div className="flex justify-between items-center">
+                    <p className="text-zinc-500">Chat credits used</p>
+                    <p className="">{project.chatUsed}</p>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <p className=" text-zinc-500">Document storage</p>
+                    <p className="">{(Number(project.documentTokens) / 1e6).toFixed(2)} MB</p>
+                  </div>
                 </div>
               </div>
             </div>
