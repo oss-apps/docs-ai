@@ -12,16 +12,16 @@ const HomeNav: React.FC = () => {
         </div>
       </Link>
       <div className="flex items-center gap-5">
-        <Link href="/" className="text-zinc-600">
+        <Link href="/" className="text-zinc-600 hidden lg:block">
           Home
         </Link>
-        <Link href="/terms" className="text-zinc-600">
+        <Link href="/terms" className="text-zinc-600 hidden lg:block">
           Terms
         </Link>
-        <Link href="/privacy" className="text-zinc-600">
+        <Link href="/privacy" className="text-zinc-600 hidden lg:block">
           Privacy
         </Link>
-        <Link href="/pricing" className="text-zinc-600">
+        <Link href="/pricing" className="text-zinc-600 hidden lg:block">
           Pricing
         </Link>
         <div className="ml-10">

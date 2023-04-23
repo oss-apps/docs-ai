@@ -12,6 +12,7 @@ import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import Footer from "~/containers/Footer";
 
 const signInSchema = z.object({
   email: z.string(),
@@ -68,11 +69,7 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
           </div>
         </div>
       </main>
-
-      <footer className="mx-auto  max-w-6xl pb-32">
-        <p className="text-center text-lg text-gray-500">contact: hey@docsai.app</p>
-        <p className="mt-4 text-center text-zinc-500">Made with ❤️ by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
-      </footer>
+      <Footer />
     </>
   );
 };

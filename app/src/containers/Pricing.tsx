@@ -36,7 +36,7 @@ const Pricing: React.FC<{
   return (
     <div className="mt-5">
       <div className="sm:flex sm:flex-col sm:align-center">
-        <h1 className="text-2xl font-semibold sm:text-center sm:text-2xl">
+        <h1 className="text-2xl font-semibold text-center sm:text-2xl">
           Our Plans
         </h1>
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
