@@ -31,7 +31,7 @@ export const documentRouter = createTRPCRouter({
         }
       })
 
-      docgpt.indexUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths)
+      await docgpt.indexUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths)
         .then(console.log)
         .catch(console.error)
 
@@ -52,7 +52,7 @@ export const documentRouter = createTRPCRouter({
           title: input.title,
         }
       })
-      docgpt.indexTextDocument(input.content, input.title, input.orgId, input.projectId, result.id)
+      await docgpt.indexTextDocument(input.content, input.title, input.orgId, input.projectId, result.id)
         .then(console.log)
         .catch(console.error)
       return {

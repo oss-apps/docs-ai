@@ -3,6 +3,7 @@
 import type { CheerioAPI } from "cheerio";
 import { Document } from "langchain/document"
 import { CheerioWebBaseLoader } from "langchain/document_loaders";
+import { mapLimit } from "~/utils/async";
 import { WebBaseLoader, WebBaseLoaderParams } from "./base";
 
 
@@ -53,12 +54,22 @@ export class GitbookLoader extends WebBaseLoader {
     const paths = this.removeDuplicates(relative_paths)
 
     const documents: Document[] = [];
-    for (const path of paths) {
+    const basePath = new URL(this.webPath).origin
+
+    const resultDocuments = await mapLimit(paths, 5, async (path) => {
       if (path && !this.isSkipped(path)) {
-        const url = this.webPath + path;
+        const url = basePath + path;
         console.log(`Fetching text from ${url}`);
-        const html = await GitbookLoader._scrape(url);
-        documents.push(...this.loadPath(html, url));
+        const html = await WebBaseLoader._scrape(url);
+        return this.loadPath(html, url);
+      }
+
+      return null
+    })
+
+    for (const resultDocument of resultDocuments) {
+      if (resultDocument) {
+        documents.push(...resultDocument)
       }
     }
     console.log(`Fetched ${documents.length} documents.`);

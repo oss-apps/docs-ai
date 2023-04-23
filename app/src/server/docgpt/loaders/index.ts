@@ -50,7 +50,6 @@ export async function indexUrlDocument(url: string, type: string, orgId: string,
     title = docs[0]?.metadata.title as string
     await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
     tokens = new Blob(docs.map(d => d.pageContent)).size
-    console.log('Hello hello')
     console.log(`Loaded ${docs.length} documents with ${tokens} tokens`)
   } catch (e) {
     console.error(e)
