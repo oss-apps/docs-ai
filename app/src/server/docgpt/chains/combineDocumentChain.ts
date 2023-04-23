@@ -48,7 +48,7 @@ export class StuffDocumentsChain
     }
     const { [this.inputKey]: docs, ...rest } = values;
     const texts = (docs as Document[]).map(({ pageContent, metadata }) => {
-      return `Content: ${pageContent}\nSource: ${metadata.source}`;
+      return pageContent;
     })
     const text = texts.join("\n\n");
 
