@@ -53,7 +53,6 @@ export const conversationRouter = createTRPCRouter({
       for (const r of ratings) {
         ratingData[r.rating] = r._count.rating
       }
-      console.log(ratings, ratingData)
 
       return {
         ratings: ratingData,
@@ -87,7 +86,7 @@ export const conversationRouter = createTRPCRouter({
       if (ctx.org.chatCredits < 1 || !ctx.project.generateSummary) return
 
       const messages = await getHistoryForConvo(input.convoId)
-      const { summary, sentiment, tokens } = await docgpt.getSummary(messages)
+      const { summary, sentiment } = await docgpt.getSummary(messages)
 
       const conversation = await ctx.prisma.conversation.update({
         where: {
@@ -102,8 +101,8 @@ export const conversationRouter = createTRPCRouter({
       const p1 = ctx.prisma.project.update({
         where: { id: input.projectId },
         data: {
-          tokensUsed: {
-            increment: tokens
+          chatUsed: {
+            increment: 1
           }
         }
       })

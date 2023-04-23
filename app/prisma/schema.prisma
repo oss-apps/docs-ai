@@ -53,7 +53,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    approved      Boolean   @default(false)
+    approved      Boolean   @default(true)
     accounts      Account[]
     sessions      Session[]
     userOrgs      OrgUser[]

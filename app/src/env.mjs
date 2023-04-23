@@ -32,6 +32,7 @@ const server = z.object({
   PINECONE_INDEX: z.string(),
   STRIPE_API_KEY: z.string(),
   STRIPE_SECRET: z.string(),
+  SENDGRID_API_KEY: z.string(),
 });
 
 /**
@@ -66,6 +67,7 @@ const processEnv = {
   PINECONE_INDEX: process.env.PINECONE_INDEX,
   STRIPE_API_KEY: process.env.STRIPE_API_KEY,
   STRIPE_SECRET: process.env.STRIPE_SECRET,
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 };
 
 // Don't touch the part below

@@ -6,9 +6,12 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type User, type Org } from "@prisma/client";
 import { CreateOrg } from "~/containers/CreateOrg";
+import superjson from "superjson";
 
 
-const Dashboard: NextPage<{ user: User }> = ({ user }) => {
+const Dashboard: NextPage<{ userJson: string }> = ({ userJson }) => {
+  const user: User = superjson.parse(userJson);
+
   return (
     <div className="h-full">
       <Nav />
@@ -71,7 +74,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       }
     }
   }
-  const props = { props: { user } }
+  const props = { props: { userJson: superjson.stringify(user) } }
   return props
 }
 

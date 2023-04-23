@@ -7,28 +7,24 @@ import { type ConvoRating, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
-import Link from "next/link";
 import { isAbovePro } from "~/utils/license";
-
-const Rating: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
-
-  if (rating === 'POSITIVE') {
-    return <>😃</>
-  } else if (rating === 'NEGATIVE') {
-    return <>😢</>
-  }
-
-  return <>😐</>
-}
 
 
 const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
-  const { data: convoData, isLoading: isConvoLoading } = api.conversation.getConversations.useQuery({ orgId: org.id, projectId: project.id })
   const { data: dashboardData, isLoading: isDashboardLoading } = api.project.dashboardData.useQuery({ orgId: org.id, projectId: project.id })
 
+  const weeklyRatingData = dashboardData?.weeklyConversations.reduce((acc, curr) => {
+    acc[curr.rating] = curr._count.rating
+    return acc
+  }, {} as Record<ConvoRating, number>)
+
+  const monthlyRatingData = dashboardData?.weeklyConversations.reduce((acc, curr) => {
+    acc[curr.rating] = curr._count.rating
+    return acc
+  }, {} as Record<ConvoRating, number>)
 
   return (
     <>
@@ -52,7 +48,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Positive</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{dashboardData?.weeklyConversations[0]?._count.rating}</p>
+                        <p className="text-center text-3xl">{weeklyRatingData?.POSITIVE}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -62,7 +58,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Negative</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{dashboardData?.weeklyConversations[1]?._count.rating}</p>
+                        <p className="text-center text-3xl">{weeklyRatingData?.NEGATIVE}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -79,7 +75,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Positive</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{dashboardData?.monthlyConversations[0]?._count.rating}</p>
+                        <p className="text-center text-3xl">{monthlyRatingData?.POSITIVE}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -89,7 +85,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Negative</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{dashboardData?.monthlyConversations[1]?._count.rating}</p>
+                        <p className="text-center text-3xl">{monthlyRatingData?.NEGATIVE}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
