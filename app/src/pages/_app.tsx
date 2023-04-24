@@ -6,8 +6,9 @@ import { initDocsAI } from "@docsai/chat-sdk";
 
 import "~/styles/globals.css";
 import Head from "next/head";
+import { env } from "~/env.mjs";
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && env.NEXT_PUBLIC_NODE_ENV === "production") {
   initDocsAI("clfp5tn2a0007mc0ub8qch4x2", "#000")
 }
 
