@@ -32,7 +32,7 @@ const Home: NextPage = () => {
             <Image src="/images/app.png" alt="App" width={900} height={800} className="rounded-lg border z-50 relative mx-auto shadow-2xl"></Image>
           </section>
           <div className="mt-32 mx-auto w-full text-center text-2xl font-semibold">Build your agent with 3 simple steps</div>
-          <section className="mt-20 grid grid-cols-3 gap-20  pb-10  px-4">
+          <section className="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-20  pb-10  px-4">
             <div className="">
               <div className="text-lg font-semibold border border-zinc-600 rounded-full w-10 h-10 flex justify-center items-center p-1 text-zinc-600">1</div>
               <p className=" font-semibold flex items-center mt-2">
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
             </div>
           </section>
           <p className="mt-32 text-center text-2xl font-semibold">Features</p>
-          <section className="mt-20 grid grid-cols-3 gap-20 pb-10 px-4">
+          <section className="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-20 pb-10 px-4">
             <div className="">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
