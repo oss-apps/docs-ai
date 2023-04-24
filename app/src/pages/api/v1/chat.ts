@@ -7,6 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const apiKey = req.headers.authorization?.split(' ')[1]
 
+
   if (!apiKey) return res.status(401).send({ message: 'unauthourised request' })
 
   const project = await prisma.project.findUnique({
