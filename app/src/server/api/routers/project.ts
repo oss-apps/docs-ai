@@ -8,6 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { isAbovePro } from "~/utils/license";
 import slugify from "~/utils/slugify";
+import crypto from "crypto";
 
 
 
@@ -71,6 +72,28 @@ export const projectRouter = createTRPCRouter({
 
         else throw e
       }
+    }),
+  createOrRecreateApiKey: orgMemberProcedure.
+    input(z.object({ projectId: z.string(), orgId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.project) {
+        const apiKey = crypto.randomBytes(16).toString('hex');
+
+        await ctx.prisma.projectToken.upsert({
+          where: {
+            projectId: input.projectId
+          },
+          create: {
+            projectId: input.projectId,
+            projectApiKey: apiKey,
+          },
+          update: {
+            projectApiKey: apiKey,
+          },
+        })
+
+        return { apiKey }
+      } else throw new TRPCError({ message: 'Project not found', code: 'NOT_FOUND' });
     }),
   dashboardData: orgMemberProcedure
     .input(z.object({ orgId: z.string(), projectId: z.string() }))

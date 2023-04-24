@@ -52,6 +52,8 @@ export const docGPTRouter = createTRPCRouter({
 });
 
 export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string) => {
+  const chatHistory = convoId ? await getHistoryForConvo(convoId) : []
+
   const result = await docgpt.getChat(orgId, projectId, question, [], botName)
 
   const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, convoId, result.sources)

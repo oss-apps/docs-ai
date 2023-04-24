@@ -136,8 +136,17 @@ model Project {
     documents        Document[]
     Conversation     Conversation[]
     slackInstalation SlackInstallation?
+    projectToken     ProjectToken?
 
     @@unique([orgId, slug])
+}
+
+model ProjectToken {
+    id            String   @id @default(cuid())
+    updatedAt     DateTime @updatedAt
+    projectId     String   @unique
+    projectApiKey String   @db.Text
+    project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum DocumentType {

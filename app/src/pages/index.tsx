@@ -83,7 +83,7 @@ const Home: NextPage = () => {
               <p className=" font-semibold flex items-center mt-2">
                 Get summary and insights
               </p>
-              <p className="mt-2 text-gray-700">You can get summary of each conversation and mood of the users. It&apos;s currently available in professional plans.</p>
+              <p className="mt-2 text-gray-700">You can get summary of each conversation and mood of the users. It&apos;s currently available only in professional plans.</p>
             </div>
             <div className="">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -101,7 +101,7 @@ const Home: NextPage = () => {
               <p className=" font-semibold flex items-center mt-2">
                 Integrations
               </p>
-              <p className="mt-2 text-gray-700">DocsAI currently can be integrated with Slack & Discord. Integration with Crisp, Other datasources like DB are coming soon.</p>
+              <p className="mt-2 text-gray-700">DocsAI currently can be integrated with Slack. Integration with Crisp, Discord & Other datasources like DB are coming soon.</p>
             </div>
             <div className="">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -114,12 +114,24 @@ const Home: NextPage = () => {
             </div>
             <div className="">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
               </svg>
               <p className=" font-semibold flex items-center mt-2">
-                User details
+                Unlimited search
               </p>
-              <p className="mt-2 text-gray-700">You can pass details of user like (userId), so you can identify it with your internal systems. Really helpful if you want to follow-up afterwards.</p>
+              <p className="mt-2 text-gray-700">Chat credits are over? Don&apos;t worry! App will still search through documents and give you relevant files. Available from Professional plans</p>
+            </div>
+            <div className="">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <p className=" font-semibold flex items-center mt-2">
+                Open source
+              </p>
+              <p className="mt-2 text-gray-700">
+                I believe in open source. That being said maintaining open source project is harder than running a company. So I will open source only there&apos;s enough need.{' '}
+                <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="underline" rel="noreferrer">Drop in a star here</a>
+              </p>
             </div>
           </section>
           <section className="mt-32 px-4 lg:px-0">
@@ -164,14 +176,6 @@ const Home: NextPage = () => {
                     <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
                   </svg>
                   <p className=" lg:text-xl text-gray-600">
-                    Integrate with discord
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
                     Integrate with tools like crisp (coming soon)
                   </p>
                 </div>
@@ -198,14 +202,6 @@ const Home: NextPage = () => {
                   </svg>
                   <p className=" lg:text-xl text-gray-600">
                     Ask questions directly from slack
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Integrates with discord
                   </p>
                 </div>
               </div>

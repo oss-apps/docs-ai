@@ -7,6 +7,7 @@ import { env } from "~/env.mjs";
 import { WebClient } from '@slack/web-api'
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 import slackify from "slackify-markdown";
+import { getLinkDirectory } from "~/utils/link";
 
 const verifySlackMessage = (timestamp: number, reqBody: string, signature: string) => {
 	if ((Date.now() / 1000 - timestamp) > 60 * 5) {
@@ -45,14 +46,16 @@ const handleEvent = async (event: any) => {
 
 			const web = new WebClient(installation.accessToken);
 
-			const { answer } = await getAnswerFromProject(installation.project.orgId, installation.projectId, text, installation.project.botName)
+			const { answer, sources } = await getAnswerFromProject(installation.project.orgId, installation.projectId, text, installation.project.botName)
+
+			const finalAnswer = `${answer}\n\nSources:\n${sources.split(',').map((link: string) => `[${getLinkDirectory(link)}](${link})`).join('\n')}`
 
 			web.chat.postMessage({
 				blocks: [{
 					type: 'section',
 					text: {
 						type: 'mrkdwn',
-						text: slackify(answer),
+						text: slackify(finalAnswer),
 					}
 				}],
 				channel: event.channel,
