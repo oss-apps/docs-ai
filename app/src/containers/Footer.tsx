@@ -3,9 +3,7 @@ import Link from "next/link";
 const Footer: React.FC = () => {
   return (
     <footer className="mx-auto  max-w-6xl pb-10">
-      {'<!--email_off-->'}
       <p className="text-center text-lg text-gray-500">contact: hey@docsai.app</p>
-      {'<!--/email_off-->'}
       <div className="mt-4 flex gap-2 mx-auto justify-center items-center">
         <Link href="/terms" className="text-zinc-500 hover:underline underline-offset-2">
           Terms
