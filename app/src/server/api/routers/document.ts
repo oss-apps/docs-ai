@@ -39,7 +39,7 @@ export const documentRouter = createTRPCRouter({
       let parsedDocs: Array<{ url: string, size: number }> = []
       if (docs) {
         console.log('Load all path selected, so adding to temp cache')
-        await (await getRedisClient()).set(`docs:${result.id}`, JSON.stringify(docs), { ttl: 60 * 60 * 24 })
+        await (await getRedisClient()).set(`docs:${result.id}`, JSON.stringify(docs), { EX: 60 * 60 * 24 })
         parsedDocs = docs.map(d => ({ url: d.metadata.source as string, size: d.metadata.size as number }))
       }
 
@@ -98,7 +98,7 @@ export const documentRouter = createTRPCRouter({
           const docs = await docgpt.loadUrlDocument(document.src, '', input.orgId, input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString())
           if (docs) {
             console.log('Load all path selected, so adding to temp cache')
-            await (await getRedisClient()).set(`docs:${document.id}`, JSON.stringify(docs))
+            await (await getRedisClient()).set(`docs:${document.id}`, JSON.stringify(docs), { EX: 60 * 60 * 24 })
             parsedDocs = docs.map(d => ({ url: d.metadata.source as string, size: d.metadata.size as number }))
           }
         }
