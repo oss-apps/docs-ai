@@ -1,4 +1,4 @@
-import { type Project, type Org } from "@prisma/client";
+import { type Project, type Org, type Document } from "@prisma/client";
 import { type User } from "next-auth";
 import { z } from "zod";
 import { api } from "~/utils/api";
@@ -14,18 +14,25 @@ const documentSchema = z.object({
   content: z.string()
 })
 
-export const TextDocument: React.FC<{ org: Org, project: Project }> = ({ project, org }) => {
+export const TextDocument: React.FC<{ org: Org, project: Project, document?: Document }> = ({ project, org, document }) => {
   const router = useRouter()
   const { convoId } = router.query as { convoId: string }
 
   const createTextDocument = api.document.createTextDocument.useMutation()
+  const reIndexDocument = api.document.reIndexTextDocument.useMutation()
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(documentSchema) });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { title, content } = data as z.input<typeof documentSchema>
 
-    createTextDocument.mutate({ title, projectId: project.id, orgId: org.id, content })
+    if (document) {
+      await reIndexDocument.mutateAsync({ title, projectId: project.id, orgId: org.id, documentId: document.id, content })
+    } else {
+      await createTextDocument.mutateAsync({ title, projectId: project.id, orgId: org.id, content })
+    }
+
+    await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
   };
 
   if (convoId) return <ChatDocument org={org} project={project} convoId={convoId} />
@@ -37,17 +44,24 @@ export const TextDocument: React.FC<{ org: Org, project: Project }> = ({ project
         error={errors.src?.message?.toString()}
         placeholder="How to add document in DocsAI?"
         {...register('title', { required: 'Title is required' })}
+        defaultValue={document?.title || ''}
       />
 
       <Label>Content</Label>
       <TextArea
         error={errors.src?.message?.toString()}
         rows={10}
+        defaultValue={document?.src || ''}
         placeholder={"It's very simple to create a document in docs AI \n1. Create a project if not exist before\n2. Go to documents tab\n3. Click on new document button. \n4. Add a url or text you want to add"}
         {...register('content', { required: 'Content is required' })}
       />
 
-      <PrimaryButton disabled={createTextDocument.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
+      <PrimaryButton
+        disabled={createTextDocument.isLoading || reIndexDocument.isLoading}
+        loading={createTextDocument.isLoading || reIndexDocument.isLoading}
+        className="mx-auto mt-6">
+        Create
+      </PrimaryButton>
     </form>
   )
 }
@@ -88,7 +102,10 @@ export const ChatDocument: React.FC<{ org: Org, project: Project, convoId: strin
         defaultValue={content}
       />
 
-      <PrimaryButton disabled={createTextDocument.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
+      <PrimaryButton
+        disabled={createTextDocument.isLoading}
+        loading={createTextDocument.isLoading}
+        className="mx-auto mt-6">Create</PrimaryButton>
     </form>
   )
 }

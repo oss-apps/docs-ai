@@ -1,5 +1,7 @@
 volumes:
   data:
+  cache:
+
 
 services:
   postgres:
@@ -10,3 +12,9 @@ services:
       - 5432:5432
     volumes:
       - data:/var/lib/postgresql
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - cache:/data

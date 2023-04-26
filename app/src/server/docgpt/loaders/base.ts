@@ -15,6 +15,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   shouldLoadAllPaths = false
   skipPaths: Array<string> = []
   loadImages = false
+  visitedUrls = new Set();
 
   constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
     if (webPath.endsWith('/')) webPath = webPath.slice(0, -1)
@@ -29,8 +30,9 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     const $ = await this.scrape();
 
     if (this.shouldLoadAllPaths === true) {
-      return this.loadAllPaths($);
+      return this.loadPageRecursively()
     }
+
     return this.loadPath($);
   }
 
@@ -76,6 +78,12 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     return paths
   }
 
+  async loadPageRecursively(): Promise<Document[]> {
+    return loadPageRecursively(this.webPath)
+  }
+
+
+
   async loadAllPaths($: CheerioAPI): Promise<Document[]> {
     const relative_paths = $("a")
       .toArray()
@@ -106,4 +114,74 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     console.log(`Fetched ${documents.length} documents.`);
     return documents;
   }
+}
+
+
+function getDocumentFromPage($: CheerioAPI, url: string) {
+  $('script').remove()
+  $('styles').remove()
+
+  const pageContent = $("body main")[0] ? render($("body main")[0], false) : render($("body"), false)
+
+  const title = $("html h1").first().text().trim();
+
+
+  return new Document({
+    pageContent,
+    metadata: { source: url, title, size: new Blob([pageContent]).size },
+  })
+}
+
+
+
+async function loadPageRecursively(rootUrl: string) {
+  const visitedUrls = new Set();
+  const basePath = new URL(rootUrl).origin
+
+  const sanitizeUrl = (url: string) => {
+    const urlObj = new URL(url);
+    urlObj.search = '';
+    urlObj.hash = '';
+
+    url = urlObj.toString()
+    const surl = url.endsWith('/') ? url.slice(0, -1) : url
+    return surl
+  }
+
+  const loadPage = async (paramUrl: string) => {
+    const url = sanitizeUrl(paramUrl)
+    if (visitedUrls.has(url)) return []
+
+    visitedUrls.add(url)
+    const pageDocuments: Document[] = []
+    console.log(`Scraping ${url}`);
+    const $ = await WebBaseLoader._scrape(url);
+
+    pageDocuments.push(getDocumentFromPage($, url))
+
+    const relative_paths = $("a")
+      .toArray()
+      .map((element) => $(element).attr("href"))
+      .filter((text) => text && (text[0] === "/" || text.startsWith(basePath)));
+
+    const resultDocuments = await mapLimit(relative_paths, 5, async (path) => {
+      if (path) {
+        const url = path.startsWith('/') ? basePath + path : path;
+        return loadPage(url);
+      }
+
+      return null
+    })
+
+    for (const resultDocument of resultDocuments) {
+      if (resultDocument) {
+        pageDocuments.push(...resultDocument)
+      }
+    }
+
+
+    return pageDocuments
+  }
+
+  return loadPage(rootUrl)
 }

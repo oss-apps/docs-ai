@@ -15,20 +15,12 @@ import { Fragment, useState } from "react";
 
 const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const [docToDelete, setDocToDelete] = useState<Document | null>(null)
-  const [docToReIndex, setDocToReIndex] = useState<Document | null>(null)
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
   const { data, isLoading, refetch } = api.document.getDocuments.useQuery({ orgId: org.id, projectId: project.id })
-  const retry = api.document.reIndexDocument.useMutation()
   const deleteDocument = api.document.deleteDocument.useMutation()
-
-  const onRetry = async (documentId: string) => {
-    await retry.mutateAsync({ orgId: org.id, projectId: project.id, documentId })
-    await refetch()
-    setDocToReIndex(null)
-  }
 
   const onDelete = async (documentId: string) => {
     await deleteDocument.mutateAsync({ orgId: org.id, projectId: project.id, documentId })
@@ -38,7 +30,6 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
 
   const onClose = () => {
     setDocToDelete(null)
-    setDocToReIndex(null)
   }
 
   return (
@@ -86,18 +77,15 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                   <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2">Indexing</div> :
                                   <div className="flex">
                                     <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2">Failed</div>
-                                    <SmallButton
-                                      className="ml-2"
-                                      onClick={() => onRetry(document.id)}>
-                                      Retry
-                                    </SmallButton>
                                   </div>
                             }
 
-                            <button onClick={() => setDocToReIndex(document)}>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                              </svg>
+                            <button>
+                              <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                              </Link>
                             </button>
                             <button onClick={() => setDocToDelete(document)}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -115,7 +103,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
             </div>
           </div>
         </div>
-        <Transition appear show={!!docToDelete || !!docToReIndex} as={Fragment}>
+        <Transition appear show={!!docToDelete} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={onClose}>
             <Transition.Child
               as={Fragment}
@@ -158,11 +146,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                         <PrimaryButton onClick={() => onDelete(docToDelete.id)} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
                           Yes, Delete
                         </PrimaryButton>
-                      ) : (
-                        <PrimaryButton onClick={() => onRetry(docToReIndex!.id)} disabled={retry.isLoading} loading={retry.isLoading}>
-                          Yes, Re-Index
-                        </PrimaryButton>
-                      )}
+                      ) : null}
                       <SecondaryButton className="border border-gray-700" onClick={onClose}>
                         Cancel
                       </SecondaryButton>

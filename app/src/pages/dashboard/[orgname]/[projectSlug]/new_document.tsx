@@ -22,7 +22,7 @@ function getDocType(type: number) {
 }
 
 enum NewDocumentType {
-  URL= 1,
+  URL = 1,
   GITBOOK,
   TEXT,
 }
@@ -49,7 +49,7 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
             <div className="max-w-4xl mx-auto mt-5">
               <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
               <p className="mt-10 text-lg text-gray-800">{!docType ? 'Available sources' : null}</p>
-              { docType ? (
+              {docType ? (
                 <div className="max-w-2xl mx-auto">
                   <CreateDocumentForm org={org} project={project} docType={Number(docType)} />
                 </div>
@@ -57,7 +57,6 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
 
                 <div className="flex gap-12 flex-wrap mt-10">
                   <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.URL}`} />
-                  <DocumentSource name="Gitbook" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.GITBOOK}`} />
                   <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.TEXT}`} />
                   <DocumentSource name="Notion" />
                   <DocumentSource name="PDF" />
@@ -71,7 +70,7 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
   );
 };
 
-const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: NewDocumentType }> = ({ org, project, docType}) => {
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: NewDocumentType }> = ({ org, project, docType }) => {
   if (docType === NewDocumentType.GITBOOK) {
     return <URLDocument org={org} project={project} urlType="gitbook" />
   }

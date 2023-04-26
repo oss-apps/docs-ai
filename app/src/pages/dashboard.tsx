@@ -1,6 +1,4 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
 import Nav from "~/containers/Nav/Nav";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";

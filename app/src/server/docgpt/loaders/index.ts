@@ -34,22 +34,26 @@ async function updateStatus(projectId: string, orgId: string, documentId: string
   })
 }
 
+export async function loadUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
+  const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false })
 
-export async function indexUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
-  let loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false })
-  if (type === 'gitbook') {
-    loader = new GitbookLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(',') })
-  }
+  const docs = await loader.load()
+  if (!loadAllPath) return indexUrlDocument(docs, orgId, projectId, documentId)
 
+  return docs
+}
+
+
+
+export async function indexUrlDocument(docs: Document[], orgId: string, projectId: string, documentId: string) {
   let title = ''
   let error = false
   let tokens = 0
 
   try {
-    const docs = await loader.load()
     title = docs[0]?.metadata.title as string
-    await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
     tokens = new Blob(docs.map(d => d.pageContent)).size
+    await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
     console.log(`Loaded ${docs.length} documents with ${tokens} tokens`)
   } catch (e) {
     console.error(e)

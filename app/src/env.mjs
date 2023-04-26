@@ -33,6 +33,7 @@ const server = z.object({
   STRIPE_API_KEY: z.string(),
   STRIPE_SECRET: z.string(),
   SENDGRID_API_KEY: z.string(),
+  REDIS_URL: z.string().url(),
 });
 
 /**
@@ -69,6 +70,7 @@ const processEnv = {
   STRIPE_API_KEY: process.env.STRIPE_API_KEY,
   STRIPE_SECRET: process.env.STRIPE_SECRET,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 // Don't touch the part below

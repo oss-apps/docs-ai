@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { type ConvoRating, MessageUser, Plan } from "@prisma/client"
+import { type ConvoRating, MessageUser, Plan, DocumentType } from "@prisma/client"
 import { getVectorDB } from "./store"
 import { ChatOpenAI } from "langchain/chat_models";
 import { SIMPLE_CHAT_PROMPT, CONDENSE_PROMPT, SUMMARY_PROMPT, SUMMARY_ANSWER } from "./templates";
@@ -68,11 +68,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
   }
 
   const { question: stdQuestion, tokens: stdTokens } = await getStandaloneQuestion(chatHistory, question)
-
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })
-
-  documents.map(d => console.log(d.pageContent))
-
 
   const history = chatHistory.map(({ role, content }) => {
     if (role === MessageUser.user) {
@@ -100,7 +96,8 @@ export const getChat = async (orgId: string, projectId: string, question: string
   const { inputTokens, outputTokens } = getTokens('', questionPrompt, result.text);
 
   const sources = documents.reduce((acc, d) => {
-    acc[d.metadata.source as string] = true
+    if (d.metadata.type === DocumentType.URL) acc[d.metadata.source as string] = true
+
     return acc
   }, {} as Record<string, boolean>)
 
