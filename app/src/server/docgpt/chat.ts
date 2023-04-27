@@ -71,8 +71,6 @@ export const getChat = async (orgId: string, projectId: string, question: string
 
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })
 
-  documents.map(d => console.log(d.pageContent))
-
   const history = chatHistory.map(({ role, content }) => {
     if (role === MessageUser.user) {
       return new HumanChatMessage(content);
