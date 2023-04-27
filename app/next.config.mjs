@@ -1,4 +1,11 @@
 // @ts-check
+import nextra from 'nextra'
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.jsx',
+})
+
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -42,4 +49,4 @@ const config = {
   }
 };
 
-export default config;
+export default withNextra(config)

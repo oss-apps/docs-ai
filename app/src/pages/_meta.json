@@ -1,0 +1,14 @@
+{
+  "index": {
+    "title": "Home",
+    "type": "page",
+    "href": "/",
+    "newWindow": true
+  },
+  "contact": {
+    "title": "Twitter",
+    "type": "page",
+    "href": "https://twitter.com/KM_Koushik_",
+    "newWindow": true
+  }
+}

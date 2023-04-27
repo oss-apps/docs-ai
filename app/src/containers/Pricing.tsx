@@ -46,7 +46,6 @@ const Pricing: React.FC<{
         <div className="relative self-center mt-6  rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
           <button
             onClick={() => setBillingInterval('month')}
-            type="button"
             className={`${billingInterval === 'month'
               ? 'relative w-1/2 bg-black border-zinc-800 shadow-sm text-white'
               : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-700'
@@ -56,7 +55,6 @@ const Pricing: React.FC<{
           </button>
           <button
             onClick={() => setBillingInterval('year')}
-            type="button"
             className={`${billingInterval === 'year'
               ? 'relative w-1/2 bg-black border-zinc-800 shadow-sm text-white'
               : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-700'

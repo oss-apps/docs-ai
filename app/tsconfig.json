@@ -39,6 +39,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
+    "**/*.jsx",
     ".next/types/**/*.ts"
   ],
   "exclude": [

@@ -1,0 +1,62 @@
+# Integrations
+
+## Embed Chatbot on your website
+First you need to install the SDK on you site. Use the following command
+```sh
+yarn add @docsai/chat-sdk 
+```
+or 
+
+```sh
+npm install @docsai/chat-sdk
+```
+
+Copy the project id from `Settings` tab and use it in the following code snippet.
+
+```js
+import { initDocsAI } from "@docsai/chat-sdk";
+
+// Second argument will be the primary color of the chat widget
+initDocsAI("<PROJECT_ID>", "#000");
+```
+
+
+
+## Slack
+- In order to use the slack integration, go to `Settings` tab and click on `Add to Slack` button.
+- You will be redirected to Slack's authorization page. You can install it to any of your Slack workspaces.
+- Goto any channel and type `@docsAI <your_question_here>` and bot will reply with the answer.
+
+## API
+If you need any custom integration, you can use our chat API. You need the API key for that. You can get the API key from `Settings` tab. If the Key is not generated, click on `Generate` button and copy the key.
+
+**Example**
+```js
+
+fetch('https://docsai.app/api/v1/chat', {
+    method: 'POST',
+    body: JSON.stringify({ projectId: '<project_id>', question: '<your_question>' }),
+    headers: {
+        'Authorization': 'Bearer <api_key>',
+        'Content-Type': 'application/json'
+    }
+})
+```
+
+Parameters:
+| Parameter |  description| Required |
+| --- | --- | --- |
+| projectId | Can be taken from settings page | Yes|
+| question | Question you want to ask | Yes|
+| conversationId | Chat ID to have continuous conversation | No |
+
+Response:
+```json
+{
+    "tokens": 724,
+    "answer": "Our pricing plans are as follows:\n\n- Free: $0/month, includes 1 project, 2 MB storage, and 25 messages/month.\n- Basic: $9/month, includes 2 projects, 5 MB storage, and 1000 messages/month.\n- Professional: $49/month, includes 5 projects, 25 MB storage, 5000 messages/month, unlimited search after credits, and generate summary and mood for conversation.\n- Enterprise: $129/month, includes unlimited projects, 100 MB storage, 12000 messages/month, unlimited search after credits, and generate summary and mood for conversation.\n\nIf these plans do not suit your needs, you can contact [email protected] for custom hosting options. Additionally, our API is available for custom integration and unlimited search is available even after chat credits are used up, starting from the Professional plan.",
+    "sources": "https://docsai.app/pricing,https://docsai.app/dashboard,https://docsai.app",
+    "limitReached": false,
+    "conversationId": "clgyrh8vm0003u1kix801l4qz"
+}
+```
