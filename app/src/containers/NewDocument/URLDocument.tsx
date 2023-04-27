@@ -105,14 +105,14 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
               />
             </Switch>
           </div>
-          <Label className={`mt-6 ${!loadAllPath ? 'text-gray-400' : ''}`}>Paths to skip</Label>
+          {/* <Label className={`mt-6 ${!loadAllPath ? 'text-gray-400' : ''}`}>Paths to skip</Label>
           <Input
             disabled={!loadAllPath}
             error={errors.skipPath?.message?.toString()}
             placeholder="/blog, /about"
             defaultValue={docSkipPath}
             {...register('skipPaths', { required: 'URL is required' })}
-          />
+          /> */}
           <PrimaryButton
             type="submit"
             disabled={createUrlDocument.isLoading || reIndexDocument.isLoading}
