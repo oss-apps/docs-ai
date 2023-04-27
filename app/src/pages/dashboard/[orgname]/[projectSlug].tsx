@@ -48,7 +48,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Positive</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{weeklyRatingData?.POSITIVE}</p>
+                        <p className="text-center text-3xl">{weeklyRatingData?.POSITIVE ?? '0'}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -58,7 +58,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Negative</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{weeklyRatingData?.NEGATIVE}</p>
+                        <p className="text-center text-3xl">{weeklyRatingData?.NEGATIVE ?? '0'}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -75,7 +75,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Positive</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{monthlyRatingData?.POSITIVE}</p>
+                        <p className="text-center text-3xl">{monthlyRatingData?.POSITIVE ?? '0'}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
@@ -85,7 +85,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     <p className="text-zinc-500 text-center">Negative</p>
                     <div className="mt-2">
                       {isAbovePro(org) ? (
-                        <p className="text-center text-3xl">{monthlyRatingData?.NEGATIVE}</p>
+                        <p className="text-center text-3xl">{monthlyRatingData?.NEGATIVE ?? '0'}</p>
                       ) : (
                         <p className="text-center">Available from Pro</p>
                       )}
