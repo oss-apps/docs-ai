@@ -29,7 +29,7 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
   })
 
   const splitDocuments = await splitter.splitDocuments(documents)
-  console.log(splitDocuments.map(d => d.pageContent))
+  console.log(splitDocuments.map(d => d.pageContent));
   await PineconeStore.fromDocuments(splitDocuments, new OpenAIEmbeddings(), { pineconeIndex, namespace: projectId })
 }
 
