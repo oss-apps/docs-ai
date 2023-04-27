@@ -39,6 +39,27 @@ body {
   @apply rounded-lg border border-gray-300 m-2
 }
 
+.markdown th,
+td {
+  @apply text-left px-4;
+}
+
+.markdown tr {
+  @apply even:bg-zinc-200;
+}
+
+.markdown thead {
+  @apply bg-zinc-200 rounded-md;
+}
+
+.markdown table {
+  @apply m-2 my-4 rounded-md border border-zinc-300;
+}
+
+.markdown thead tr:first-child td:first-child {
+  @apply rounded-t-md;
+}
+
 pre {
   white-space: pre-wrap;
 }
