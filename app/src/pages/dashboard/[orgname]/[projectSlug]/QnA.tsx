@@ -18,7 +18,6 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
       </Head>
       <main className="h-full">
         <div className="h-full flex">

@@ -76,8 +76,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
+        <title>Docs AI - Settings</title>
       </Head>
       <main className="h-full">
         <div className="h-full flex">

@@ -25,7 +25,6 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
       </Head>
       <main className="h-full p-5">
         <Nav org={org?.org} />

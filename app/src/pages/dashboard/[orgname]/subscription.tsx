@@ -58,7 +58,6 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
       <>
         <Head>
           <title>Docs AI</title>
-          <meta name="description" content="Create an AI support agent with your documents." />
           <link rel="icon" href="/images/favicon.ico" />
 
         </Head>

@@ -20,7 +20,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create an AI support agent with your documents." />
+        <meta property="og:title" content="DocsAI" />
+        <meta name="description" content="Create AI support agent with your documents." />
+        <meta property="og:image" content="https://docsai.app/images/app.png" />
+
+        <meta property="twitter:title" content="DocsAI" />
+        <meta property="twitter:description" content="Create AI support agent with your documents." />
+        <meta property="twitter:image" content="https://docsai.app/images/app.png" />
         <link rel="icon" href="/images/favicon.ico" />
         <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="494f02eb-86bc-460d-ac63-db4d351eea9c" async></script>
       </Head>

@@ -45,7 +45,6 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
       </Head>
       <main className="h-full">
         <div className="h-full flex">
@@ -67,65 +66,65 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
           </div>
         </div>
         <Transition appear show={isEmbedOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+          <Dialog as="div" className="relative z-10" onClose={closeModal}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Install SDK
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <MarkDown markdown={installMsg} />
-                  </div>
-
-                  <div className="mt-5 text-lg font-medium leading-6 text-gray-900">
-                    <p>Initialise SDK</p>
-                  </div>
-
-                  <div>
-                    <MarkDown markdown={initialiseMsg} />
-                  </div>
-
-
-                  <div className="mt-4 mx-auto">
-                    <PrimaryButton
-                      type="button"
-                      onClick={closeModal}
-                      className="mx-auto"
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Done
-                    </PrimaryButton>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                      Install SDK
+                    </Dialog.Title>
+                    <div className="mt-2">
+                      <MarkDown markdown={installMsg} />
+                    </div>
+
+                    <div className="mt-5 text-lg font-medium leading-6 text-gray-900">
+                      <p>Initialise SDK</p>
+                    </div>
+
+                    <div>
+                      <MarkDown markdown={initialiseMsg} />
+                    </div>
+
+
+                    <div className="mt-4 mx-auto">
+                      <PrimaryButton
+                        type="button"
+                        onClick={closeModal}
+                        className="mx-auto"
+                      >
+                        Done
+                      </PrimaryButton>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
             </div>
-          </div>
-        </Dialog>
-      </Transition>
+          </Dialog>
+        </Transition>
       </main>
     </>
   );

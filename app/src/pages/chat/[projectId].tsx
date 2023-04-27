@@ -38,7 +38,6 @@ const QnAPage: NextPage<{ orgJson: string | null, projectJson: string | null }> 
     <>
       <Head>
         <title>{org.name}</title>
-        <meta name="description" content="Create chat bot with your documents in 5 minutes" />
       </Head>
       <main className="h-full">
         <div className="h-full flex">
