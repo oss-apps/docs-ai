@@ -2,9 +2,10 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import { useConfig } from "nextra-theme-docs"
 import Footer from "~/containers/Footer"
+import type { DocsThemeConfig } from 'nextra-theme-docs';
 
 
-const config = {
+const config: DocsThemeConfig = {
   logo: (
     <div className="flex items-center">
       <Image src="/images/logo.png" width={40} height={40} alt="logo" className="rounded-lg"></Image>
@@ -13,7 +14,6 @@ const config = {
   ),
 
   logoLink: '/docs/getting-started',
-
   project: {
     link: 'https://github.com/docs-ai/docs-ai',
   },
@@ -27,9 +27,6 @@ const config = {
   sidebar: {
     toggleButton: false,
   },
-  editLink: {
-    component: null,
-  },
   feedback: {
     content: null,
   },
@@ -38,9 +35,12 @@ const config = {
       titleTemplate: '%s - DocsAI',
     }
   },
-  breadcrumb: {
-    component: null,
+  editLink: {
+    text: ''
   },
+  nextThemes: {
+    defaultTheme: 'light',
+  }
 }
 
 
