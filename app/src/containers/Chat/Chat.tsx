@@ -67,9 +67,24 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   }
 
   useEffect(() => {
-    const cb = () => {
+    const cb = async () => {
+      const apiUrl = '/api/v1/endConversation';
       if (conversation) {
-        summarizeConversation.mutate({ projectId: project.id, convoId: conversation?.id, orgId: org.id })
+        const blobData = new Blob([JSON.stringify({ projectId: project.id, conversationId: conversation?.id })], { type: 'application/json' });
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(apiUrl, blobData);
+        } else {
+          // Fallback for browsers that don't support sendBeacon()
+          // This may not always work when the page is being closed
+          await fetch(apiUrl, {
+            method: 'POST',
+            body: blobData,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            keepalive: true
+          });
+        }
       }
     }
     window.addEventListener('beforeunload', cb)
