@@ -38,8 +38,7 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
     setIsEmbedOpen(true)
   }
 
-  const installMsg = "```\nyarn add @docsai/chat-sdk \n```\nor\n```\nnpm install @docsai/chat-sdk\n```"
-  const initialiseMsg = `\`\`\`\nimport { initDocsAI } from \"@docsai/chat-sdk\";\n\n// Second argument will be the primary color of the chat widget\ninitDocsAI(\"${project.id}\", \"#000\");\n`
+  const installScript = `\`\`\`\n<script src="https://docsai.app/embed.min.js" project-id="${project.id}" primary-color="#000" async></script>\n`
 
   return (
     <>
@@ -95,20 +94,11 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Install SDK
+                      Add the following script to your website
                     </Dialog.Title>
                     <div className="mt-2">
-                      <MarkDown markdown={installMsg} />
+                      <MarkDown markdown={installScript} />
                     </div>
-
-                    <div className="mt-5 text-lg font-medium leading-6 text-gray-900">
-                      <p>Initialise SDK</p>
-                    </div>
-
-                    <div>
-                      <MarkDown markdown={initialiseMsg} />
-                    </div>
-
 
                     <div className="mt-4 mx-auto">
                       <PrimaryButton

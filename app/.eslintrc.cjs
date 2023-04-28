@@ -17,7 +17,7 @@ module.exports = {
   },
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
-  "ignorePatterns": ["theme.config.tsx"],
+  "ignorePatterns": ["theme.config.tsx", "embed.js", "embed.min.js", "**.js"],
   rules: {
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/consistent-type-imports": [

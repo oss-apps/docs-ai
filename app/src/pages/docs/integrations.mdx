@@ -1,23 +1,10 @@
 # Integrations
 
 ## Embed Chatbot on your website
-First you need to install the SDK on you site. Use the following command
-```sh
-yarn add @docsai/chat-sdk 
-```
-or 
+Embed chat bot by adding the below script to your website.
 
-```sh
-npm install @docsai/chat-sdk
-```
-
-Copy the project id from `Settings` tab and use it in the following code snippet.
-
-```js
-import { initDocsAI } from "@docsai/chat-sdk";
-
-// Second argument will be the primary color of the chat widget
-initDocsAI("<PROJECT_ID>", "#000");
+```html
+<script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" primary-color="#000" async></script>
 ```
 
 
