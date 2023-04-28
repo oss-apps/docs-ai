@@ -22,7 +22,7 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
-  const document: Document & { parsedUrls: ParsedUrls } = superjson.parse(documentJson)
+  const document: Document & { parsedUrls: ParsedUrls, totalSize: number } = superjson.parse(documentJson)
 
   console.log(document.parsedUrls)
 
@@ -50,7 +50,7 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
   );
 };
 
-const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { parsedUrls: ParsedUrls } }> =
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { parsedUrls: ParsedUrls, totalSize: number } }> =
   ({ org, project, docType, document }) => {
     if (docType === DocumentType.TEXT) {
       return <TextDocument org={org} project={project} document={document} />
@@ -114,14 +114,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const parsedDocuments = JSON.parse(await (await getRedisClient())
     .get(`docs:${id}`) || '[]') as ParsedDocs
 
-  const parsedUrls = parsedDocuments.map(d => ({ url: d.metadata.source as string, size: Number(d.metadata.size) }))
+  const parsedUrls = []
+  let totalSize = 0
+  for (const doc of parsedDocuments) {
+    parsedUrls.push({ url: doc.metadata.source as string, size: Number(doc.metadata.size) })
+    totalSize += Number(doc.metadata.size)
+  }
 
   const props = {
     props: {
       user: session.user,
       orgJson: superjson.stringify(org.org),
       projectJson: superjson.stringify(org.org.projects[0]),
-      documentJson: superjson.stringify({ ...org.org.projects[0].documents[0], parsedUrls })
+      documentJson: superjson.stringify({ ...org.org.projects[0].documents[0], parsedUrls, totalSize })
     }
   }
   return props

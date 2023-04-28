@@ -10,6 +10,7 @@ import { Switch } from "@headlessui/react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { type ParsedUrls, type ParsedDocs } from "~/types";
+import { getLimits } from "~/utils/license";
 
 
 const documentSchema = z.object({
@@ -17,14 +18,13 @@ const documentSchema = z.object({
   skipPaths: z.string().optional(),
 })
 
-export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: string, document?: Document & { parsedUrls: ParsedUrls } }>
+export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: string, document?: Document & { parsedUrls: ParsedUrls, totalSize: number } }>
   = ({ project, org, urlType, document }) => {
     const router = useRouter()
     const [skippedUrls, setSkippedUrls] = useState<Record<string, boolean>>({})
     const [parsedUrls, setParsedUrls] = useState<ParsedUrls>(document?.parsedUrls || [])
+    const [totalSize, setTotalSize] = useState<number>(document?.totalSize || 0)
     const [doc, setDoc] = useState<Document | null>(document || null)
-
-    console.log(parsedUrls)
 
     const createUrlDocument = api.document.createUrlDocument.useMutation()
     const reIndexDocument = api.document.reIndexUrlDocument.useMutation()
@@ -32,11 +32,13 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
 
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(documentSchema) });
 
+    const limits = getLimits(org.plan)
+
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
       const { src, skipPaths } = data as z.input<typeof documentSchema>
 
       try {
-        const { parsedDocs, document } = !doc ?
+        const { parsedDocs, document, totalSize } = !doc ?
           await createUrlDocument.mutateAsync({ src, projectId: project.id, orgId: org.id, type: urlType, loadAllPath, skipPaths })
           : await reIndexDocument.mutateAsync({ projectId: project.id, orgId: org.id, documentId: doc.id })
         setDoc(document)
@@ -44,6 +46,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
           await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
         }
         setParsedUrls(parsedDocs)
+        setTotalSize(totalSize)
         // await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
       } catch (e) {
         console.log(e)
@@ -78,6 +81,16 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
     }, [document])
 
     const [loadAllPath, setLoadAllPath] = useState(docLoadAllPath)
+
+    const quota = (limits.documentSize - Number(org.documentTokens)) / 1e3
+
+    const isQuotaExceeded = totalSize / 1000 > quota
+
+    const onSkipToggle = (url: string, size: number) => {
+      const isSkipped = skippedUrls[url]
+      setSkippedUrls({ ...skippedUrls, [url]: !isSkipped })
+      setTotalSize(totalSize + (isSkipped ? size : -size))
+    }
 
 
     return (
@@ -135,12 +148,12 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
                       {(doc.size / 1000).toFixed(1)} KB
                     </p>
                     {skippedUrls[doc.url] ?
-                      <button onClick={() => setSkippedUrls({ ...skippedUrls, [doc.url]: false })}>
+                      <button onClick={() => onSkipToggle(doc.url, doc.size)}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button> :
-                      <button onClick={() => setSkippedUrls({ ...skippedUrls, [doc.url]: true })}>
+                      <button onClick={() => onSkipToggle(doc.url, doc.size)}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>
@@ -149,17 +162,32 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
                 </div>
               ))}
             </div>
+            <div className="flex justify-end p-2">
+              <div>
+                <div>
+                  <span className="text-zinc-500">Total: </span>
+                  <span className={`${isQuotaExceeded ? 'text-red-500' : 'text-green-500'}`}>{totalSize / 1000} KB</span>
+                </div>
+                <div>
+                  <span className="text-sm text-zinc-500">Quota left:  </span>
+                  <span className="text-sm">{quota < 0 ? 0 : quota} KB</span>
+                </div>
+              </div>
+            </div>
           </div>
         ) : null}
 
         {doc && parsedUrls.length ? (
           <PrimaryButton
             onClick={onIndex}
-            disabled={indexUrlDocument.isLoading}
+            disabled={indexUrlDocument.isLoading || isQuotaExceeded}
             loading={indexUrlDocument.isLoading}
             className="mx-auto mt-6">
             Create document
           </PrimaryButton>
+        ) : null}
+        {isQuotaExceeded ? (
+          <div className="text-red-400 mt-2 text-center">Quota exceeded</div>
         ) : null}
       </>
     )

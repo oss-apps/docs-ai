@@ -12,7 +12,7 @@ import { prisma } from "~/server/db";
 import * as docgpt from '~/server/docgpt/index'
 import { deleteDocumentVector } from "~/server/docgpt/store";
 import { type ParsedDocs } from "~/types";
-
+import { getLimits } from "~/utils/license";
 
 
 export const documentRouter = createTRPCRouter({
@@ -36,16 +36,21 @@ export const documentRouter = createTRPCRouter({
       })
 
       const docs = await docgpt.loadUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths)
-      let parsedDocs: Array<{ url: string, size: number }> = []
+      const parsedDocs: Array<{ url: string, size: number }> = []
+      let totalSize = 0
       if (docs) {
         console.log('Load all path selected, so adding to temp cache')
         await (await getRedisClient()).set(`docs:${result.id}`, JSON.stringify(docs), { EX: 60 * 60 * 24 })
-        parsedDocs = docs.map(d => ({ url: d.metadata.source as string, size: d.metadata.size as number }))
+        for (const doc of docs) {
+          totalSize += doc.metadata.size as number
+          parsedDocs.push({ url: doc.metadata.source as string, size: doc.metadata.size as number })
+        }
       }
 
       return {
         document: result,
         parsedDocs,
+        totalSize,
       };
     }),
 
@@ -57,7 +62,8 @@ export const documentRouter = createTRPCRouter({
           id: input.documentId,
         }
       })
-      let parsedDocs: Array<{ url: string, size: number }> = []
+      const parsedDocs: Array<{ url: string, size: number }> = []
+      let totalSize = 0
 
       if (document) {
         const details = document.details as Prisma.JsonObject
@@ -99,14 +105,18 @@ export const documentRouter = createTRPCRouter({
           if (docs) {
             console.log('Load all path selected, so adding to temp cache')
             await (await getRedisClient()).set(`docs:${document.id}`, JSON.stringify(docs), { EX: 60 * 60 * 24 })
-            parsedDocs = docs.map(d => ({ url: d.metadata.source as string, size: d.metadata.size as number }))
+            for (const doc of docs) {
+              totalSize += doc.metadata.size as number
+              parsedDocs.push({ url: doc.metadata.source as string, size: doc.metadata.size as number })
+            }
           }
         }
       }
 
       return {
         document,
-        parsedDocs: parsedDocs
+        parsedDocs: parsedDocs,
+        totalSize,
       };
     }),
 
@@ -130,9 +140,19 @@ export const documentRouter = createTRPCRouter({
         return acc
       }, {} as Record<string, boolean>)
 
-      const docs = parsedDocs
+      const docs: Document[] = []
+      let totalSize = 0
+      const filtredDocs = parsedDocs
         .filter(d => !skipPaths[d.metadata.source as string])
-        .map(d => new Document({ pageContent: d.pageContent, metadata: d.metadata }))
+
+      for (const doc of filtredDocs) {
+        docs.push(new Document({ pageContent: doc.pageContent, metadata: doc.metadata }))
+        totalSize += Number(doc.metadata.size)
+      }
+
+      if (ctx.org && Number(ctx.org?.documentTokens) + totalSize > getLimits(ctx.org?.plan).documentSize) {
+        throw new TRPCError({ message: 'Document size limit exceeded', code: 'INTERNAL_SERVER_ERROR' })
+      }
 
       await docgpt.indexUrlDocument(docs, input.orgId, input.projectId, input.documentId)
       await (await getRedisClient()).del(`docs:${input.documentId}`);
@@ -152,6 +172,11 @@ export const documentRouter = createTRPCRouter({
           title: input.title,
         }
       })
+
+      if (ctx.org && Number(ctx.org?.documentTokens) + new Blob([input.content]).size > getLimits(ctx.org?.plan).documentSize) {
+        throw new TRPCError({ message: 'Document size limit exceeded', code: 'INTERNAL_SERVER_ERROR' })
+      }
+
       await docgpt.indexTextDocument(input.content, input.title, input.orgId, input.projectId, result.id)
         .then(console.log)
         .catch(console.error)
@@ -239,10 +264,17 @@ export const documentRouter = createTRPCRouter({
       const parsedDocuments = JSON.parse(await (await getRedisClient())
         .get(`docs:${input.documentId}`) || '[]') as ParsedDocs
 
-      const parsedUrls = parsedDocuments.map(d => ({ url: d.metadata.source as string, size: Number(d.metadata.size) }))
+      const parsedUrls = []
+      let totalSize = 0
+      for (const doc of parsedDocuments) {
+        parsedUrls.push({ url: doc.metadata.source as string, size: Number(doc.metadata.size) })
+        totalSize += Number(doc.metadata.size)
+      }
+
 
       return {
         parsedUrls,
+        totalSize,
       };
     }),
 });
