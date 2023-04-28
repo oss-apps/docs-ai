@@ -88,7 +88,7 @@ function initDocsAI(projectId, primaryColor) {
   }
   `
 
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && document.getElementById("docsai-root") === null) {
     const root = document.createElement("div");
     root.id = "docsai-root";
     root.className = "docsai-root";
