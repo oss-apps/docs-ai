@@ -9,7 +9,7 @@ import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { sendSignInEmail } from "./email";
+import { sendFollowUpEmail, sendSignInEmail } from "./email";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -73,6 +73,15 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  events: {
+    createUser: (message) => {
+
+      console.log("createUser", message);
+      if (message.user.email) {
+        sendFollowUpEmail(message.user.email, "https://docsai.app").catch(console.error);
+      }
+    }
+  }
 };
 
 /**
