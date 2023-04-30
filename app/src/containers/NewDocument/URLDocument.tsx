@@ -18,11 +18,11 @@ const documentSchema = z.object({
   skipPaths: z.string().optional(),
 })
 
-export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: string, document?: Document & { parsedUrls: ParsedUrls, totalSize: number } }>
+export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: string, document?: Document & { documentData: ParsedUrls, totalSize: number } }>
   = ({ project, org, urlType, document }) => {
     const router = useRouter()
     const [skippedUrls, setSkippedUrls] = useState<Record<string, boolean>>({})
-    const [parsedUrls, setParsedUrls] = useState<ParsedUrls>(document?.parsedUrls || [])
+    const [parsedUrls, setParsedUrls] = useState<ParsedUrls>(document?.documentData || [])
     const [totalSize, setTotalSize] = useState<number>(document?.totalSize || 0)
     const [doc, setDoc] = useState<Document | null>(document || null)
 
@@ -139,21 +139,21 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
             <p className="text-zinc-500 text-lg">Fetched pages</p>
             <div className="max-h-[50vh] border border-gray-400 rounded-md w-full overflow-auto">
               {parsedUrls.map((doc) => (
-                <div key={doc.url} className={`p-2 border-b flex justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.url] ? 'bg-red-50' : ''}`}>
-                  <a href={doc.url} target="_blank" rel="noreferrer" className={`text-zinc-500 hover:underline underline-offset-2`}>
-                    {doc.url}
+                <div key={doc.id} className={`p-2 border-b flex justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.id] ? 'bg-red-50' : ''}`}>
+                  <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-500 hover:underline underline-offset-2`}>
+                    {doc.uniqueId}
                   </a>
                   <div className="flex gap-4 items-center">
                     <p className="text-zinc-600">
                       {(doc.size / 1000).toFixed(1)} KB
                     </p>
-                    {skippedUrls[doc.url] ?
-                      <button onClick={() => onSkipToggle(doc.url, doc.size)}>
+                    {skippedUrls[doc.id] ?
+                      <button onClick={() => onSkipToggle(doc.id, doc.size)}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button> :
-                      <button onClick={() => onSkipToggle(doc.url, doc.size)}>
+                      <button onClick={() => onSkipToggle(doc.id, doc.size)}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>

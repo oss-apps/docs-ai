@@ -4,6 +4,6 @@ export enum URLType {
   DEFAULT = 'DEFAULT'
 }
 
-export type ParsedUrls = Array<{ url: string, size: number }>
+export type ParsedUrls = Array<{ id: string, uniqueId: string, size: number }>
 
 export type ParsedDocs = Array<{ pageContent: string, metadata: Record<string, string> }> 

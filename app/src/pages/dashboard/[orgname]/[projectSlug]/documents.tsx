@@ -12,6 +12,23 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
+const Status = ({ status }: { status: IndexStatus }) => {
+  switch (status) {
+    case IndexStatus.SUCCESS:
+      return <div className="text-sm text-green-600 bg-green-200 p-0.5 rounded-md px-2 h-fit">Indexed</div>
+    case IndexStatus.INDEXING:
+      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Indexing</div>
+    case IndexStatus.FETCHING:
+      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching</div>
+    case IndexStatus.FETCH_DONE:
+      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching done</div>
+    case IndexStatus.FETCHING_FAILED:
+      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Fetching failed</div>
+    case IndexStatus.FAILED:
+      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Failed</div>
+  }
+}
+
 
 const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const [docToDelete, setDocToDelete] = useState<Document | null>(null)
@@ -57,7 +74,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   <div className="border mt-4  rounded-md">
                     <ul>
                       {data?.documents.map((document) => (
-                        <li key={document.id} className="p-5 flex justify-between items-center border-b last:border-none">
+                        <li key={document.id} className="p-5 grid grid-cols-3 gap-20 border-b last:border-none">
                           <div>
                             <div className="font-semibold">{document.title}</div>
                             <div className="text-sm text-gray-500 truncate max-w-2xl">
@@ -68,17 +85,19 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                 document.src}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex gap-4">
+                            <Status status={document.indexStatus} />
+
                             {
-                              document.indexStatus === IndexStatus.SUCCESS ?
-                                <div className="text-sm text-green-600 bg-green-200 p-0.5 rounded-md px-2">Indexed</div> :
-                                document.indexStatus === IndexStatus.INDEXING ?
-                                  <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2">Indexing</div> :
-                                  <div className="flex">
-                                    <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2">Failed</div>
-                                  </div>
+                              document.indexStatus !== IndexStatus.SUCCESS ? (
+                                <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
+                                  <SmallButton>Complete setup</SmallButton>
+                                </Link>
+                              ) : null
                             }
 
+                          </div>
+                          <div className="flex items-center gap-2 justify-end">
                             <button>
                               <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

@@ -12,7 +12,6 @@ import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { api } from "~/utils/api";
 import { type ParsedDocs, type ParsedUrls } from "~/types";
-import { getRedisClient } from "~/server/cache";
 
 
 const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string }> = ({ user, orgJson, projectJson, documentJson }) => {
@@ -22,9 +21,15 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
-  const document: Document & { parsedUrls: ParsedUrls, totalSize: number } = superjson.parse(documentJson)
+  const document: Document & {
+    documentData: {
+      size: number;
+      id: string;
+      uniqueId: string;
+    }[];
+    totalSize: number;
+  } = superjson.parse(documentJson)
 
-  console.log(document.parsedUrls)
 
   return (
     <>
@@ -50,7 +55,7 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
   );
 };
 
-const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { parsedUrls: ParsedUrls, totalSize: number } }> =
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { documentData: ParsedUrls, totalSize: number } }> =
   ({ org, project, docType, document }) => {
     if (docType === DocumentType.TEXT) {
       return <TextDocument org={org} project={project} document={document} />
@@ -93,6 +98,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
               documents: {
                 where: {
                   id
+                },
+                include: {
+                  documentData: {
+                    select: {
+                      id: true,
+                      uniqueId: true,
+                      size: true,
+                    },
+                    where: {
+                      indexed: false,
+                    }
+                  }
                 }
               }
             }
@@ -111,14 +128,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  const parsedDocuments = JSON.parse(await (await getRedisClient())
-    .get(`docs:${id}`) || '[]') as ParsedDocs
 
-  const parsedUrls = []
   let totalSize = 0
-  for (const doc of parsedDocuments) {
-    parsedUrls.push({ url: doc.metadata.source as string, size: Number(doc.metadata.size) })
-    totalSize += Number(doc.metadata.size)
+  for (const doc of org.org.projects[0].documents[0].documentData) {
+    totalSize += doc.size
   }
 
   const props = {
@@ -126,7 +139,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       user: session.user,
       orgJson: superjson.stringify(org.org),
       projectJson: superjson.stringify(org.org.projects[0]),
-      documentJson: superjson.stringify({ ...org.org.projects[0].documents[0], parsedUrls, totalSize })
+      documentJson: superjson.stringify({ ...org.org.projects[0].documents[0], totalSize })
     }
   }
   return props

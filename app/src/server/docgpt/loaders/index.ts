@@ -35,7 +35,7 @@ async function updateStatus(projectId: string, orgId: string, documentId: string
 }
 
 export async function loadUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
-  const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false })
+  const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false, documentId })
 
   const docs = await loader.load()
   if (!loadAllPath) return indexUrlDocument(docs, orgId, projectId, documentId)
@@ -52,7 +52,10 @@ export async function indexUrlDocument(docs: Document[], orgId: string, projectI
 
   try {
     title = docs[0]?.metadata.title as string
-    tokens = new Blob(docs.map(d => d.pageContent)).size
+    tokens = docs.reduce((acc, curr) => {
+      acc += curr.metadata.size
+      return acc
+    }, 0)
     await loadDocumentsToDb(projectId, documentId, DocumentType.URL, docs)
     console.log(`Loaded ${docs.length} documents with ${tokens} tokens`)
   } catch (e) {

@@ -158,25 +158,42 @@ enum DocumentType {
 }
 
 enum IndexStatus {
+    FETCHING
+    FETCH_DONE
+    FETCHING_FAILED
     INDEXING
     SUCCESS
     FAILED
 }
 
 model Document {
-    id           String       @id @default(cuid())
-    src          String       @db.Text
-    title        String?      @db.Text
-    description  String?      @db.Text
-    createdAt    DateTime     @default(now())
-    updatedAt    DateTime     @updatedAt
+    id           String         @id @default(cuid())
+    src          String         @db.Text
+    title        String?        @db.Text
+    description  String?        @db.Text
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
     documentType DocumentType
-    indexed      Boolean      @default(false)
-    indexStatus  IndexStatus  @default(INDEXING)
+    indexed      Boolean        @default(false)
+    indexStatus  IndexStatus    @default(FETCHING)
     projectId    String
-    tokens       Int          @default(0)
+    tokens       Int            @default(0)
     details      Json?
-    project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    project      Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    documentData DocumentData[]
+}
+
+model DocumentData {
+    id          String   @id @default(cuid())
+    uniqueId    String   @db.Text
+    displayName String?
+    documentId  String
+    data        String?  @db.Text
+    size        Int      @default(0)
+    indexed     Boolean  @default(false)
+    document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+    @@unique([uniqueId, documentId])
 }
 
 enum ConvoRating {

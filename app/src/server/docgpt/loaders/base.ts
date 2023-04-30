@@ -4,8 +4,10 @@ import { Document } from "langchain/document"
 import { CheerioWebBaseLoader } from "langchain/document_loaders";
 import { mapLimit } from "~/utils/async";
 import { render } from './cheerioToText'
+import { prisma } from "~/server/db";
 
 export interface WebBaseLoaderParams {
+  documentId?: string
   shouldLoadAllPaths?: boolean
   skipPaths?: Array<string>
   loadImages?: boolean
@@ -16,6 +18,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   skipPaths: Array<string> = []
   loadImages = false
   visitedUrls = new Set();
+  documentId = ''
 
   constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
     if (webPath.endsWith('/')) webPath = webPath.slice(0, -1)
@@ -24,6 +27,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
       params.shouldLoadAllPaths ?? this.shouldLoadAllPaths;
     this.skipPaths = params.skipPaths ?? this.skipPaths;
     this.loadImages = params.loadImages ?? false;
+    this.documentId = params.documentId ?? ''
   }
 
   public async load(): Promise<Document[]> {
@@ -79,40 +83,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   }
 
   async loadPageRecursively(): Promise<Document[]> {
-    return loadPageRecursively(this.webPath)
-  }
-
-
-
-  async loadAllPaths($: CheerioAPI): Promise<Document[]> {
-    const relative_paths = $("a")
-      .toArray()
-      .map((element) => $(element).attr("href"))
-      .filter((text) => text && text[0] === "/");
-
-    const paths = this.removeDuplicates(relative_paths)
-
-    const documents: Document[] = [];
-    const basePath = new URL(this.webPath).origin
-
-    const resultDocuments = await mapLimit(paths, 5, async (path) => {
-      if (path && !this.isSkipped(path)) {
-        const url = basePath + path;
-        console.log(`Fetching text from ${url}`);
-        const html = await WebBaseLoader._scrape(url);
-        return this.loadPath(html, url);
-      }
-
-      return null
-    })
-
-    for (const resultDocument of resultDocuments) {
-      if (resultDocument) {
-        documents.push(...resultDocument)
-      }
-    }
-    console.log(`Fetched ${documents.length} documents.`);
-    return documents;
+    return loadPageRecursively(this.webPath, this.documentId)
   }
 }
 
@@ -132,9 +103,48 @@ function getDocumentFromPage($: CheerioAPI, url: string) {
   })
 }
 
+function getRelativePaths($: CheerioAPI, basePath: string) {
+  return $("a")
+    .toArray()
+    .map((element) => $(element).attr("href"))
+    .filter((text) => text && (text[0] === "/" || text.startsWith(basePath)));
+}
+
+async function loadDocAndGetLink(url: string, documentId: string) {
+  const $ = await WebBaseLoader._scrape(url);
+  const document = getDocumentFromPage($, url)
+  await prisma.documentData.upsert({
+    where: {
+      uniqueId_documentId: {
+        documentId: documentId,
+        uniqueId: url,
+      }
+    },
+    update: {
+      documentId: documentId,
+      uniqueId: url,
+      size: document.metadata.size,
+      data: document.pageContent,
+      displayName: document.metadata.title,
+      indexed: false,
+    },
+    create: {
+      documentId: documentId,
+      uniqueId: url,
+      size: document.metadata.size,
+      data: document.pageContent,
+      displayName: document.metadata.title,
+      indexed: false,
+    }
+  })
+  const relativePaths = getRelativePaths($, url)
+
+  return { relativePaths }
+}
 
 
-async function loadPageRecursively(rootUrl: string) {
+
+async function loadPageRecursively(rootUrl: string, documentId: string) {
   const visitedUrls = new Set();
   const basePath = new URL(rootUrl).origin
 
@@ -153,18 +163,12 @@ async function loadPageRecursively(rootUrl: string) {
     if (visitedUrls.has(url)) return []
 
     visitedUrls.add(url)
-    const pageDocuments: Document[] = []
     console.log(`Scraping ${url}`);
-    const $ = await WebBaseLoader._scrape(url);
 
-    pageDocuments.push(getDocumentFromPage($, url))
+    const { relativePaths } = await loadDocAndGetLink(url, documentId)
 
-    const relative_paths = $("a")
-      .toArray()
-      .map((element) => $(element).attr("href"))
-      .filter((text) => text && (text[0] === "/" || text.startsWith(basePath)));
 
-    const resultDocuments = await mapLimit(relative_paths, 5, async (path) => {
+    await mapLimit(relativePaths, 5, async (path) => {
       if (path) {
         const url = path.startsWith('/') ? basePath + path : path;
         return loadPage(url);
@@ -173,14 +177,7 @@ async function loadPageRecursively(rootUrl: string) {
       return null
     })
 
-    for (const resultDocument of resultDocuments) {
-      if (resultDocument) {
-        pageDocuments.push(...resultDocument)
-      }
-    }
-
-
-    return pageDocuments
+    return []
   }
 
   return loadPage(rootUrl)
