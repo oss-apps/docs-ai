@@ -5,6 +5,8 @@ import PrimaryButton from "~/components/form/button";
 import { Input, Label, TextArea } from "~/components/form/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
+import Snackbar from "~/components/SnackBar";
+import { useEffect, useState } from "react";
 
 
 const orgSchema = z.object({
@@ -12,6 +14,8 @@ const orgSchema = z.object({
 })
 
 export const CreateOrg: React.FC = () => {
+  const [showError, setShowError] = useState(false)
+
   const router = useRouter()
 
   const createOrg = api.org.createOrg.useMutation()
@@ -29,6 +33,10 @@ export const CreateOrg: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    setShowError(createOrg.isError)
+  }, [createOrg.isError])
+
   return (
     <div>
       <p className="mb-10 text-center text-xl">Create organaisation</p>
@@ -41,6 +49,7 @@ export const CreateOrg: React.FC = () => {
         />
         <PrimaryButton loading={createOrg.isLoading} disabled={createOrg.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
       </form>
+      <Snackbar isError message={createOrg.error?.message || ''} show={showError} setShow={setShowError} />
     </div>
   )
 }

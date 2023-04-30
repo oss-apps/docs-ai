@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "~/env.mjs";
@@ -26,20 +27,30 @@ export const orgRouter = createTRPCRouter({
         throw new TRPCError({ message: 'User still in waiting list', code: 'BAD_REQUEST' });
       }
 
-      const result = await ctx.prisma.org.create({
-        data: {
-          name: slugify(input.name),
-          displayName: input.name,
-          orgUsers: {
-            create: {
-              userId: user.id
+      try {
+
+        const result = await ctx.prisma.org.create({
+          data: {
+            name: slugify(input.name),
+            displayName: input.name,
+            orgUsers: {
+              create: {
+                userId: user.id
+              }
             }
           }
+        })
+
+        return {
+          org: result,
+        };
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+          throw new TRPCError({ message: 'This name already been used', code: 'BAD_REQUEST' });
         }
-      })
-      return {
-        org: result,
-      };
+
+        else throw e
+      }
     }),
   createCheckoutSession: orgMemberProcedure
     .input(z.object({ orgId: z.string(), price: z.string() }))

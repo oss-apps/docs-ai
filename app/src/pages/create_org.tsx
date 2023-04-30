@@ -8,16 +8,16 @@ import { User, type Org } from "@prisma/client";
 import { CreateOrg } from "~/containers/CreateOrg";
 
 
-const CreateOrgPage: NextPage<{ user: User }> = ({ user }) => {
+const CreateOrgPage: NextPage = () => {
 
   return (
     <div className="h-full">
       <Nav />
       <main className="p-5">
         <div className="max-w-6xl mx-auto mt-10">
-					<div className=" max-w-2xl mx-auto">
-						<CreateOrg />
-					</div>
+          <div className=" max-w-2xl mx-auto">
+            <CreateOrg />
+          </div>
         </div>
       </main>
     </div>
@@ -39,10 +39,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = await prisma.user.findUnique({
     where: {
       id: session.user.id
+    },
+    select: {
+      id: true,
+      name: true,
     }
   })
 
-  const props = { props: { user } }
+  const props = { props: {} }
   return props
 }
 
