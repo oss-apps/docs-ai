@@ -7,6 +7,7 @@ import "~/styles/globals.css";
 import Head from "next/head";
 import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
+import { Toaster } from "react-hot-toast";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -31,6 +32,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <script src="/embed.min.js" project-id="clfp5tn2a0007mc0ub8qch4x2" primary-color="#000" async></script>
         ) : null}
       </Head>
+      <Toaster position="bottom-center" />
       <SessionProvider session={session}>
         <Component {...pageProps} />
       </SessionProvider>

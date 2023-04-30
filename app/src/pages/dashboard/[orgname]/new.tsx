@@ -28,7 +28,6 @@ const projectSchema = z.object({
 
 const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
   const router = useRouter()
-  const [showError, setShowError] = useState(false)
 
   const org: (OrgUser & {
     org: Org
@@ -44,9 +43,6 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
     await router.push(`/dashboard/${org.org.name}/${project.slug}`)
   };
 
-  useEffect(() => {
-    setShowError(createProject.isError)
-  }, [createProject.isError])
 
   return (
     <div className="h-full">
@@ -82,7 +78,6 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
             </form>
           </div>
         </div>
-        <Snackbar isError message={createProject.error?.message || ''} show={showError} setShow={setShowError} />
       </main>
     </div>
   );

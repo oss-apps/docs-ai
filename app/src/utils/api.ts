@@ -4,9 +4,10 @@
  *
  * We also create a few inference helpers for input and output types.
  */
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import { httpBatchLink, loggerLink, TRPCClientError } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
+import { toast } from "react-hot-toast";
 import superjson from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
@@ -43,6 +44,18 @@ export const api = createTRPCNext<AppRouter>({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
+
+      queryClientConfig: {
+        defaultOptions: {
+          mutations: {
+            onError: (err) => {
+              if (err instanceof TRPCClientError) {
+                toast.error(err.message);
+              }
+            },
+          },
+        },
+      },
     };
   },
   /**

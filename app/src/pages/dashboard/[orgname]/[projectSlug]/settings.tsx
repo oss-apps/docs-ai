@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { Switch } from "@headlessui/react";
 import { isAbovePro } from "~/utils/license";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
 
 
 const projectSchema = z.object({
@@ -28,8 +29,6 @@ const projectSchema = z.object({
 
 
 const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
-  const [showSuccess, setShowSuccess] = useState(false)
-
   const org: Org = superjson.parse(orgJson)
   const project: Project & {
     slackInstalation: {
@@ -56,7 +55,9 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   };
 
   useEffect(() => {
-    setShowSuccess(updateProject.isSuccess)
+    if (updateProject.isSuccess) {
+      toast.success('Project updated')
+    }
   }, [updateProject.isSuccess])
 
   const onGenerateApiKey = async () => {
@@ -214,7 +215,6 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
             </div>
           </div>
         </div>
-        <Snackbar isError={false} message={'Succefully updated'} show={showSuccess} setShow={setShowSuccess} />
       </main>
     </>
   );
