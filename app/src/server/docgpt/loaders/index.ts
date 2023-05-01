@@ -38,8 +38,6 @@ export async function loadUrlDocument(url: string, type: string, orgId: string, 
   const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false, documentId })
 
   const docs = await loader.load()
-  if (!loadAllPath) return indexUrlDocument(docs, orgId, projectId, documentId)
-
   return docs
 }
 

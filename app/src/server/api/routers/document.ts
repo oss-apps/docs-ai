@@ -17,24 +17,22 @@ const loadUrlDocument = async (src: string, type: string, orgId: string, project
   await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths)
   let parsedDocs: ParsedUrls = []
   let totalSize = 0
-  if (loadAllPath) {
-    console.log('Load all path selected')
-    parsedDocs = await prisma.documentData.findMany({
-      where: {
-        documentId,
-      },
-      select: {
-        id: true,
-        uniqueId: true,
-        size: true,
-      }
-    })
+  parsedDocs = await prisma.documentData.findMany({
+    where: {
+      documentId,
+    },
+    select: {
+      id: true,
+      uniqueId: true,
+      size: true,
+    }
+  })
 
-    totalSize = parsedDocs.reduce((acc, curr) => {
-      acc += curr.size
-      return acc
-    }, 0)
-  }
+  totalSize = parsedDocs.reduce((acc, curr) => {
+    acc += curr.size
+    return acc
+  }, 0)
+
 
   await prisma.document.update({
     data: {

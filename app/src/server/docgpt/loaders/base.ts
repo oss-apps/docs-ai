@@ -37,7 +37,8 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
       return this.loadPageRecursively()
     }
 
-    return this.loadPath($);
+    const { document } = await loadDocAndGetLink(this.webPath, this.documentId)
+    return [document];
   }
 
   loadPath($: CheerioAPI, url?: string): Document[] {
@@ -139,7 +140,7 @@ async function loadDocAndGetLink(url: string, documentId: string) {
   })
   const relativePaths = getRelativePaths($, url)
 
-  return { relativePaths }
+  return { relativePaths, document }
 }
 
 
