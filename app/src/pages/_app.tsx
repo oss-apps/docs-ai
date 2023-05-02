@@ -8,12 +8,18 @@ import Head from "next/head";
 import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
+import { Crisp } from 'crisp-sdk-web'
+import { useEffect } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   const router = useRouter();
+
+  useEffect(() => {
+    Crisp.configure('2fd4bc7f-ed8f-4b1a-ad1c-b2570354218d', {})
+  }, [])
 
   return (
     <>
