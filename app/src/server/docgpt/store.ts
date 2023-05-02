@@ -6,9 +6,9 @@ import { OpenAIEmbeddings } from "langchain/embeddings";
 import { PineconeStore } from "langchain/vectorstores";
 import { env } from "~/env.mjs";
 
-const client = new PineconeClient()
 
 export const getVectorIndex = async () => {
+  const client = new PineconeClient()
   await client.init({
     apiKey: env.PINECONE_API_KEY,
     environment: env.PINECONE_ENVIRONMENT,

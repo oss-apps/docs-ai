@@ -5,6 +5,9 @@ import { CheerioWebBaseLoader } from "langchain/document_loaders";
 import { mapLimit } from "~/utils/async";
 import { render } from './cheerioToText'
 import { prisma } from "~/server/db";
+import { AsyncCaller } from "~/utils/async_caller";
+import { load } from "cheerio";
+import fetch from "node-fetch";
 
 export interface WebBaseLoaderParams {
   documentId?: string
@@ -19,6 +22,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   loadImages = false
   visitedUrls = new Set();
   documentId = ''
+  caller: AsyncCaller;
 
   constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
     if (webPath.endsWith('/')) webPath = webPath.slice(0, -1)
@@ -28,6 +32,20 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     this.skipPaths = params.skipPaths ?? this.skipPaths;
     this.loadImages = params.loadImages ?? false;
     this.documentId = params.documentId ?? ''
+    this.caller = new AsyncCaller({ maxRetries: 2 })
+  }
+
+  static async _scrapeNew(
+    url: string,
+    caller: AsyncCaller,
+  ): Promise<CheerioAPI> {
+    const response = await caller.call(fetch, url, { redirect: "follow", follow: 2 });
+    const html = await response.text();
+    return load(html);
+  }
+
+  async scrape(): Promise<CheerioAPI> {
+    return WebBaseLoader._scrapeNew(this.webPath, this.caller);
   }
 
   public async load(): Promise<Document[]> {
@@ -37,7 +55,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
       return this.loadPageRecursively()
     }
 
-    const { document } = await loadDocAndGetLink(this.webPath, this.documentId)
+    const { document } = await loadDocAndGetLink(this.webPath, this.documentId, this.caller)
     return [document];
   }
 
@@ -111,36 +129,41 @@ function getRelativePaths($: CheerioAPI, basePath: string) {
     .filter((text) => text && (text[0] === "/" || text.startsWith(basePath)));
 }
 
-async function loadDocAndGetLink(url: string, documentId: string) {
-  const $ = await WebBaseLoader._scrape(url);
-  const document = getDocumentFromPage($, url)
-  await prisma.documentData.upsert({
-    where: {
-      uniqueId_documentId: {
+async function loadDocAndGetLink(url: string, documentId: string, caller: AsyncCaller) {
+  try {
+    const $ = await WebBaseLoader._scrapeNew(url, caller);
+    const document = getDocumentFromPage($, url)
+    await prisma.documentData.upsert({
+      where: {
+        uniqueId_documentId: {
+          documentId: documentId,
+          uniqueId: url,
+        }
+      },
+      update: {
         documentId: documentId,
         uniqueId: url,
+        size: document.metadata.size,
+        data: document.pageContent,
+        displayName: document.metadata.title,
+        indexed: false,
+      },
+      create: {
+        documentId: documentId,
+        uniqueId: url,
+        size: document.metadata.size,
+        data: document.pageContent,
+        displayName: document.metadata.title,
+        indexed: false,
       }
-    },
-    update: {
-      documentId: documentId,
-      uniqueId: url,
-      size: document.metadata.size,
-      data: document.pageContent,
-      displayName: document.metadata.title,
-      indexed: false,
-    },
-    create: {
-      documentId: documentId,
-      uniqueId: url,
-      size: document.metadata.size,
-      data: document.pageContent,
-      displayName: document.metadata.title,
-      indexed: false,
-    }
-  })
-  const relativePaths = getRelativePaths($, url)
+    })
+    const relativePaths = getRelativePaths($, url)
 
-  return { relativePaths, document }
+    return { relativePaths, document }
+  } catch (e) {
+    console.log('Fetch failed for', url, e)
+    return { relativePaths: [], document: new Document() }
+  }
 }
 
 
@@ -159,6 +182,8 @@ async function loadPageRecursively(rootUrl: string, documentId: string) {
     return surl
   }
 
+  const caller = new AsyncCaller({})
+
   const loadPage = async (paramUrl: string) => {
     const url = sanitizeUrl(paramUrl)
     if (visitedUrls.has(url)) return []
@@ -166,7 +191,7 @@ async function loadPageRecursively(rootUrl: string, documentId: string) {
     visitedUrls.add(url)
     console.log(`Scraping ${url}`);
 
-    const { relativePaths } = await loadDocAndGetLink(url, documentId)
+    const { relativePaths } = await loadDocAndGetLink(url, documentId, caller)
 
 
     await mapLimit(relativePaths, 5, async (path) => {

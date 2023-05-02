@@ -35,6 +35,8 @@ async function updateStatus(projectId: string, orgId: string, documentId: string
 }
 
 export async function loadUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
+  console.log('fetch done')
+
   const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false, documentId })
 
   const docs = await loader.load()

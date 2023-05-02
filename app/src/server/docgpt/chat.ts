@@ -19,6 +19,7 @@ const getTokens = (systemPrompt: string, questionPrompt: string, answer: string)
   );
   const inputTokens = encoding.encode(systemPrompt + questionPrompt);
   const outputTokens = encoding.encode(answer);
+  encoding.free()
 
   return { inputTokens: inputTokens.length, outputTokens: outputTokens.length };
 }
