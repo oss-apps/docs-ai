@@ -17,9 +17,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    Crisp.configure('2fd4bc7f-ed8f-4b1a-ad1c-b2570354218d', {})
-  }, [])
+  // useEffect(() => {
+  //   Crisp.configure('2fd4bc7f-ed8f-4b1a-ad1c-b2570354218d', {})
+  // }, [])
 
   return (
     <>
