@@ -157,7 +157,9 @@ async function loadDocAndGetLink(url: string, documentId: string, caller: AsyncC
         indexed: false,
       }
     })
-    const relativePaths = getRelativePaths($, url)
+    const basePath = new URL(url).origin
+
+    const relativePaths = getRelativePaths($, basePath)
 
     return { relativePaths, document }
   } catch (e) {
