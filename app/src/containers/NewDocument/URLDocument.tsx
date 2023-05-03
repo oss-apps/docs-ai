@@ -46,9 +46,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
         if (isStopped) {
           toast.error(`Only ${limits.pageLimit} pages can be fetched at same time for your plan.`)
         }
-        if (!loadAllPath) {
-          await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
-        }
+
         setParsedUrls(parsedDocs)
         setTotalSize(totalSize)
         // await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
