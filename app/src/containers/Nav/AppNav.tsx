@@ -32,7 +32,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
           <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
-            Agent
+            Your bot
           </SecondaryButton>
         </Link>
         {/* <Link href={`/dashboard/${org.name}/${project.slug}/QnA`} className="w-full">
@@ -47,7 +47,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full mt-4">
           <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
-            Chats
+            Chat history
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full mt-4">
