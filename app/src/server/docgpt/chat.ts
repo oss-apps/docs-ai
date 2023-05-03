@@ -9,6 +9,7 @@ import cl100k_base from "@dqbd/tiktoken/encoders/cl100k_base.json";
 import { AIChatMessage, HumanChatMessage } from "langchain/schema";
 import { prisma } from "../db";
 import { checkAndUpdateFreeAccount } from "../stripe";
+import { type Document } from "langchain/document";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -79,14 +80,6 @@ export const getChat = async (orgId: string, projectId: string, question: string
       return new AIChatMessage(content);
     }
   })
-
-  // const callbackManager = CallbackManager.fromHandlers({
-  //   handleLLMNewToken(token: string) {
-  //     console.log("token", { token });
-
-  //     return Promise.resolve();
-  //   },
-  // });
 
   const chat = new ChatOpenAI({ temperature: 0, streaming: true });
   const chain = new StuffDocumentsChain({ documentVariableName: 'summaries' });

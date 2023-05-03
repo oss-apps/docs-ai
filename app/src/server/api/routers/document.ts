@@ -13,8 +13,8 @@ import { deleteDocumentVector } from "~/server/docgpt/store";
 import { type ParsedDocs, type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 
-const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string) => {
-  await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths)
+const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
+  const { isStopped } = await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths, pageLimit)
   let parsedDocs: ParsedUrls = []
   let totalSize = 0
   parsedDocs = await prisma.documentData.findMany({
@@ -43,7 +43,7 @@ const loadUrlDocument = async (src: string, type: string, orgId: string, project
     }
   })
 
-  return { parsedDocs, totalSize }
+  return { parsedDocs, totalSize, isStopped }
 }
 
 
@@ -92,12 +92,13 @@ export const documentRouter = createTRPCRouter({
         }
       })
 
-      const { parsedDocs, totalSize } = await loadUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths || '')
+      const { parsedDocs, totalSize, isStopped } = await loadUrlDocument(input.src, type, input.orgId, input.projectId, result.id, input.loadAllPath, input.skipPaths || '', getLimits(ctx.org?.plan || Prisma.Plan.FREE).pageLimit)
 
       return {
         document: result,
         parsedDocs,
         totalSize,
+        isStopped,
       };
     }),
 
@@ -111,6 +112,7 @@ export const documentRouter = createTRPCRouter({
       })
       let parsedDocs: ParsedUrls = []
       let totalSize = 0
+      let isStopped = false
 
       if (document) {
         const details = document.details as Prisma.Prisma.JsonObject
@@ -127,16 +129,18 @@ export const documentRouter = createTRPCRouter({
         await resetTokens(document, input.orgId, input.projectId)
         await deleteDocumentVector(input.projectId, input.documentId)
 
-        const data = await loadUrlDocument(document.src, '', input.orgId, input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString() || '')
+        const data = await loadUrlDocument(document.src, '', input.orgId, input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString() || '', getLimits(ctx.org?.plan || Prisma.Plan.FREE).pageLimit)
 
         parsedDocs = data.parsedDocs
         totalSize = data.totalSize
+        isStopped = data.isStopped
       }
 
       return {
         document,
         parsedDocs: parsedDocs,
         totalSize,
+        isStopped,
       };
     }),
 

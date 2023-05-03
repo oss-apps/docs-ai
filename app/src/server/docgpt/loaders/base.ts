@@ -14,6 +14,7 @@ export interface WebBaseLoaderParams {
   shouldLoadAllPaths?: boolean
   skipPaths?: Array<string>
   loadImages?: boolean
+  pageLimit?: number
 }
 
 export class WebBaseLoader extends CheerioWebBaseLoader {
@@ -23,6 +24,8 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   visitedUrls = new Set();
   documentId = ''
   caller: AsyncCaller;
+  isStopped = false
+  pageLimit = 30
 
   constructor(public webPath: string, params: WebBaseLoaderParams = {}) {
     if (webPath.endsWith('/')) webPath = webPath.slice(0, -1)
@@ -33,6 +36,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     this.loadImages = params.loadImages ?? false;
     this.documentId = params.documentId ?? ''
     this.caller = new AsyncCaller({ maxRetries: 2 })
+    this.pageLimit = params.pageLimit ?? this.pageLimit
   }
 
   static async _scrapeNew(
@@ -52,7 +56,8 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     const $ = await this.scrape();
 
     if (this.shouldLoadAllPaths === true) {
-      return this.loadPageRecursively()
+      this.isStopped = await this.loadPageRecursively()
+      return []
     }
 
     const { document } = await loadDocAndGetLink(this.webPath, this.documentId, this.caller)
@@ -62,6 +67,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   loadPath($: CheerioAPI, url?: string): Document[] {
     $('script').remove()
     $('styles').remove()
+    $('noscript').remove()
 
     const pageContent = $("body main")[0] ? render($("body main")[0], true) : render($("body"), this.loadImages)
 
@@ -101,8 +107,8 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     return paths
   }
 
-  async loadPageRecursively(): Promise<Document[]> {
-    return loadPageRecursively(this.webPath, this.documentId)
+  async loadPageRecursively(): Promise<boolean> {
+    return loadPageRecursively(this.webPath, this.documentId, this.pageLimit)
   }
 }
 
@@ -110,6 +116,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
 function getDocumentFromPage($: CheerioAPI, url: string) {
   $('script').remove()
   $('styles').remove()
+  $('noscript').remove()
 
   const pageContent = $("body main")[0] ? render($("body main")[0], false) : render($("body"), false)
 
@@ -170,9 +177,11 @@ async function loadDocAndGetLink(url: string, documentId: string, caller: AsyncC
 
 
 
-async function loadPageRecursively(rootUrl: string, documentId: string) {
+async function loadPageRecursively(rootUrl: string, documentId: string, allowedCount = 30) {
+  console.log('Loading recursively', rootUrl, documentId, allowedCount)
   const visitedUrls = new Set();
   const basePath = new URL(rootUrl).origin
+  let isStopped = false
 
   const sanitizeUrl = (url: string) => {
     const urlObj = new URL(url);
@@ -190,11 +199,15 @@ async function loadPageRecursively(rootUrl: string, documentId: string) {
     const url = sanitizeUrl(paramUrl)
     if (visitedUrls.has(url)) return []
 
+    if (visitedUrls.size > allowedCount) {
+      isStopped = true
+      return []
+    }
+
     visitedUrls.add(url)
     console.log(`Scraping ${url}`);
 
     const { relativePaths } = await loadDocAndGetLink(url, documentId, caller)
-
 
     await mapLimit(relativePaths, 5, async (path) => {
       if (path) {
@@ -208,5 +221,6 @@ async function loadPageRecursively(rootUrl: string, documentId: string) {
     return []
   }
 
-  return loadPage(rootUrl)
+  await loadPage(rootUrl)
+  return isStopped
 }

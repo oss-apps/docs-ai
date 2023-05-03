@@ -1,10 +1,10 @@
 import { PineconeClient } from "@pinecone-database/pinecone";
 import { type DocumentType } from "@prisma/client";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { Document } from "langchain/document";
 import { OpenAIEmbeddings } from "langchain/embeddings";
 import { PineconeStore } from "langchain/vectorstores";
 import { env } from "~/env.mjs";
+import { RecursiveCharacterTextSplitter } from "./textSplitter";
 
 
 export const getVectorIndex = async () => {
@@ -24,8 +24,8 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
   }))
 
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 500,
-    chunkOverlap: 50,
+    chunkSize: 2000,
+    chunkOverlap: 100,
   })
 
   const splitDocuments = await splitter.splitDocuments(documents)

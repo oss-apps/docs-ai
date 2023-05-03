@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { type ParsedUrls, type ParsedDocs } from "~/types";
 import { getLimits } from "~/utils/license";
+import { toast } from "react-hot-toast";
 
 
 const documentSchema = z.object({
@@ -38,11 +39,14 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
       const { src, skipPaths } = data as z.input<typeof documentSchema>
 
       try {
-        const { parsedDocs, document, totalSize } = !doc ?
+        const { parsedDocs, document, totalSize, isStopped } = !doc ?
           await createUrlDocument.mutateAsync({ src, projectId: project.id, orgId: org.id, type: urlType, loadAllPath, skipPaths })
           : await reIndexDocument.mutateAsync({ projectId: project.id, orgId: org.id, documentId: doc.id })
         setDoc(document)
-        if (parsedDocs.length === 0) {
+        if (isStopped) {
+          toast.error(`Only ${limits.pageLimit} pages can be fetched at same time for your plan.`)
+        }
+        if (!loadAllPath) {
           await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
         }
         setParsedUrls(parsedDocs)

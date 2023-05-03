@@ -34,13 +34,12 @@ async function updateStatus(projectId: string, orgId: string, documentId: string
   })
 }
 
-export async function loadUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string) {
-  console.log('fetch done')
-
-  const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false, documentId })
+export async function loadUrlDocument(url: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths?: string, pageLimit?: number) {
+  console.log('Loading url document', url)
+  const loader = new WebBaseLoader(url, { shouldLoadAllPaths: loadAllPath, skipPaths: skipPaths?.split(','), loadImages: false, documentId, pageLimit })
 
   const docs = await loader.load()
-  return docs
+  return { docs, isStopped: loader.isStopped }
 }
 
 
