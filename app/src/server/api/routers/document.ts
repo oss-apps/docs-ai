@@ -25,6 +25,9 @@ const loadUrlDocument = async (src: string, type: string, orgId: string, project
       id: true,
       uniqueId: true,
       size: true,
+    },
+    orderBy: {
+      size: 'desc',
     }
   })
 

@@ -54,7 +54,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
   if (org && org?.chatCredits < 1) {
     if (org.plan === Plan.FREE || org.plan === Plan.BASIC) {
       if (org.plan === Plan.FREE) await checkAndUpdateFreeAccount(org)
-      console.log("Search only mode is not possible for free or basic plans")
+      console.log("Search only mode is not possible for free or basic plans. OrgId: ", orgId)
       return { tokens: 0, answer: 'Sorry limit reached. Contact owner of the site', sources: '', limitReached: true }
     }
     else {

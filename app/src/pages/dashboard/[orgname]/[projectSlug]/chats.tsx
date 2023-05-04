@@ -143,7 +143,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                               </div>
                               <div className="flex gap-3 mt-1 flex-shrink-0 flex-wrap">
                                 {m.sources?.split(',').map(s =>
-                                  <a className="border border-gray-300 hover:bg-gray-100 shrink-0 flex-wrap text-sm p-0.5 rounded-md px-2" href={s} target="_blank" key={s} rel="noreferrer">
+                                  <a className="border border-gray-300 hover:bg-gray-100 text-sm p-0.5 rounded-md px-2 max-w-[300px] text-ellipsis whitespace-nowrap overflow-hidden" href={s} target="_blank" key={s} rel="noreferrer">
                                     {getLinkDirectory(s)}
                                   </a>
                                 )}
