@@ -88,7 +88,7 @@ const DocumentSource: React.FC<{ name: string, url?: string }> = ({ name, url })
   return (
     <button className="border rounded-md h-32 w-32 flex justify-center items-center flex-col" onClick={() => url ? router.push(url) : null}>
       <div className="text-3xl font-light text-gray-800">{name}</div>
-      <p className="text-xs text-gray-600">{!url ? 'Comming soon' : ''}</p>
+      <p className="text-xs text-gray-600">{!url ? 'Coming soon' : ''}</p>
     </button>
   )
 }
