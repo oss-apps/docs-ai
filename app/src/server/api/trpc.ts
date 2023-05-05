@@ -106,6 +106,22 @@ const setProjectAndOrg = t.middleware(async ({ ctx, next, rawInput }) => {
   });
 });
 
+
+const loggerMiddleware = t.middleware(async (opts) => {
+  const start = Date.now();
+
+  const result = await opts.next({ ctx: opts.ctx });
+
+  const durationMs = Date.now() - start;
+  const meta = { path: opts.path, type: opts.type, durationMs };
+
+  result.ok
+    ? console.log('OK request timing:', meta)
+    : console.error('Non-OK request timing', meta);
+
+  return result;
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -113,7 +129,7 @@ const setProjectAndOrg = t.middleware(async ({ ctx, next, rawInput }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(setProjectAndOrg);
+export const publicProcedure = t.procedure.use(loggerMiddleware).use(setProjectAndOrg);
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next, rawInput }) => {
@@ -143,7 +159,7 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next, rawInput }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedure = t.procedure.use(loggerMiddleware).use(enforceUserIsAuthed);
 
 /**
  * Prevent non-organization members from accessing the proceduce
