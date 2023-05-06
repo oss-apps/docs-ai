@@ -61,7 +61,7 @@ export const conversationRouter = createTRPCRouter({
         total: ratingData.NEGATIVE + ratingData.NEUTRAL + ratingData[ConvoRating.POSITIVE]
       };
     }),
-  getConversation: orgMemberProcedure
+  getConversation: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), convoId: z.string() }))
     .query(async ({ input, ctx }) => {
       if (input.convoId === 'new') {
