@@ -9,7 +9,8 @@ import cl100k_base from "@dqbd/tiktoken/encoders/cl100k_base.json";
 import { AIChatMessage, HumanChatMessage } from "langchain/schema";
 import { prisma } from "../db";
 import { checkAndUpdateFreeAccount } from "../stripe";
-import { type Document } from "langchain/document";
+import { CallbackManager } from "langchain/callbacks";
+import { type ChatCallback } from "~/types";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -47,7 +48,7 @@ export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUs
   return { question: result.text, tokens: inputTokens + outputTokens }
 }
 
-export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string) => {
+export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string, cb?: ChatCallback) => {
   const org = await prisma.org.findUnique({ where: { id: orgId } })
   const vectorDb = await getVectorDB(projectId)
 
@@ -55,6 +56,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
     if (org.plan === Plan.FREE || org.plan === Plan.BASIC) {
       if (org.plan === Plan.FREE) await checkAndUpdateFreeAccount(org)
       console.log("Search only mode is not possible for free or basic plans. OrgId: ", orgId)
+      cb?.('Sorry limit reached. Contact owner of the site')
       return { tokens: 0, answer: 'Sorry limit reached. Contact owner of the site', sources: '', limitReached: true }
     }
     else {
@@ -64,6 +66,8 @@ export const getChat = async (orgId: string, projectId: string, question: string
         acc[d.metadata.source as string] = true
         return acc
       }, {} as Record<string, boolean>)
+
+      cb?.(answer)
 
       return { tokens: 0, answer, sources: Object.keys(sources).join(','), limitReached: true }
     }
@@ -81,7 +85,14 @@ export const getChat = async (orgId: string, projectId: string, question: string
     }
   })
 
-  const chat = new ChatOpenAI({ temperature: 0, streaming: true });
+  const callbackManager = CallbackManager.fromHandlers({
+    handleLLMNewToken(token: string) {
+      cb?.(token)
+      return Promise.resolve();
+    },
+  });
+
+  const chat = new ChatOpenAI({ temperature: 0, streaming: true, callbackManager });
   const chain = new StuffDocumentsChain({ documentVariableName: 'summaries' });
   const { summaries } = await chain.call({ input_documents: documents, question: stdQuestion }) as { summaries: string }
 

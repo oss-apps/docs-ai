@@ -64,6 +64,11 @@ export const conversationRouter = createTRPCRouter({
   getConversation: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), convoId: z.string() }))
     .query(async ({ input, ctx }) => {
+      if (input.convoId === 'new') {
+        return {
+          conversation: null,
+        }
+      }
       const conversation = await ctx.prisma.conversation.findFirst({
         where: {
           id: input.convoId,

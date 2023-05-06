@@ -51,8 +51,9 @@ export const checkAndUpdateFreeAccount = async (org: Org) => {
       where: { id: org.id },
       data: {
         chatCredits: {
-          increment: 25,
-        }
+          increment: 30,
+        },
+        paymentsUpdatedAt: new Date(),
       }
     })
 

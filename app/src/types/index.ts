@@ -6,4 +6,6 @@ export enum URLType {
 
 export type ParsedUrls = Array<{ id: string, uniqueId: string, size: number }>
 
-export type ParsedDocs = Array<{ pageContent: string, metadata: Record<string, string> }> 
+export type ParsedDocs = Array<{ pageContent: string, metadata: Record<string, string> }>
+
+export type ChatCallback = (message: string) => void

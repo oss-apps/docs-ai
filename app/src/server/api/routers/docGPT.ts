@@ -1,5 +1,6 @@
 import { type Conversation, ConvoRating } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { type CallbackManager } from "langchain/dist/callbacks";
 import { z } from "zod";
 
 import {
@@ -10,6 +11,7 @@ import {
 import { prisma } from "~/server/db";
 // import * as docGPT from "~/server/docGPT";
 import * as docgpt from "~/server/docgpt/index";
+import { type ChatCallback } from "~/types";
 
 export const docGPTRouter = createTRPCRouter({
   getAnswer: orgMemberProcedure
@@ -51,10 +53,10 @@ export const docGPTRouter = createTRPCRouter({
     }),
 });
 
-export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string) => {
+export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback) => {
   const chatHistory = convoId ? await getHistoryForConvo(convoId) : []
 
-  const result = await docgpt.getChat(orgId, projectId, question, [], botName)
+  const result = await docgpt.getChat(orgId, projectId, question, chatHistory, botName, cb)
 
   const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, convoId, result.sources)
 

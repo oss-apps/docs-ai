@@ -14,18 +14,70 @@ const qnaSchema = z.object({
 })
 
 
+const getStreamAnswer = async (projectId: string, question: string, convoId: string, onMessage: (token: string) => void, onEnd: (convoId: string) => void) => {
+  const res = await fetch('/api/web/chat', {
+    method: 'POST',
+    body: JSON.stringify({
+      projectId: projectId,
+      question: question,
+      conversationId: convoId
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (res.ok) {
+    const reader = res.body?.getReader();
+    const decoder = new TextDecoder('utf-8');
+
+    if (!reader) {
+      return;
+    }
+    let result = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+
+      if (value) {
+        const dataResults = decoder.decode(value);
+        if (dataResults.startsWith('DOCSAI_CONVO_ID')) {
+          const convoId = dataResults.split(':')[1];
+          if (convoId) {
+            onEnd(convoId)
+          }
+          break;
+        }
+        result += dataResults;
+        onMessage(result)
+      }
+
+      if (done) {
+        onEnd(convoId)
+        break;
+      }
+    }
+  } else {
+    onEnd(convoId)
+  }
+}
+
+
 export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean, embed?: boolean }> = ({ org, project, isPublic, embed }) => {
+  const [thinking, setThinking] = useState(false)
   const [conversation, setConversation] = useState<(Conversation & {
     messages: Messages[];
   }) | null>(null)
   const [latestQuestion, setLatestQuestion] = useState<string | null>(null)
+  const [answer, setAnswer] = useState<string | null>(null)
 
   const chatBox = useRef<HTMLDivElement>(null);
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm({ resolver: zodResolver(qnaSchema) });
 
-  const getPublicChatbotAnswer = api.docGPT.getPublicChatbotAnswer.useMutation()
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
+  const { client } = api.useContext()
+
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { question } = data as any as z.input<typeof qnaSchema>
@@ -36,14 +88,19 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     setLatestQuestion(question)
     try {
       reset()
-      const convo = await getPublicChatbotAnswer.mutateAsync({
-        projectId: project.id, orgId: org.id, question, convoId: conversation?.id
-      })
-      setConversation(convo.conversation)
+      setThinking(true)
+      await getStreamAnswer(project.id, question, conversation?.id ?? 'new', (token) => {
+        setAnswer(token)
+        setThinking(false)
+      }, async (convoId) => {
+        const { conversation } = await client.conversation.getConversation.query({ orgId: org.id, projectId: project.id, convoId: convoId })
+        setConversation(conversation)
+        setAnswer(null)
+        setLatestQuestion(null)
+      });
     } catch (e) {
       console.log(e)
     }
-    setLatestQuestion(null)
   }
 
   useEffect(() => {
@@ -51,7 +108,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     if (myDiv) {
       myDiv.scrollTop = myDiv.scrollHeight;
     }
-  }, [latestQuestion, conversation])
+  }, [latestQuestion, conversation, answer])
 
   const onClose = () => {
     if (window.parent) {
@@ -160,7 +217,19 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
             </div>
           </div>
         ) : null}
-        {getPublicChatbotAnswer.isLoading ? (
+        {answer ? (
+          <div className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
+            <div className="mt-1 text-xl">
+              {'🤖'}
+            </div>
+            <div className="markdown ml-4 lg:ml-10">
+              <div>
+                <MarkDown markdown={answer} />
+              </div>
+            </div>
+          </div>
+        ) : null}
+        {thinking ? (
           <div className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
             <div className="mt-1 text-xl">
               {'🤖'}
@@ -184,8 +253,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
             className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
             placeholder="Ask anything"
             {...register('question', { required: 'Question is required', minLength: 3 })}></input>
-          <button type="submit" className="p-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500 " disabled={getPublicChatbotAnswer.isLoading}>
-            {getPublicChatbotAnswer.isLoading ? <Loading /> : (
+          <button type="submit" className="p-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500 " >
+            {answer || latestQuestion ? <Loading /> : (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 ">
                 <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
               </svg>
