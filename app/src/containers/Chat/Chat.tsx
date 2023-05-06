@@ -99,6 +99,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         setLatestQuestion(null)
       });
     } catch (e) {
+      setThinking(false)
       console.log(e)
     }
   }
