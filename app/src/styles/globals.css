@@ -76,3 +76,26 @@ pre {
   -webkit-text-fill-color: transparent;
   @apply bg-zinc-300
 }
+.simple-card {
+  @apply bg-slate-50;
+  @apply p-3;
+  @apply rounded-md;
+  @apply shadow-md;
+}
+
+.simple-card:hover {
+  @apply scale-105;
+  @apply transition-transform;
+  @apply ease-in-out
+}
+
+.title-underline {
+  @apply underline-offset-4;
+  @apply underline;
+  @apply decoration-black;
+}
+
+.pro-chip {
+  @apply bg-gradient-to-r from-sky-500 to-indigo-500;
+  @apply text-white p-0.5 px-1 rounded-md text-sm m-1;
+}

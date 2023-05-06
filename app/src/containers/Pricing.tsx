@@ -41,9 +41,9 @@ const Pricing: React.FC<{
         </h1>
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
           If these plans doesn&apos;t suit you or you need custom hosting, Contact <span className="text-zinc-800 font-semibold">hey@docsai.app</span> and we can set it up for you.
-          Save <span className="text-zinc-800 font-semibold">2 months</span> on yearly plans.
         </h2>
-        <div className="relative self-center mt-6  rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+        <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
+          <div className="border border-zinc-800 rounded-lg  ">
           <button
             onClick={() => setBillingInterval('month')}
             className={`${billingInterval === 'month'
@@ -62,9 +62,12 @@ const Pricing: React.FC<{
           >
             Yearly
           </button>
+          </div>
+          <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">2 months</span> on yearly plans. </p>
+
         </div>
         <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
-          <div className="bg-zinc-100 rounded-md">
+          <div className="bg-white rounded-md border">
             <div className="p-6">
               <h2 className="text-2xl leading-6 font-semibold">
                 Free
@@ -100,7 +103,7 @@ const Pricing: React.FC<{
               </p>
             </div>
           </div>
-          <div className="bg-zinc-100 rounded-md">
+          <div className="bg-white rounded-md border">
             <div className="p-6">
               <h2 className="text-2xl leading-6 font-semibold">
                 Basic
@@ -143,7 +146,7 @@ const Pricing: React.FC<{
               </PrimaryButton>
             </div>
           </div>
-          <div className="bg-zinc-100 rounded-md">
+          <div className=" rounded-md border-4 border-black ">
             <div className="p-6">
               <h2 className="text-2xl leading-6 font-semibold">
                 Professional
@@ -199,9 +202,9 @@ const Pricing: React.FC<{
             </div>
 
           </div>
-          <div className="bg-zinc-100 rounded-md">
+          <div className="bg-white rounded-md border">
             <div className="p-6">
-              <h2 className="text-2xl leading-6 font-semibold">
+              <h2 className="text-2xl leading-6 font-semibold align-middle">
                 Enterprise
               </h2>
               <p className="mt-2 text-zinc-500">Best suited for big companies</p>
