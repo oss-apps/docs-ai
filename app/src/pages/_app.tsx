@@ -8,9 +8,7 @@ import Head from "next/head";
 import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
-import { Crisp } from 'crisp-sdk-web'
-import { useEffect } from "react";
-import fetch from "node-fetch"
+
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

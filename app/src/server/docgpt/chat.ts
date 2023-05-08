@@ -63,7 +63,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
       const documents = await vectorDb.similaritySearch(question, 4, { projectId })
       const answer = documents.map(d => d.pageContent).join('\n')
       const sources = documents.reduce((acc, d) => {
-        acc[d.metadata.source as string] = true
+        if (d.metadata.type === DocumentType.URL) acc[d.metadata.source as string] = true
         return acc
       }, {} as Record<string, boolean>)
 

@@ -12,6 +12,8 @@ import * as docgpt from '~/server/docgpt/index'
 import { deleteDocumentVector } from "~/server/docgpt/store";
 import { type ParsedDocs, type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
+import * as storage from '~/server/storage'
+import { DocumentType } from "@prisma/client";
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
   const { isStopped } = await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths, pageLimit)
@@ -269,6 +271,68 @@ export const documentRouter = createTRPCRouter({
       };
     }),
 
+  createUploadFileUrls: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), fileNames: z.string().array().min(1), title: z.string().optional() }))
+    .mutation(async ({ input, ctx }) => {
+
+      const result = await ctx.prisma.document.create({
+        data: {
+          src: input.fileNames[0] || 'File',
+          documentType: DocumentType.FILES,
+          projectId: input.projectId,
+          title: input.title,
+          documentData: {
+            createMany: {
+              data: input.fileNames.map(fileName => ({
+                uniqueId: fileName,
+                displayName: fileName,
+              }))
+            }
+          }
+        }
+      })
+
+      const docIds = await ctx.prisma.documentData.findMany({
+        where: {
+          documentId: result.id
+        },
+        select: {
+          id: true
+        }
+      })
+
+      const urls = await storage.getDocumentUploadUrls(result.id, docIds.map(doc => doc.id))
+
+      return {
+        urls,
+        document: result,
+      }
+    }),
+
+  indexFileDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), documentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+
+      await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING' }, where: { id: input.documentId } })
+      const document = await ctx.prisma.document.findFirst({
+        where: {
+          id: input.documentId,
+        },
+        include: {
+          documentData: true
+        }
+      })
+
+      if (!document) {
+        throw new TRPCError({ message: 'Document not found', code: 'INTERNAL_SERVER_ERROR' })
+      }
+
+      await docgpt.indexFileDocuments(input.orgId, input.projectId, document.id, document.documentData.map(d => d.id), document.title || document.src)
+      return {
+        status: 'success',
+      };
+    }),
+
   deleteDocument: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), documentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -280,6 +344,10 @@ export const documentRouter = createTRPCRouter({
 
       if (!document) {
         throw new TRPCError({ message: 'Document not found', code: 'INTERNAL_SERVER_ERROR' })
+      }
+
+      if (document.documentType === 'FILES') {
+        await storage.deleteFileDocument(document.id)
       }
 
       await resetTokens(document, input.orgId, input.projectId)

@@ -69,7 +69,7 @@ const Home: NextPage = () => {
               <p className=" font-semibold flex items-center mt-2">
                 Multiple Sources
               </p>
-              <p className="mt-2 text-gray-700">Add as many websites / documents you want for same bot. More source types are coming to DocsAI.</p>
+              <p className="mt-2 text-gray-700">Add as many websites, text, pdf, docx you want for same bot. More source types are coming to DocsAI.</p>
             </div>
             <div className="simple-card ">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

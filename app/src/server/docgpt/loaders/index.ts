@@ -4,6 +4,7 @@ import { GitbookLoader } from "./gitbook"
 import { IndexStatus, DocumentType, Project, Org } from "@prisma/client"
 import { loadDocumentsToDb } from "../store"
 import { prisma } from "~/server/db"
+import * as storage from "~/server/storage"
 
 async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number) {
   await prisma.document.update({
@@ -84,5 +85,45 @@ export async function indexTextDocument(content: string, title: string, orgId: s
     error = true
   }
 
+  await updateStatus(projectId, orgId, documentId, error, title, tokens)
+}
+
+
+export async function indexFileDocuments(orgId: string, projectId: string, documentId: string, docDataIds: string[], title: string) {
+  const docs = await Promise.all(docDataIds.map(async id => {
+    const { content } = await storage.downloadDocument(documentId, id)
+    return new Document({
+      pageContent: content,
+      metadata: {
+        title: title, projectId, documentId, source: 'FILE', type: DocumentType.FILES, size: new Blob([content!]).size, docDataId: id
+      }
+    })
+  }))
+
+  let error = false
+  let tokens = 0
+  try {
+    await loadDocumentsToDb(projectId, documentId, DocumentType.FILES, docs)
+    tokens = docs.reduce((acc, curr) => {
+      acc += curr.metadata.size
+      return acc
+    }, 0)
+  }
+  catch (e) {
+    console.error(e)
+    error = true
+  }
+
+  const result = docs.map(async doc => {
+    return await prisma.documentData.update({
+      where: { id: doc.metadata.docDataId as string },
+      data: {
+        indexed: !error,
+        size: doc.metadata.size as number,
+      }
+    })
+  })
+
+  await Promise.all(result)
   await updateStatus(projectId, orgId, documentId, error, title, tokens)
 }

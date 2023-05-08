@@ -34,6 +34,9 @@ const server = z.object({
   STRIPE_SECRET: z.string(),
   SENDGRID_API_KEY: z.string(),
   REDIS_URL: z.string().url(),
+  R2_ACCESS_KEY: z.string(),
+  R2_SECRET_KEY: z.string(),
+  R2_DOCS_BUCKET: z.string(),
 });
 
 /**
@@ -71,6 +74,9 @@ const processEnv = {
   STRIPE_SECRET: process.env.STRIPE_SECRET,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   REDIS_URL: process.env.REDIS_URL,
+  R2_ACCESS_KEY: process.env.R2_ACCESS_KEY,
+  R2_SECRET_KEY: process.env.R2_SECRET_KEY,
+  R2_DOCS_BUCKET: process.env.R2_DOCS_BUCKET,
 };
 
 // Don't touch the part below

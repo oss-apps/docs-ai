@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { useState } from "react";
+import { FileDocument } from "~/containers/NewDocument/FileDocument";
 
 
 function getDocType(type: number) {
@@ -21,15 +22,10 @@ function getDocType(type: number) {
   return DocumentType.URL
 }
 
-enum NewDocumentType {
-  URL = 1,
-  GITBOOK,
-  TEXT,
-}
 
 const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const router = useRouter()
-  const { docType, orgname, projectSlug } = router.query as { docType: string, orgname: string, projectSlug: string }
+  const { docType } = router.query as { docType: DocumentType, orgname: string, projectSlug: string }
 
 
   const org: Org = superjson.parse(orgJson)
@@ -50,15 +46,15 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
               <p className="mt-10 text-lg text-gray-800">{!docType ? 'Available sources' : null}</p>
               {docType ? (
                 <div className="max-w-2xl mx-auto">
-                  <CreateDocumentForm org={org} project={project} docType={Number(docType)} />
+                  <CreateDocumentForm org={org} project={project} docType={docType} />
                 </div>
               ) : (
 
                 <div className="flex gap-12 flex-wrap mt-10">
-                  <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.URL}`} />
-                  <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${NewDocumentType.TEXT}`} />
+                  <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
+                  <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
+                  <DocumentSource name="Files" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
                   <DocumentSource name="Notion" />
-                  <DocumentSource name="PDF" />
                 </div>
               )}
             </div>
@@ -69,13 +65,11 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
   );
 };
 
-const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: NewDocumentType }> = ({ org, project, docType }) => {
-  if (docType === NewDocumentType.GITBOOK) {
-    return <URLDocument org={org} project={project} urlType="gitbook" />
-  }
-
-  if (docType === NewDocumentType.TEXT) {
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType }> = ({ org, project, docType }) => {
+  if (docType === DocumentType.TEXT) {
     return <TextDocument org={org} project={project} />
+  } else if (docType === DocumentType.FILES) {
+    return <FileDocument project={project} org={org} />
   }
 
   return <URLDocument org={org} project={project} />

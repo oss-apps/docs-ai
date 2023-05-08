@@ -155,6 +155,7 @@ enum DocumentType {
     CHAT
     TEXT
     PDF
+    FILES
 }
 
 enum IndexStatus {
