@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
           Pricing
         </Link>
       </div>
-      <p className="mt-4 text-center text-zinc-500">Made with ❤️ by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
+      <p className="mt-4 text-center text-zinc-500">Made by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
     </footer>
   );
 };
