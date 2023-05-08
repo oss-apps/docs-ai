@@ -8,6 +8,7 @@ import mammoth from 'mammoth';
 import { toast } from "react-hot-toast";
 import { getLimits } from "~/utils/license";
 import { useRouter } from "next/router";
+import { type TextItem } from "pdfjs-dist/types/src/display/api";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -35,8 +36,8 @@ const readPdfFile = async (file: File) => {
     const page = await pdf.getPage(pageNumber);
     const content = await page.getTextContent();
     const text = content.items.map((item) => {
-      if (item?.str) {
-        return item.str;
+      if ((item as TextItem)?.str) {
+        return (item as TextItem)?.str;
       }
       return ''
     }).join(' ')
