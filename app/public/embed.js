@@ -25,7 +25,7 @@ function getChatChatButton(primaryColor) {
 }
 
 function createChatIframe(projectId) {
-  const docsUrl = document.currentScript.getAttribute('docs-url');
+  const docsUrl = document.currentScript.getAttribute('docs-url') || 'https://docsai.app';
   const chatIframe = document.createElement("iframe");
   chatIframe.id = "chat-iframe";
   chatIframe.src = `${docsUrl}/embed/chat/${projectId}`;
@@ -94,10 +94,13 @@ function initDocsAI(projectId, primaryColor) {
     root.className = "docsai-root";
     root.appendChild(getChatChatButton(primaryColor));
     root.appendChild(createChatIframe(projectId));
-    document.body.appendChild(root);
-    const style = document.createElement('style');
-    style.innerText = DOCS_AI_STYLE;
-    document.head.appendChild(style)
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.appendChild(root);
+      const style = document.createElement('style');
+      style.innerText = DOCS_AI_STYLE;
+      document.head.appendChild(style)
+    });
+
 
     window.addEventListener('message', (ev) => {
       if (ev.data?.source === 'docsai' && ev.data?.message === 'close') {
