@@ -105,7 +105,6 @@ function initDocsAI(projectId, primaryColor) {
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      console.log('docsai chat loaded 3')
       document.body.appendChild(root);
       const style = document.createElement('style');
       style.innerText = DOCS_AI_STYLE;
