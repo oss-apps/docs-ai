@@ -94,7 +94,18 @@ function initDocsAI(projectId, primaryColor) {
     root.className = "docsai-root";
     root.appendChild(getChatChatButton(primaryColor));
     root.appendChild(createChatIframe(projectId));
+    console.log('docsai chat loaded 1')
+
+    if (document.body) {
+      console.log('docsai chat loaded 2')
+      document.body.appendChild(root);
+      const style = document.createElement('style');
+      style.innerText = DOCS_AI_STYLE;
+      document.head.appendChild(style)
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
+      console.log('docsai chat loaded 3')
       document.body.appendChild(root);
       const style = document.createElement('style');
       style.innerText = DOCS_AI_STYLE;
@@ -113,8 +124,8 @@ function initDocsAI(projectId, primaryColor) {
   }
 }
 
-
 (function () {
+  console.log('docsai chat loaded')
   const projectId = document.currentScript.getAttribute('project-id');
   const primaryColor = document.currentScript.getAttribute('primary-color');
   initDocsAI(projectId, primaryColor);
