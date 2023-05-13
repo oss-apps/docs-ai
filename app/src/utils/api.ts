@@ -9,8 +9,10 @@ import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { toast } from "react-hot-toast";
 import superjson from "superjson";
+import Cors from 'cors'
 
 import { type AppRouter } from "~/server/api/root";
+import { type NextApiRequest, type NextApiResponse } from "next";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -79,3 +81,25 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  * @example type HelloOutput = RouterOutputs['example']['hello']
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
+
+
+
+export const cors = Cors({
+  methods: ['POST', 'GET', 'HEAD'],
+  origin: '*',
+})
+
+export function runCorsMiddleware(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  return new Promise((resolve, reject) => {
+    cors(req, res, (result: any) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}

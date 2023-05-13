@@ -1,3 +1,5 @@
+var DOCS_AI_URL = document.currentScript.getAttribute('docs-url') || 'https://docsai.app';
+
 
 function toggleChat() {
   const chatIframe = document.getElementById("chat-iframe");
@@ -13,26 +15,27 @@ function toggleChat() {
   }
 }
 
-function getChatChatButton(primaryColor) {
+function getChatChatButton(primaryColor, textColor = '#fff') {
   const chatButton = document.createElement("button");
   chatButton.id = "chat-button";
   chatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 4px;" viewBox="0 0 24 24" height="25" width="25" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" /></svg>';
   if (primaryColor) {
     chatButton.style.backgroundColor = primaryColor;
+  } if (textColor) {
+    chatButton.style.color = textColor;
   }
   chatButton.addEventListener("click", toggleChat);
   return chatButton;
 }
 
-function createChatIframe(projectId) {
-  const docsUrl = document.currentScript.getAttribute('docs-url') || 'https://docsai.app';
+function createChatIframe(projectId, options) {
   const chatIframe = document.createElement("iframe");
   chatIframe.id = "chat-iframe";
-  chatIframe.src = `${docsUrl}/embed/chat/${projectId}`;
+  chatIframe.src = `${DOCS_AI_URL}/embed/chat/${projectId}?${objectToQueryString(options)}`;
   return chatIframe;
 }
 
-function initDocsAI(projectId, primaryColor) {
+async function initDocsAI(projectId, primaryColor, url) {
   const DOCS_AI_STYLE = `
   #chat-button {
     position: fixed;
@@ -92,8 +95,10 @@ function initDocsAI(projectId, primaryColor) {
     const root = document.createElement("div");
     root.id = "docsai-root";
     root.className = "docsai-root";
-    root.appendChild(getChatChatButton(primaryColor));
-    root.appendChild(createChatIframe(projectId));
+    const projectData = await getRequest(url, 'web/project', { projectId })
+
+    root.appendChild(getChatChatButton(primaryColor, projectData?.textColor));
+    root.appendChild(createChatIframe(projectId, { primaryColor }));
     console.log('docsai chat loaded 1')
 
     if (document.body) {
@@ -111,7 +116,6 @@ function initDocsAI(projectId, primaryColor) {
       document.head.appendChild(style)
     });
 
-
     window.addEventListener('message', (ev) => {
       if (ev.data?.source === 'docsai' && ev.data?.message === 'close') {
         const chatIframe = document.getElementById("chat-iframe");
@@ -127,5 +131,34 @@ function initDocsAI(projectId, primaryColor) {
   console.log('docsai chat loaded')
   const projectId = document.currentScript.getAttribute('project-id');
   const primaryColor = document.currentScript.getAttribute('primary-color');
-  initDocsAI(projectId, primaryColor);
+  const docsAiUrl = document.currentScript.getAttribute('docs-url') || 'https://docsai.app';
+  initDocsAI(projectId, primaryColor, docsAiUrl);
 })();
+
+function objectToQueryString(obj) {
+  let queryString = '';
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (queryString.length > 0) {
+        queryString += '&';
+      }
+      queryString += `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`;
+    }
+  }
+  return queryString;
+}
+
+async function getRequest(url, endpoint, queryParams) {
+  try {
+
+    const response = await fetch(`${DOCS_AI_URL}/api/${endpoint}?${new URLSearchParams(queryParams)}`)
+    const data = await response.json()
+    console.log("🔥 ~ getRequest ~ data:", data)
+    return data
+  }
+  catch (err) {
+    console.error(err)
+    return null
+  }
+}
+

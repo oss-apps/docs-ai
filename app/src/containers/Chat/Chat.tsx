@@ -8,11 +8,13 @@ import { Loading } from "~/components/loading/Loading"
 import { api } from "~/utils/api";
 import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
+import { useRouter } from "next/router";
+import tinycolor from 'tinycolor2';
+import { getContrastColor } from "~/utils/color";
 
 const qnaSchema = z.object({
   question: z.string().min(3),
 })
-
 
 const getStreamAnswer = async (projectId: string, question: string, convoId: string, onMessage: (token: string) => void, onEnd: (convoId: string) => void) => {
   const res = await fetch('/api/web/chat', {
@@ -62,8 +64,11 @@ const getStreamAnswer = async (projectId: string, question: string, convoId: str
   }
 }
 
-
 export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean, embed?: boolean }> = ({ org, project, isPublic, embed }) => {
+  const router = useRouter();
+  const primaryColor = router.query.primaryColor as string || project.primaryColor || '#000000';
+  const backgroundColor = primaryColor.toString() || '#000000'
+  const textColor = getContrastColor(backgroundColor)
   const [thinking, setThinking] = useState(false)
   const [conversation, setConversation] = useState<(Conversation & {
     messages: Messages[];
@@ -151,10 +156,10 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   }, [conversation, org.id, project.id, summarizeConversation])
 
   return (
-    <div className="h-full">
-      <div ref={chatBox} id="docs-ai-chat-box" className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem] mb-2 overflow-auto lg:border lg:border-gray-200 rounded text-sm lg:text-base leading-tight">
+    <div className="h-full bg-white ">
+      <div ref={chatBox} id="docs-ai-chat-box " className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
         {embed ? (
-          <div className="p-2 items-center px-4 flex justify-between text-lg">
+          <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
             <p>
               {project.botName}
             </p>
@@ -173,82 +178,39 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
             </div>
           </div>
         ) : null}
-        <div className="flex lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
-          <div className="mt-1 text-xl">
-            {'🤖'}
-          </div>
-          <div className="markdown ml-4 lg:ml-10">
-            <div>Hi, I am {project.botName}. How can I help you?</div>
-          </div>
-        </div>
+
+        <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
+
         {conversation?.messages.map((m) => (
-          <div key={m.id} className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
-            <div className="mt-1 text-xl">
-              {m.user === 'user' ? '👤' : '🤖'}
-            </div>
-            <div className="ml-4 lg:ml-10">
-              <MarkDown markdown={m.message} />
-              {m.sources ? (
-                <div className="pt-4">
-                  <div className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-green-500">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
-                    <span>Sources: </span>
-                  </div>
-                  <div className="flex gap-3 mt-1 flex-shrink-0 flex-wrap">
-                    {m.sources?.split(',').map(s =>
-                      <a className="border border-gray-300 hover:bg-gray-100 shrink-0 flex-wrap text-sm p-0.5 rounded-md px-2 max-w-[300px] text-ellipsis whitespace-nowrap overflow-hidden" href={s} target="_blank" key={s} rel="noreferrer">
-                        {getLinkDirectory(s)}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </div>
+          m.user == 'user' ?
+            <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
+            : <LeftChat key={m.id} sentence={m.message} sources={m.sources} />
         ))}
+
         {latestQuestion ? (
-          <div className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
-            <div className="mt-1 text-xl">
-              {'👤'}
-            </div>
-            <div className="markdown ml-4 lg:ml-10">
-              <div>{latestQuestion}</div>
-            </div>
-          </div>
+          <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
         ) : null}
+
         {answer ? (
-          <div className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
-            <div className="mt-1 text-xl">
-              {'🤖'}
-            </div>
-            <div className="markdown ml-4 lg:ml-10">
-              <div>
-                <MarkDown markdown={answer} />
-              </div>
-            </div>
-          </div>
+          <LeftChat key={answer} sentence={answer} />
         ) : null}
+
         {thinking ? (
-          <div className="flex mt-1 lg:mt-4 items-start even:bg-gray-100 p-2 px-4">
-            <div className="mt-1 text-xl">
-              {'🤖'}
-            </div>
-            <div className="markdown ml-4 lg:ml-10">
-              <div className="text-gray-600">Thinking...</div>
-            </div>
-          </div>
+          <LeftChat key="thinking" isThinking={true} />
         ) : null}
       </div>
-      <div className="mb-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
-        {project.defaultQuestion.split(',').map(q => (
-          <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md p-0.5 px-1 border border-gray-300">
-            {q}
-          </button>
-        ))}
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {project.defaultQuestion &&
+        <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
+          {project.defaultQuestion.split(',').map(q => (
+            <>
+              {q && <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
+                {q}
+              </button>
+              }</>
+          ))}
+        </div>
+      }
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-2 lg:mt-4">
         <div className="flex w-full lg:border lg:border-gray-300 rounded-md lg:p-1">
           <input
             className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
@@ -264,6 +226,83 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         </div>
       </form>
     </div >
+
   )
 }
 
+const LeftArrow: React.FC = () => {
+  return (
+    <div className="absolute left-0 top-4 transform -translate-x-1/3 rotate-45 w-4 h-2 bg-gray-100 ">
+    </div>
+  )
+}
+
+const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) => {
+  return (
+    <div className="absolute right-0 top-4 transform translate-x-1/3 rotate-45 w-4 h-2"
+      style={{
+        backgroundColor
+      }}></div>
+  )
+}
+
+export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null }) => {
+  return (
+    <div className="flex m-2 lg:m-4  lg:mt-4 mt-2">
+      <div className="rounded-xl rounded-bl-none relative bg-zinc-200 p-2 px-4">
+        {isThinking && <div className="markdown">
+          <div className="text-gray-600">Thinking...</div>
+        </div>}
+
+        {sentence && <div className="">
+          <MarkDown markdown={sentence} />
+          {sources && <AnswerSources sources={sources} />}
+
+        </div>}
+        {/* <LeftArrow /> */}
+      </div>
+
+    </div>
+  )
+}
+
+export const RightChat: React.FC<{ sentence: string, backgroundColor: string, color?: string }> = ({ sentence, backgroundColor, color = "#000000" }) => {
+  return (
+    <div className="flex m-2 lg:m-4  lg:mt-4 mt-2 justify-end ">
+      <div className=" rounded-xl rounded-br-none relative p-2 px-4" style={{ backgroundColor, color }}>
+        <div className="markdown">
+          <div>
+            <MarkDown markdown={sentence} />
+          </div>
+        </div>
+        {/* <RightArrow backgroundColor={backgroundColor} /> */}
+      </div>
+
+    </div>
+  )
+}
+
+export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = null }) => {
+  return (
+    <>
+      {sources ? (
+        <div className="pt-4">
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-green-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <span className="font-bold">Sources </span>
+            <div className="flex gap-1 mt-1 flex-shrink-0 flex-wrap">
+              {sources?.split(',').map(s =>
+                <a className="border border-gray-300 hover:bg-gray-100 shrink-0 flex-wrap text-sm p-0.5 rounded-md px-2 max-w-[300px] text-ellipsis whitespace-nowrap overflow-hidden" href={s} target="_blank" key={s} rel="noreferrer">
+                  {getLinkDirectory(s)}
+                </a>
+              )}
+            </div>
+          </div>
+
+        </div>
+      ) : null}
+    </>
+  )
+}

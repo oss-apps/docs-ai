@@ -3,7 +3,7 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { ConvoRating, type Org, type Project } from "@prisma/client";
+import { ConvoRating, MessageUser, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { SmallButton } from "~/components/form/button";
+import { LeftChat, RightChat } from "~/containers/Chat/Chat";
+import { getContrastColor } from "~/utils/color";
 
 const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
@@ -30,6 +32,8 @@ const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
+
+  const textColor = getContrastColor(project.primaryColor)
 
   const router = useRouter()
   const { convoId } = router.query as { convoId: string | undefined }
@@ -127,31 +131,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                   </div>
                   {
                     isLoading ? <div>Loading...</div> : currentChat?.conversation?.messages.map(m => (
-                      <div key={m.id} className="flex mt-4 items-start even:bg-gray-100 p-2 px-4">
-                        <div className="mt-1 text-xl">
-                          {m.user === 'user' ? '👤' : '🤖'}
-                        </div>
-                        <div className="ml-10">
-                          <MarkDown markdown={m.message} />
-                          {m.sources ? (
-                            <div className="pt-4">
-                              <div className="flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-green-500">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                </svg>
-                                <span>Sources: </span>
-                              </div>
-                              <div className="flex gap-3 mt-1 flex-shrink-0 flex-wrap">
-                                {m.sources?.split(',').map(s =>
-                                  <a className="border border-gray-300 hover:bg-gray-100 text-sm p-0.5 rounded-md px-2 max-w-[300px] text-ellipsis whitespace-nowrap overflow-hidden" href={s} target="_blank" key={s} rel="noreferrer">
-                                    {getLinkDirectory(s)}
-                                  </a>
-                                )}
-                              </div>
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>))
+                      m.user === MessageUser.assistant ? <LeftChat key={m.id} sentence={m.message} sources={m.sources} /> :
+                        <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
+                    ))
                   }
                 </div>
               </div>

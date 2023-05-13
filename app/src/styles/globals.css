@@ -12,7 +12,7 @@ body {
 }
 
 .markdown {
-  @apply text-gray-800 leading-7;
+  @apply leading-7;
 }
 
 .markdown a {

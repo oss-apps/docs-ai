@@ -34,7 +34,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
 export function Label(props: JSX.IntrinsicElements["label"]) {
   return (
     <label {...props} className={`block text-zinc-500 ml-1 mb-1 ${props?.className || ''}`}>
-      {props.children}
+      <span>  {props.children} </span>
+      {props.title ? <p className="font-light text-xs mb-0 text-zinc-400"> {props.title}</p> : null}
     </label>
   );
 }

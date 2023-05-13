@@ -30,9 +30,15 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
             Dashboard
           </SecondaryButton>
         </Link>
+
+        <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="w-full">
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100' : 'bg-white'}`}>
+            Your bot
+          </SecondaryButton>
+        </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
           <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
-            Your bot
+            Bot Appearance
           </SecondaryButton>
         </Link>
         {/* <Link href={`/dashboard/${org.name}/${project.slug}/QnA`} className="w-full">

@@ -38,15 +38,14 @@ export const projectRouter = createTRPCRouter({
         else throw e
       }
     }),
+
   updateProject: orgMemberProcedure
     .input(z.object({
       name: z.string(),
       description: z.string().optional(),
-      defaultQuestion: z.string().optional(),
       orgId: z.string(),
       projectId: z.string(),
-      botName: z.string(),
-      generateSummary: z.boolean().optional(),
+      generateSummary: z.boolean().optional()
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -57,8 +56,6 @@ export const projectRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
-            defaultQuestion: input.defaultQuestion,
-            botName: input.botName,
             generateSummary: isAbovePro(ctx.org) && !!input.generateSummary
           }
         })
@@ -73,6 +70,40 @@ export const projectRouter = createTRPCRouter({
         else throw e
       }
     }),
+
+  updateBotSettings: orgMemberProcedure
+    .input(z.object({
+      defaultQuestion: z.string().optional(),
+      projectId: z.string(),
+      botName: z.string().min(3),
+      initialQuestion: z.string().min(3),
+      primaryColor: z.string().min(4),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const result = await ctx.prisma.project.update({
+          where: {
+            id: input.projectId
+          },
+          data: {
+            defaultQuestion: input.defaultQuestion,
+            botName: input.botName,
+            initialQuestion: input.initialQuestion,
+            primaryColor: input.primaryColor,
+          }
+        })
+        return {
+          project: result,
+        };
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+          throw new TRPCError({ message: 'This project already exist', code: 'BAD_REQUEST' });
+        }
+
+        else throw e
+      }
+    }),
+
   createOrRecreateApiKey: orgMemberProcedure.
     input(z.object({ projectId: z.string(), orgId: z.string() }))
     .mutation(async ({ input, ctx }) => {

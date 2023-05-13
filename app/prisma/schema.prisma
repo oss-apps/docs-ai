@@ -134,6 +134,8 @@ model Project {
     chatUsed         Int                @default(0)
     documentTokens   BigInt             @default(0)
     generateSummary  Boolean            @default(false)
+    initialQuestion  String?
+    primaryColor     String             @default("#000000")
     documents        Document[]
     Conversation     Conversation[]
     slackInstalation SlackInstallation?

@@ -22,9 +22,7 @@ import { toast } from "react-hot-toast";
 
 const projectSchema = z.object({
   name: z.string().min(3).max(50),
-  description: z.string().optional(),
-  defaultQuestion: z.string(),
-  botName: z.string(),
+  description: z.string().optional()
 })
 
 
@@ -50,8 +48,8 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   const createApiToken = api.project.createOrRecreateApiKey.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { name, description, defaultQuestion, botName } = data as any as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, defaultQuestion, botName, generateSummary })
+    const { name, description } = data as any as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, generateSummary })
   };
 
   useEffect(() => {
@@ -109,30 +107,12 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                       <div className="w-1/2">
                         <form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded-md">
                           <div className="w-full">
-                            <Label>Name</Label>
+                            <Label>Project Name</Label>
                             <Input
                               defaultValue={project.name}
                               placeholder="A good name"
                               {...register('name')}
                               error={errors.name?.message?.toString()}
-                            />
-                          </div>
-                          <div className="w-full mt-4">
-                            <Label>Bot Name</Label>
-                            <Input
-                              defaultValue={project.botName}
-                              placeholder="Jarvis"
-                              {...register('botName')}
-                              error={errors.name?.message?.toString()}
-                            />
-                          </div>
-                          <div className="w-full mt-4">
-                            <Label>Question sugesstions</Label>
-                            <Input
-                              defaultValue={project.defaultQuestion}
-                              placeholder="How to use DocsAI?, How to add project?"
-                              {...register('defaultQuestion')}
-                              error={errors.defaultQuestion?.message?.toString()}
                             />
                           </div>
                           <div className="w-full mt-4">

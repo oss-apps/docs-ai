@@ -51,7 +51,7 @@ const QnAPage: NextPage<{ orgJson: string | null, projectJson: string | null }> 
                 <ChatBox org={org} project={project} />
               </div>
             </div>
-            <div className="text-center mt-4 text-xs">Powered by <a href="https://docsai.app" className="text-cyan-500">DocsAI.app</a></div>
+            <div className="text-center mt-4 text-xs font-light">Powered by <a href="https://docsai.app" className="text-cyan-500">DocsAI.app</a></div>
           </div>
         </div>
       </main>
