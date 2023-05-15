@@ -97,8 +97,12 @@ async function initDocsAI(projectId, primaryColor, url) {
     root.className = "docsai-root";
     const projectData = await getRequest(url, 'web/project', { projectId })
 
-    root.appendChild(getChatChatButton(primaryColor, projectData?.textColor));
-    root.appendChild(createChatIframe(projectId, { primaryColor }));
+    const _primaryColor =
+      (primaryColor === '#000000' || primaryColor === '#000' || !primaryColor) ? projectData?.primaryColor : primaryColor;
+
+    console.log(projectData, _primaryColor)
+    root.appendChild(getChatChatButton(_primaryColor, projectData?.textColor));
+    root.appendChild(createChatIframe(projectId, { primaryColor: _primaryColor }));
     console.log('docsai chat loaded 1')
 
     if (document.body) {

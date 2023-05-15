@@ -14,6 +14,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MarkDown } from "~/components/MarkDown";
 import Link from "next/link";
+import { IconCustomize, IconEmbed, IconShare } from "~/components/icons/icons";
 
 
 const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -41,7 +42,7 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   }
 
   const installScript = () => {
-    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" primary-color="${(project)?.primaryColor ?? '#000000'}" async></script>`
+    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" async></script>`
   }
   return (
     <>
@@ -55,14 +56,16 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className="mt-5 p-5 px-10">
               <div className="max-w-5xl mx-auto">
                 <div className="flex justify-end gap-4 mb-4">
-                  <SecondaryButton onClick={openModal} className=" w-20">
+                  <SecondaryButton onClick={openModal} className="justify-center gap-2 w-20">
+                    <IconEmbed className="h-4 w-4" />
                     Embed
                   </SecondaryButton>
-                  <SecondaryButton onClick={onShareClick} className=" w-20">
-                    {shareText}
+                  <SecondaryButton onClick={onShareClick} className="justify-center gap-2 w-20">
+                    <IconShare className="h-4 w-4" /> {shareText}
                   </SecondaryButton>
                   <Link href={`/dashboard/${org.name}/${project.slug}/agent`}>
-                    <SecondaryButton onClick={onShareClick} className=" w-20">
+                    <SecondaryButton className="flex justify-center gap-2  w-36">
+                      <IconCustomize className="h-4 w-4" />
                       Customize
                     </SecondaryButton>
                   </Link>

@@ -18,7 +18,7 @@ const Nav: React.FC<{ org?: Org }> = ({ org }) => {
               Subscription
             </Link>
           ) : null}
-          <SecondaryButton className="border border-gray-700" onClick={() => void signOut()}>
+          <SecondaryButton className="border border-gray-700 justify-center" onClick={() => void signOut()}>
             Log out
           </SecondaryButton>
         </div>

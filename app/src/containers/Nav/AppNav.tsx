@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
+import { IconBot, IconChatHistory, IconDashboard, IconFolderOpen, IconPaintBrush, IconSettings } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
@@ -26,18 +27,23 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
       <div className="mt-10">
         <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full">
-          <SecondaryButton className={`border-0 w-full text-left shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100' : 'bg-white'}`}>
-            Dashboard
+          <SecondaryButton className={`border-0 w-full flex  gap-2 text-left shadow-none focus:bg-gray-100 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconDashboard className="h-4 w-4" />
+            <p>
+              Dashboard
+            </p>
           </SecondaryButton>
         </Link>
 
         <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="w-full">
-          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconBot className="h-4 w-4" />
             Your bot
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
-          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconPaintBrush className="h-4 w-4" />
             Bot Appearance
           </SecondaryButton>
         </Link>
@@ -47,17 +53,20 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </SecondaryButton>
         </Link> */}
         <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full mt-4">
-          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconFolderOpen className="h-4 w-4" />
             Documents
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full mt-4">
-          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconChatHistory className="h-4 w-4" />
             Chat history
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full mt-4">
-          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+          <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+            <IconSettings className="h-4 w-4" />
             Settings
           </SecondaryButton>
         </Link>

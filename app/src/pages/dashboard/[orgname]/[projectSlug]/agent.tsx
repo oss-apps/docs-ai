@@ -21,6 +21,7 @@ import { z } from "zod";
 import { toast } from "react-hot-toast";
 import { mergeObjects } from "~/utils/common";
 import { getContrastColor } from "~/utils/color";
+import { IconEmbed, IconShare } from "~/components/icons/icons";
 
 export const projectSchema = z.object({
   defaultQuestion: z.string().min(3),
@@ -65,7 +66,7 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   }
 
   const installScript = () => {
-    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" primary-color="${(projectState)?.primaryColor ?? '#000000'}" async></script>`
+    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" async></script>`
   }
 
   return (
@@ -85,11 +86,12 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className=" mx-auto">
               <ChatBox org={org} project={projectState} embed />
               <div className="flex justify-center gap-4 mt-4">
-                <PrimaryButton onClick={openModal} className=" w-20">
+                <PrimaryButton onClick={openModal} className="justify-center gap-2 w-20">
+                  <IconEmbed className="h-4 w-4" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" />
                   Embed
                 </PrimaryButton>
-                <SecondaryButton onClick={onShareClick} className=" w-20">
-                  {shareText}
+                <SecondaryButton onClick={onShareClick} className="justify-center gap-2 w-20">
+                  <IconShare className="h-4 w-4" /> {shareText}
                 </SecondaryButton>
               </div>
             </div>

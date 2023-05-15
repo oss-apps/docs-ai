@@ -11,6 +11,7 @@ import superjson from "superjson";
 import Link from "next/link";
 import PrimaryButton from "~/components/form/button";
 import Avatar from "~/components/Avatar";
+import { IconAdd } from "~/components/icons/icons";
 
 
 const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson }) => {
@@ -39,7 +40,8 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
                   </span>
                 </div>
                 <Link href={`/dashboard/${org.org.name}/new`}>
-                  <PrimaryButton>+ New Project</PrimaryButton>
+                  <PrimaryButton className="justify-center gap-2">
+                    <IconAdd className="h-5 w-5" primaryClassName="fill-slate-600" secondaryClassName="fill-slate-100" /> New Project</PrimaryButton>
                 </Link>
               </div>
               <div className="mt-10">

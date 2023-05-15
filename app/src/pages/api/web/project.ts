@@ -26,6 +26,6 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
     res.status(404).send({ message: 'Project Not Found' })
     return
   }
-  const projectDetails = { project, textColor: getContrastColor(project?.primaryColor) }
+  const projectDetails = { ...project, textColor: getContrastColor(project?.primaryColor) }
   res.send(projectDetails)
 }

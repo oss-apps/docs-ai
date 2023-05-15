@@ -7,4 +7,3 @@ export const getContrastColor = (bgColor: string) => {
   const contrastColor = tinycolor.mostReadable(bgColor, textColorPallete);
   return contrastColor.toHexString();
 }
-

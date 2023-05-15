@@ -85,7 +85,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                 document.src}
                             </div>
                           </div>
-                          <div className="flex gap-4">
+                          <div className="flex items-center gap-4">
                             <Status status={document.indexStatus} />
 
                             {

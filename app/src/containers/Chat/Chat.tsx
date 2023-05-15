@@ -11,6 +11,7 @@ import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import tinycolor from 'tinycolor2';
 import { getContrastColor } from "~/utils/color";
+import { IconSend } from "~/components/icons/icons";
 
 const qnaSchema = z.object({
   question: z.string().min(3),
@@ -156,76 +157,88 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   }, [conversation, org.id, project.id, summarizeConversation])
 
   return (
-    <div className="h-full bg-white ">
-      <div ref={chatBox} id="docs-ai-chat-box " className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
-        {embed ? (
-          <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
-            <p>
-              {project.botName}
-            </p>
-            <div className="flex gap-3">
-              <button onClick={onResetChat} className="flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                </svg>
-              </button>
-              <button onClick={onClose} className="flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                </svg>
-              </button>
+    <>
+      <style>
+        {
+          `
+          html {
+            --chat-primary-color: ${primaryColor};
+            --chat-secondary-color: ${primaryColor}80;
+          }
+          `
+        }
+      </style>
+      <div className="h-full bg-white ">
+        <div ref={chatBox} id="docs-ai-chat-box " className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
+          {embed ? (
+            <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
+              <p>
+                {project.botName}
+              </p>
+              <div className="flex gap-3">
+                <button onClick={onResetChat} className="flex justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                </button>
+                <button onClick={onClose} className="flex justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
+                  </svg>
+                </button>
 
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
+          <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
 
-        {conversation?.messages.map((m) => (
-          m.user == 'user' ?
-            <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
-            : <LeftChat key={m.id} sentence={m.message} sources={m.sources} />
-        ))}
-
-        {latestQuestion ? (
-          <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
-        ) : null}
-
-        {answer ? (
-          <LeftChat key={answer} sentence={answer} />
-        ) : null}
-
-        {thinking ? (
-          <LeftChat key="thinking" isThinking={true} />
-        ) : null}
-      </div>
-      {project.defaultQuestion &&
-        <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
-          {project.defaultQuestion.split(',').map(q => (
-            <>
-              {q && <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
-                {q}
-              </button>
-              }</>
+          {conversation?.messages.map((m) => (
+            m.user == 'user' ?
+              <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
+              : <LeftChat key={m.id} sentence={m.message} sources={m.sources} />
           ))}
+
+          {latestQuestion ? (
+            <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
+          ) : null}
+
+          {answer ? (
+            <LeftChat key={answer} sentence={answer} />
+          ) : null}
+
+          {thinking ? (
+            <LeftChat key="thinking" isThinking={true} />
+          ) : null}
         </div>
-      }
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-2 lg:mt-4">
-        <div className="flex w-full lg:border lg:border-gray-300 rounded-md lg:p-1">
-          <input
-            className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
-            placeholder="Ask anything"
-            {...register('question', { required: 'Question is required', minLength: 3 })}></input>
-          <button type="submit" className="p-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500 " >
-            {answer || latestQuestion ? <Loading /> : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 ">
-                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </form>
-    </div >
+        {project.defaultQuestion &&
+          <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
+            {project.defaultQuestion.split(',').map(q => (
+              <>
+                {q && <button onClick={() => getAnswer(q)} key={q} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
+                  {q}
+                </button>
+                }</>
+            ))}
+          </div>
+        }
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-2 lg:mt-4">
+          <div className="flex w-full lg:border lg:border-gray-300 rounded-md lg:p-1">
+            <input
+              className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
+              placeholder="Ask anything"
+              {...register('question', { required: 'Question is required', minLength: 3 })}></input>
+            <button type="submit" className="p-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500 " >
+              {answer || latestQuestion ? <Loading /> : (
+                <IconSend className="rotate-90 w-6 h-6"
+                  secondaryClassName={`fill-[var(--chat-primary-color)]`}
+                  primaryClassName={`fill-[var(--chat-secondary-color)]`} />
+              )}
+            </button>
+          </div>
+        </form>
+      </div >
+    </>
 
   )
 }
