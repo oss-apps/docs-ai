@@ -4,10 +4,12 @@ import { SessionProvider } from "next-auth/react";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import "~/styles/globals.scss";
 import Head from "next/head";
 import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
+
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -35,7 +37,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <script src="/embed.js" project-id="clhljr3og0009u1sstmk8r2ro" primary-color="#000000" docs-url="http://localhost:3000" async></script>
         ) : null}
       </Head>
-
       <Toaster position="bottom-center" />
       <SessionProvider session={session}>
         <Component {...pageProps} />
