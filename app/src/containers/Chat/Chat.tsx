@@ -223,7 +223,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           </div>
         }
         <form onSubmit={handleSubmit(onSubmit)} className="mt-2 lg:mt-4">
-          <div className="flex w-full lg:border lg:border-gray-300 rounded-md lg:p-1">
+          <div className="flex w-full lg:border lg:border-gray-300 rounded-md p-0.5 lg:p-1">
             <input
               className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
               placeholder="Ask anything"
