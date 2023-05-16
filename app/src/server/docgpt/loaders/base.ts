@@ -32,7 +32,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     super(webPath);
     this.shouldLoadAllPaths =
       params.shouldLoadAllPaths ?? this.shouldLoadAllPaths;
-    this.skipPaths = params.skipPaths ? params.skipPaths.map(p => p.replace('*', '.*')) : this.skipPaths;
+    this.skipPaths = params.skipPaths ? params.skipPaths.map(p => p.replace('*', '.*').trim()) : this.skipPaths;
     this.loadImages = params.loadImages ?? false;
     this.documentId = params.documentId ?? ''
     this.caller = new AsyncCaller({ maxRetries: 2 })
