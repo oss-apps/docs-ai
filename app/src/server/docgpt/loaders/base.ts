@@ -32,7 +32,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
     super(webPath);
     this.shouldLoadAllPaths =
       params.shouldLoadAllPaths ?? this.shouldLoadAllPaths;
-    this.skipPaths = params.skipPaths ?? this.skipPaths;
+    this.skipPaths = params.skipPaths ? params.skipPaths.map(p => p.replace('*', '.*')) : this.skipPaths;
     this.loadImages = params.loadImages ?? false;
     this.documentId = params.documentId ?? ''
     this.caller = new AsyncCaller({ maxRetries: 2 })
@@ -86,8 +86,10 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
 
     let skipped = false
     for (const skipPath of this.skipPaths) {
-      if ((skipPath.endsWith('*') && path.startsWith(skipPath.slice(0, -1))) || skipPath === path) {
+      const regex = new RegExp('^' + skipPath + '$');
+      if (regex.test(path)) {
         skipped = true
+        break
       }
     }
 
@@ -108,7 +110,7 @@ export class WebBaseLoader extends CheerioWebBaseLoader {
   }
 
   async loadPageRecursively(): Promise<boolean> {
-    return loadPageRecursively(this.webPath, this.documentId, this.pageLimit)
+    return loadPageRecursively(this.webPath, this.documentId, this.pageLimit, this.isSkipped.bind(this))
   }
 }
 
@@ -177,7 +179,7 @@ async function loadDocAndGetLink(url: string, documentId: string, caller: AsyncC
 
 
 
-async function loadPageRecursively(rootUrl: string, documentId: string, allowedCount = 30) {
+async function loadPageRecursively(rootUrl: string, documentId: string, allowedCount = 30, isSkipped: (path: string) => boolean) {
   console.log('Loading recursively', rootUrl, documentId, allowedCount)
   const visitedUrls = new Set();
   const basePath = new URL(rootUrl).origin
@@ -211,8 +213,12 @@ async function loadPageRecursively(rootUrl: string, documentId: string, allowedC
 
     await mapLimit(relativePaths, 5, async (path) => {
       if (path) {
-        const url = path.startsWith('/') ? basePath + path : path;
-        return loadPage(url);
+        let _path = !path.startsWith('/') ? path.replace(basePath, '') : path
+        _path = _path.startsWith('/') ? _path : '/' + _path
+        if (!isSkipped(_path)) {
+          const url = path.startsWith('/') ? basePath + path : path;
+          return loadPage(url);
+        }
       }
 
       return null

@@ -41,7 +41,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
       try {
         const { parsedDocs, document, totalSize, isStopped } = !doc ?
           await createUrlDocument.mutateAsync({ src, projectId: project.id, orgId: org.id, type: urlType, loadAllPath, skipPaths })
-          : await reIndexDocument.mutateAsync({ projectId: project.id, orgId: org.id, documentId: doc.id })
+          : await reIndexDocument.mutateAsync({ projectId: project.id, orgId: org.id, documentId: doc.id, loadAllPath, skipPaths })
         setDoc(document)
         if (isStopped) {
           toast.error(`Only ${limits.pageLimit} pages can be fetched at same time for your plan.`)
@@ -77,7 +77,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
 
       const details = document.details as Prisma.JsonObject
 
-      const docSkipPath = details.skipPath?.toString()
+      const docSkipPath = details.skipPaths?.toString()
 
       return { docSkipPath, docLoadAllPath: !!details.loadAllPath }
     }, [document])
@@ -120,14 +120,14 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
               />
             </Switch>
           </div>
-          {/* <Label className={`mt-6 ${!loadAllPath ? 'text-gray-400' : ''}`}>Paths to skip</Label>
+          <Label className={`mt-6 ${!loadAllPath ? 'text-gray-400' : ''}`}>Paths to skip</Label>
           <Input
             disabled={!loadAllPath}
             error={errors.skipPath?.message?.toString()}
-            placeholder="/blog, /about"
+            placeholder="/blog,/about/*,*.pdf"
             defaultValue={docSkipPath}
             {...register('skipPaths', { required: 'URL is required' })}
-          /> */}
+          />
           <PrimaryButton
             type="submit"
             disabled={createUrlDocument.isLoading || reIndexDocument.isLoading}

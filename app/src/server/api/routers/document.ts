@@ -108,7 +108,7 @@ export const documentRouter = createTRPCRouter({
     }),
 
   reIndexUrlDocument: orgMemberProcedure
-    .input(z.object({ documentId: z.string(), projectId: z.string(), orgId: z.string() }))
+    .input(z.object({ documentId: z.string(), projectId: z.string(), orgId: z.string(), loadAllPath: z.boolean().optional(), skipPaths: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
       const document = await ctx.prisma.document.findFirst({
         where: {
@@ -120,19 +120,25 @@ export const documentRouter = createTRPCRouter({
       let isStopped = false
 
       if (document) {
-        const details = document.details as Prisma.Prisma.JsonObject
+        const details = { ...document.details as Prisma.Prisma.JsonObject, skipPaths: input.skipPaths, loadAllPath: input.loadAllPath }
 
         await ctx.prisma.document.update({
           data: {
-            indexStatus: 'FETCHING'
+            indexStatus: 'FETCHING',
+            details,
           },
           where: {
-            id: input.documentId
+            id: input.documentId,
           }
         })
 
         await resetTokens(document, input.orgId, input.projectId)
         await deleteDocumentVector(input.projectId, input.documentId)
+        await ctx.prisma.documentData.deleteMany({
+          where: {
+            documentId: input.documentId
+          }
+        })
 
         const data = await loadUrlDocument(document.src, '', input.orgId, input.projectId, document.id, !!details.loadAllPath, details?.skipPaths?.toString() || '', getLimits(ctx.org?.plan || Prisma.Plan.FREE).pageLimit)
 
