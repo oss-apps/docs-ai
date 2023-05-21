@@ -3,6 +3,7 @@ import { signOut } from "next-auth/react";
 import { SecondaryButton } from "~/components/form/button";
 import Image from "next/image";
 import { type Org } from "@prisma/client";
+import { IconLogOut } from "~/components/icons/icons";
 
 const Nav: React.FC<{ org?: Org }> = ({ org }) => {
   return (
@@ -18,8 +19,8 @@ const Nav: React.FC<{ org?: Org }> = ({ org }) => {
               Subscription
             </Link>
           ) : null}
-          <SecondaryButton className="border border-gray-700 justify-center" onClick={() => void signOut()}>
-            Log out
+          <SecondaryButton className="border border-gray-700 justify-center gap-2" onClick={() => void signOut()}>
+            <IconLogOut /> Log out
           </SecondaryButton>
         </div>
       </div>

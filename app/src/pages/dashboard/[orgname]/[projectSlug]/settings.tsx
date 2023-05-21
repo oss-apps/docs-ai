@@ -18,6 +18,7 @@ import { Switch } from "@headlessui/react";
 import { isAbovePro } from "~/utils/license";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
+import { IconUpdate } from "~/components/icons/icons";
 
 
 const projectSchema = z.object({
@@ -142,8 +143,8 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                             {!isAbovePro(org) ? 'You need to be at least on Pro plan' : null}
                           </div>
                           <div className="mt-8">
-                            <PrimaryButton className="mx-auto" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
-                              Update
+                            <PrimaryButton className="mx-auto flex justify-center gap-2" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
+                              <IconUpdate className="w-5 h-5" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" /> Update
                             </PrimaryButton>
                           </div>
                         </form>

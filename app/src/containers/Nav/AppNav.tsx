@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
-import { IconBot, IconChatHistory, IconDashboard, IconFolderOpen, IconPaintBrush, IconSettings } from "~/components/icons/icons"
+import { IconBot, IconChatHistory, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
@@ -60,7 +60,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full mt-4">
           <SecondaryButton className={`border-0 mt-2 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
-            <IconChatHistory className="h-4 w-4" />
+            <IconHistory className="h-4 w-4" />
             Chat history
           </SecondaryButton>
         </Link>

@@ -10,6 +10,7 @@ import { api } from "~/utils/api";
 import { isAbovePro } from "~/utils/license";
 import PrimaryButton from "~/components/form/button";
 import Link from "next/link";
+import { IconChat, IconChatHistory } from "~/components/icons/icons";
 
 
 const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -96,7 +97,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                 <div className="mt-10">
                   {project.documentTokens ? (
                     <Link href={`/dashboard/${org.name}/${project.slug}/agent`}>
-                      <PrimaryButton className="mx-auto">Chat with bot</PrimaryButton>
+                      <PrimaryButton className="mx-auto justify-center gap-2"> <IconChatHistory className="w-5 h-5" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" /> Chat with bot</PrimaryButton>
                     </Link>
                   ) : (
                     <Link className="mx-auto" href={`/dashboard/${org.name}/${project.slug}/new_document`}>

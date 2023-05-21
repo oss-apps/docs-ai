@@ -21,7 +21,7 @@ import { z } from "zod";
 import { toast } from "react-hot-toast";
 import { mergeObjects } from "~/utils/common";
 import { getContrastColor } from "~/utils/color";
-import { IconEmbed, IconShare } from "~/components/icons/icons";
+import { IconEmbed, IconShare, IconUpdate } from "~/components/icons/icons";
 
 export const projectSchema = z.object({
   defaultQuestion: z.string().min(3),
@@ -233,8 +233,8 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
 
 
         <div className="mt-20">
-          <PrimaryButton type="submit" className="mx-auto" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
-            Update
+          <PrimaryButton type="submit" className="mx-auto flex justify-center gap-2" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
+            <IconUpdate className="w-5 h-5" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" /> Update
           </PrimaryButton>
         </div>
       </form>

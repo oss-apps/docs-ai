@@ -201,3 +201,52 @@ export const IconWebsite: React.FC<IconProps> = ({ className, primaryClassName, 
     </svg>
   )
 }
+
+export const IconHistory: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M6.55 6.14l1.16 1.15A1 1 0 0 1 7 9H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1.7-.7l1.44 1.42A10 10 0 1 1 2 12a1 1 0 0 1 2 0 8 8 0 1 0 2.55-5.86z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M15.7 14.3a1 1 0 0 1-1.4 1.4l-3-3a1 1 0 0 1-.3-.7V7a1 1 0 0 1 2 0v4.59l2.7 2.7z" />
+    </svg>
+  )
+}
+export const IconLogOut: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M11 4h3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V6h-2v12h2v-2a1 1 0 0 1 2 0v3a1 1 0 0 1-1 1h-3v1a1 1 0 0 1-1.27.96l-6.98-2A1 1 0 0 1 2 19V5a1 1 0 0 1 .75-.97l6.98-2A1 1 0 0 1 11 3v1z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M18.59 11l-1.3-1.3c-.94-.94.47-2.35 1.42-1.4l3 3a1 1 0 0 1 0 1.4l-3 3c-.95.95-2.36-.46-1.42-1.4l1.3-1.3H14a1 1 0 0 1 0-2h4.59z" /></svg>
+  )
+}
+
+export const IconNewProject: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <g>
+        <path className={primaryClassName ?? 'fill-zinc-900'} d="M22 10H2V6c0-1.1.9-2 2-2h7l2 2h7a2 2 0 0 1 2 2v2z" />
+        <rect width="20" height="12" x="2" y="8" className={secondaryClassName ?? 'fill-zinc-400'} rx="2" />
+        <path className={primaryClassName ?? 'fill-zinc-900'} d="M13 13h2a1 1 0 0 1 0 2h-2v2a1 1 0 0 1-2 0v-2H9a1 1 0 0 1 0-2h2v-2a1 1 0 0 1 2 0v2z" />
+      </g>
+    </svg>
+  )
+}
+
+
+
+
+export const IconBack: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <circle cx="12" cy="12" r="10" className={primaryClassName ?? 'fill-zinc-400'} />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M13.7 15.3a1 1 0 0 1-1.4 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.4 1.4L10.42 12l3.3 3.3z" /></svg>
+  )
+}
+
+export const IconUpdate: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M8 4a1 1 0 0 1-1 1H5v10h2a2 2 0 0 1 2 2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h2V5h-2a1 1 0 0 1 0-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h2a1 1 0 0 1 1 1z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M11 6.41V13a1 1 0 0 0 2 0V6.41l1.3 1.3a1 1 0 0 0 1.4-1.42l-3-3a1 1 0 0 0-1.4 0l-3 3a1 1 0 0 0 1.4 1.42L11 6.4z" /></svg>
+  )
+}

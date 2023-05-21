@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import NavBack from "~/components/NavBack";
+import { IconAdd, IconNewProject } from "~/components/icons/icons";
 
 
 const projectSchema = z.object({
@@ -47,14 +48,14 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
   return (
     <div className="h-full">
       <Head>
-        <title>New Project</title>
+        <title> New Project</title>
       </Head>
       <Nav />
       <main>
         <div className="max-w-2xl mx-auto mt-5">
           <NavBack href="/dashboard" ></NavBack>
-          <p className="text-center text-4xl mt-10">
-            New project
+          <p className="flex justify-center gap-3 items-center text-4xl mt-10">
+            <IconNewProject className="h-10 w-10" />  New project
           </p>
           <div className="max-w-2xl mx-auto mt-10 ">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -72,8 +73,8 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
                 {...register('description')}
               />
 
-              <PrimaryButton disabled={createProject.isLoading} loading={createProject.isLoading} className="mx-auto mt-6">
-                Create
+              <PrimaryButton disabled={createProject.isLoading} loading={createProject.isLoading} className="mx-auto mt-6 flex gap-2">
+                <IconAdd className="w-5 h-5" />  Create
               </PrimaryButton>
             </form>
           </div>
