@@ -5,6 +5,7 @@ sgMail.setApiKey(env.SENDGRID_API_KEY);
 
 export const sendSignInEmail = async (email: string, url: string) => {
   const { host } = new URL(url);
+  console.log('Sending sign in email', email)
 
   const msg = {
     to: email,
@@ -14,7 +15,8 @@ export const sendSignInEmail = async (email: string, url: string) => {
     html: `<p>Hey hey,</p> <p>You can sign in to DocsAI by clicking the below URL:</p><p><a href="${url}">Sign in to ${host}</a></p><br /><br /><br /><p>Thanks,</p><p>Koushik KM<br/>DocsAI</p>`,
   };
 
-  await sgMail.send(msg);
+  const resp = await sgMail.send(msg);
+  console.log('Sent sign in email', resp[0].statusCode, resp[0].body);
 };
 
 
