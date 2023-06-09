@@ -48,7 +48,7 @@ const handleEvent = async (event: any) => {
 
 			console.log('Slack request:', text, installation.teamId, installation.projectId, event.team)
 
-			const { answer, sources } = await getAnswerFromProject(installation.project.orgId, installation.projectId, text, installation.project.botName)
+			const { answer, sources } = await getAnswerFromProject(installation.project.orgId, installation.projectId, text, installation.project.botName, undefined, undefined, installation.project.defaultPrompt)
 
 			const finalAnswer = `${answer}\n\nSources:\n${sources.split(',').map((link: string) => `[${getLinkDirectory(link)}](${link})`).join('\n')}`
 

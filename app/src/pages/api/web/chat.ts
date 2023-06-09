@@ -1,4 +1,3 @@
-import { CallbackManager } from "langchain/callbacks";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 import { prisma } from "~/server/db";
@@ -25,7 +24,7 @@ export default async function handleChat(req: NextApiRequest & { userId?: number
   }
 
   try {
-    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback)
+    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback, project.defaultPrompt)
     if (convo.conversationId) {
       res.write(encoder.encode(`DOCSAI_CONVO_ID:${convo.conversationId}`));
     }

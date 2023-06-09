@@ -1,0 +1,169 @@
+- type: folder
+  name: app
+  path: /app
+  files:
+    - type: folder
+      name: src
+      path: /app/src
+      files:
+        - type: folder
+          name: utils
+          path: /app/src/utils
+          files:
+            - type: file
+              name: common.ts
+              path: /app/src/utils/common.ts
+              summary: A function that merges two objects into one
+              languages: TypeScript
+              imports: []
+              functions:
+                - number: 1
+                  name: mergeObjects
+                  summary: Merges two objects into one
+                  return: Record<string, any>
+            - type: file
+              name: slugify.ts
+              path: /app/src/utils/slugify.ts
+              summary: >-
+                A function that takes a string and returns a slugified version
+                of it
+              languages: TypeScript
+              imports: []
+              functions:
+                - number: 1
+                  name: slugify
+                  summary: Takes a string and returns a slugified version of it
+            - type: file
+              name: link.ts
+              path: /app/src/utils/link.ts
+              summary: >-
+                Defines a single function to extract the directory from a given
+                link.
+              languages: TypeScript
+              imports: []
+              functions:
+                - number: 1
+                  name: getLinkDirectory
+                  summary: Extracts directory from a given link.
+                  return: string
+            - type: file
+              name: async.ts
+              path: /app/src/utils/async.ts
+              summary: >-
+                Defines a function to limit the number of promises that can be
+                executed concurrently
+              languages: TypeScript
+              imports: []
+              functions:
+                - number: 1
+                  name: mapLimit
+                  summary: >-
+                    Limits the number of promises that can be executed
+                    concurrently
+                  return: Promise<R[]>
+            - type: file
+              name: color.ts
+              path: /app/src/utils/color.ts
+              summary: >-
+                Defines a function to get the contrast color of a given
+                background color.
+              languages: TypeScript
+              imports:
+                - name: tinycolor2
+                  type: library
+              functions:
+                - number: 1
+                  name: getContrastColor
+                  return: string
+                  summary: Returns the contrast color of a given background color.
+            - type: file
+              name: async_caller.ts
+              path: /app/src/utils/async_caller.ts
+              summary: >-
+                A class that can be used to make async calls with concurrency
+                and retry logic.
+              languages: TypeScript
+              imports:
+                - p-retry
+                - p-queue
+              functions:
+                - number: 1
+                  name: AsyncCaller
+                  summary: >-
+                    A class that can be used to make async calls with
+                    concurrency and retry logic.
+                - number: 2
+                  name: call
+                  summary: A function that makes an async call with retry logic.
+                - number: 3
+                  name: fetch
+                  summary: A function that makes an async call to fetch data.
+            - type: file
+              name: license.ts
+              path: /app/src/utils/license.ts
+              summary: >-
+                Contains functions to check if an organization is above a
+                certain plan, if it is paid, and to get limits based on a plan
+              languages: TypeScript
+              imports:
+                - '@prisma/client'
+              functions:
+                - number: 1
+                  name: isAbovePro
+                  summary: Checks if an organization is above the professional plan
+                  return: boolean
+                - number: 2
+                  name: isPaid
+                  summary: Checks if an organization is paid
+                  return: boolean
+                - number: 3
+                  name: getLimits
+                  summary: Returns limits based on a plan
+                  return: object
+            - type: file
+              name: api.ts
+              path: /app/src/utils/api.ts
+              summary: >-
+                Creates a client-side entrypoint for tRPC API, creates type-safe
+                React Query hooks, and inference helpers for input and output
+                types.
+              languages: TypeScript
+              imports:
+                - '@trpc/client'
+                - '@trpc/next'
+                - '@trpc/server'
+                - react-hot-toast
+                - superjson
+                - cors
+                - ~/server/api/root
+                - next
+              functions:
+                - number: 1
+                  name: api
+                  summary: >-
+                    Creates a set of type-safe react-query hooks for your tRPC
+                    API.
+                - number: 2
+                  name: RouterInputs
+                  summary: Inference helper for inputs.
+                - number: 3
+                  name: RouterOutputs
+                  summary: Inference helper for outputs.
+                - number: 4
+                  name: runCorsMiddleware
+                  summary: Runs CORS middleware.
+          summary: >-
+            The /app/src/utils folder contains various utility files for
+            functions such as merging objects, slugifying strings, extracting
+            directories, limiting promises, handling colors, making async calls,
+            managing licenses, and creating API entrypoints.
+      summary: >-
+        The /app/src folder contains the utils subfolder, which includes utility
+        files for various functions like object merging, string slugifying,
+        directory extraction, promise limiting, color handling, async calls,
+        license management, and API entrypoint creation.
+  summary: >-
+    The /app folder contains the /app/src folder with a utils subfolder, housing
+    utility files for functions like object merging, slugifying, directory
+    extraction, promise limiting, color handling, async calls, license
+    management, and API entrypoint creation.

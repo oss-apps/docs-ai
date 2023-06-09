@@ -45,7 +45,8 @@ export const projectRouter = createTRPCRouter({
       description: z.string().optional(),
       orgId: z.string(),
       projectId: z.string(),
-      generateSummary: z.boolean().optional()
+      generateSummary: z.boolean().optional(),
+      defaultPrompt: z.string()
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -56,6 +57,7 @@ export const projectRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
+            defaultPrompt: input.defaultPrompt,
             generateSummary: isAbovePro(ctx.org) && !!input.generateSummary
           }
         })

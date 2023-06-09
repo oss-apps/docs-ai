@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (project.projectToken?.projectApiKey !== apiKey) return res.status(401).send({ message: 'unauthourised request' })
 
-  const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId)
+  const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId, undefined, project.defaultPrompt)
 
   return res.status(200).send(result)
 }

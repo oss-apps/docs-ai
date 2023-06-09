@@ -11,6 +11,7 @@ import { prisma } from "../db";
 import { checkAndUpdateFreeAccount } from "../stripe";
 import { CallbackManager } from "langchain/callbacks";
 import { type ChatCallback } from "~/types";
+import { DEFAULT_PROMPT } from "../constants";
 
 
 const getTokens = (systemPrompt: string, questionPrompt: string, answer: string) => {
@@ -48,7 +49,7 @@ export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUs
   return { question: result.text, tokens: inputTokens + outputTokens }
 }
 
-export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string, cb?: ChatCallback) => {
+export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string, prompt = DEFAULT_PROMPT, cb?: ChatCallback) => {
   const org = await prisma.org.findUnique({ where: { id: orgId } })
   const vectorDb = await getVectorDB(projectId)
 
@@ -96,7 +97,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
   const chain = new StuffDocumentsChain({ documentVariableName: 'summaries' });
   const { summaries } = await chain.call({ input_documents: documents, question: stdQuestion }) as { summaries: string }
 
-  const questionPrompt = (await SIMPLE_CHAT_PROMPT.format({ question: stdQuestion, summaries, bot_name: botName })).text;
+  const questionPrompt = (await SIMPLE_CHAT_PROMPT.format({ question: stdQuestion, summaries, bot_name: botName, prompt })).text;
 
   const result = await chat.call([...history, new HumanChatMessage(questionPrompt)])
   const { inputTokens, outputTokens } = getTokens('', questionPrompt, result.text);

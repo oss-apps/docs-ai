@@ -38,3 +38,15 @@ export const SmallButton: React.FC<PrimaryButtonProps> = ({ children, className,
   )
 }
 
+export const SmallSecondaryButton: React.FC<PrimaryButtonProps> = ({ children, className, loading, ...rest }) => {
+
+  return (
+    <button
+      className={classNames('min-w-[120px] flex justify-center p-0.5 px-4 border bg-white text-sm  border-black rounded-md shadow-md hover:bg-zinc-100  items-center', className)}
+      {...rest}
+    >
+      {loading ? <Loading height={20} width={20} /> : children}
+    </button>
+  )
+}
+

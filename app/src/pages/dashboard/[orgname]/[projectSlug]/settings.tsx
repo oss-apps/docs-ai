@@ -6,24 +6,24 @@ import { getServerAuthSession } from "~/server/auth";
 import { type ProjectToken, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
-import { Input, Label } from "~/components/form/input";
-import PrimaryButton, { SmallButton } from "~/components/form/button";
+import { Input, Label, TextArea } from "~/components/form/input";
+import PrimaryButton, { SmallButton, SmallSecondaryButton } from "~/components/form/button";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/utils/api";
-import Snackbar from "~/components/SnackBar";
-import { useEffect, useState } from "react";
+import { type MouseEventHandler, useEffect, useState } from "react";
 import { Switch } from "@headlessui/react";
 import { isAbovePro } from "~/utils/license";
-import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { IconUpdate } from "~/components/icons/icons";
+import { DEFAULT_PROMPT } from "~/server/constants";
 
 
 const projectSchema = z.object({
   name: z.string().min(3).max(50),
-  description: z.string().optional()
+  defaultPrompt: z.string(),
+  description: z.string().optional(),
 })
 
 
@@ -42,16 +42,17 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
 
   const [generateSummary, setGenerateSummary] = useState(project.generateSummary)
 
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(projectSchema) });
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm({ resolver: zodResolver(projectSchema) });
 
   const updateProject = api.project.updateProject.useMutation()
 
   const createApiToken = api.project.createOrRecreateApiKey.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { name, description } = data as any as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, generateSummary })
+    const { name, description, defaultPrompt } = data as any as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ name, description, orgId: org.id, projectId: project.id, generateSummary, defaultPrompt })
   };
+
 
   useEffect(() => {
     if (updateProject.isSuccess) {
@@ -73,6 +74,11 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
     }, 2000)
   }
 
+  const onResetPrompt: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    setValue('defaultPrompt', DEFAULT_PROMPT)
+  }
+
   return (
     <>
       <Head>
@@ -81,7 +87,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
       <main className="h-full">
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full">
+          <div className="w-full h-full overflow-auto pb-20">
             <div className="mt-10 p-5 px-10">
               <div className="max-w-5xl mx-auto">
                 <div>
@@ -105,7 +111,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                     <p className="text-gray-800 text-lg">Project settings</p>
                     <div className="mt-4 border-t" />
                     <div className="flex gap-10">
-                      <div className="w-1/2">
+                      <div className="w-full">
                         <form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded-md">
                           <div className="w-full">
                             <Label>Project Name</Label>
@@ -116,7 +122,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                               error={errors.name?.message?.toString()}
                             />
                           </div>
-                          <div className="w-full mt-4">
+                          <div className="w-full mt-6">
                             <Label>Project description</Label>
                             <Input
                               defaultValue={project.description || ''}
@@ -125,7 +131,18 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                               error={errors.description?.message?.toString()}
                             />
                           </div>
-                          <div className="flex gap-3 items-center mt-4">
+                          <div className="w-full mt-6">
+                            <Label>System Prompt <span className="text-sm">(Changing this might affect bot performance)</span></Label>
+                            <TextArea
+                              error={errors.src?.message?.toString()}
+                              rows={5}
+                              defaultValue={project.defaultPrompt}
+                              placeholder={"Write a concise prompt"}
+                              {...register('defaultPrompt', { required: 'Prompt is required' })}
+                            />
+                            <SmallSecondaryButton onClick={onResetPrompt}>Reset</SmallSecondaryButton>
+                          </div>
+                          <div className="flex gap-3 items-center mt-6">
                             <Label>Generate summary</Label>
                             <Switch
                               className={`${generateSummary ? 'bg-blue-600' : 'bg-gray-200'
@@ -149,7 +166,13 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                           </div>
                         </form>
                       </div>
-                      <div className="w-1/2">
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <p className="text-gray-800 text-lg">API settings</p>
+                    <div className="mt-4 border-t" />
+                    <div className="flex gap-10">
+                      <div className="w-full">
                         <div className="p-4">
                           <Label>API key</Label>
                           <div className="p-3 px-4 bg-zinc-100 rounded">

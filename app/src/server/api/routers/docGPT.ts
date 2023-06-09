@@ -8,6 +8,7 @@ import {
   orgMemberProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { DEFAULT_PROMPT } from "~/server/constants";
 import { prisma } from "~/server/db";
 // import * as docGPT from "~/server/docGPT";
 import * as docgpt from "~/server/docgpt/index";
@@ -18,7 +19,7 @@ export const docGPTRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), saveConvo: z.boolean().optional(), convoId: z.string().optional() }))
     .query(async ({ input, ctx }) => {
       const project = await ctx.prisma.project.findUnique({ where: { id: input.projectId } });
-      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, [], project?.botName || '');
+      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, [], project?.botName || '', project?.defaultPrompt);
 
       const convo = input.saveConvo ?
         await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources) : null
@@ -35,7 +36,7 @@ export const docGPTRouter = createTRPCRouter({
       if (!project || !project.public) {
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
-      return await getAnswerFromProject(input.orgId, input.projectId, input.question, project.botName, input.convoId)
+      return await getAnswerFromProject(input.orgId, input.projectId, input.question, project.botName, input.convoId, undefined, project.defaultPrompt)
     }),
   getPublicChatbotAnswer: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), question: z.string(), convoId: z.string().optional() }))
@@ -45,7 +46,7 @@ export const docGPTRouter = createTRPCRouter({
         throw new TRPCError({ message: 'Project not found or not public', code: 'BAD_REQUEST' });
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
-      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, chatHistory, project.botName)
+      const result = await docgpt.getChat(input.orgId, input.projectId, input.question, chatHistory, project.botName, project.defaultPrompt)
       const convo = await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources)
       return {
         conversation: convo,
@@ -53,10 +54,10 @@ export const docGPTRouter = createTRPCRouter({
     }),
 });
 
-export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback) => {
+export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback, prompt = DEFAULT_PROMPT) => {
   const chatHistory = convoId ? await getHistoryForConvo(convoId) : []
 
-  const result = await docgpt.getChat(orgId, projectId, question, chatHistory, botName, cb)
+  const result = await docgpt.getChat(orgId, projectId, question, chatHistory, botName, prompt, cb)
 
   const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, convoId, result.sources)
 
