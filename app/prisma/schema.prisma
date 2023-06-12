@@ -227,12 +227,13 @@ enum MessageUser {
 }
 
 model Messages {
-    id      String       @id @default(cuid())
-    message String       @db.Text
-    user    MessageUser
-    convoId String
-    sources String?      @db.Text
-    convo   Conversation @relation(fields: [convoId], references: [id], onDelete: Cascade)
+    id        String       @id @default(cuid())
+    message   String       @db.Text
+    user      MessageUser
+    convoId   String
+    sources   String?      @db.Text
+    convo     Conversation @relation(fields: [convoId], references: [id], onDelete: Cascade)
+    createdAt DateTime     @default(now())
 }
 
 model SlackInstallation {

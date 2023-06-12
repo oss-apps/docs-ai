@@ -139,7 +139,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
         {parsedUrls.length ? (
           <div className="mt-10">
             <p className="text-zinc-500 text-lg">Fetched pages</p>
-            <div className="max-h-[50vh] border border-gray-400 rounded-md w-full overflow-auto">
+            <div className="max-h-[35vh] border border-gray-400 rounded-md w-full overflow-auto">
               {parsedUrls.map((doc) => (
                 <div key={doc.id} className={`p-2 border-b flex justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.id] ? 'bg-red-50' : ''}`}>
                   <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-500 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>

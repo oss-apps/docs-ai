@@ -158,16 +158,14 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        {docToDelete ? 'You are trying to delete the document and this action cannot be reversed' : 'You are try to re-index the documents'}
+                        You are trying to delete the document and this action cannot be reversed.
                       </p>
                     </div>
 
                     <div className="mt-4 flex gap-4">
-                      {docToDelete ? (
-                        <PrimaryButton onClick={() => onDelete(docToDelete.id)} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
-                          Yes, Delete
-                        </PrimaryButton>
-                      ) : null}
+                      <PrimaryButton onClick={() => onDelete(docToDelete?.id || '')} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
+                        Yes, Delete
+                      </PrimaryButton>
                       <SecondaryButton className="border border-gray-700" onClick={onClose}>
                         Cancel
                       </SecondaryButton>

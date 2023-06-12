@@ -11,9 +11,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
-import { SmallButton } from "~/components/form/button";
+import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
 import { LeftChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
+import { Dialog, Transition } from "@headlessui/react";
+import React, { Fragment } from "react";
 
 const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
@@ -30,6 +32,8 @@ const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
 
 const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+  const [showClearConvo, setShowClearConvo] = React.useState(false)
+
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
@@ -38,7 +42,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   const router = useRouter()
   const { convoId } = router.query as { convoId: string | undefined }
 
-  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage } =
+  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage, refetch: refetchHistory } =
     api.conversation.getConversations.useInfiniteQuery({
       orgId: org.id, projectId: project.id
     }, {
@@ -51,12 +55,23 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   })
 
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
+  const clearChatHistory = api.conversation.clearChatHistory.useMutation()
 
   const onGenerateClicked = async () => {
     if (currentChat && currentChat.conversation) {
       await summarizeConversation.mutateAsync({ projectId: project.id, orgId: org.id, convoId: currentChat?.conversation?.id })
       await refetch()
     }
+  }
+
+  const closeDialog = () => {
+    setShowClearConvo(false)
+  }
+
+  const onClearHistory = async () => {
+    await clearChatHistory.mutateAsync({ projectId: project.id, orgId: org.id })
+    await refetchHistory()
+    setShowClearConvo(false)
   }
 
 
@@ -72,7 +87,14 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
             {convoData?.pages[0]?.conversations.length ? (
               <div className="px-0 h-full flex">
                 <div className="w-1/3 border-r overflow-auto ">
-                  <div className="text-gray-600 p-4 border-b">Chats</div>
+                  <div className="text-gray-600 p-4 border-b flex justify-between">
+                    <p>
+                      Chats
+                    </p>
+                    <button className="text-red-500" onClick={() => setShowClearConvo(true)}>
+                      Clear
+                    </button>
+                  </div>
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
                     <button className="w-full" key={conversation.id} onClick={() => router.replace(`/dashboard/${org.name}/${project.slug}/chats?convoId=${conversation.id}`)}>
                       <div className="p-4 flex justify-between items-center  border-b w-full">
@@ -152,6 +174,59 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
             )}
           </div>
         </div>
+        <Transition appear show={showClearConvo} as={Fragment}>
+          <Dialog as="div" className="relative z-10" onClose={closeDialog}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      Are you sure?
+                    </Dialog.Title>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        You are trying to the chat history and this action cannot be reversed
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex gap-4">
+                      <PrimaryButton onClick={onClearHistory} disabled={clearChatHistory.isLoading} loading={clearChatHistory.isLoading}>
+                        Yes, Delete
+                      </PrimaryButton>
+
+                      <SecondaryButton className="border border-gray-700" onClick={closeDialog}>
+                        Cancel
+                      </SecondaryButton>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
       </main>
     </>
   );

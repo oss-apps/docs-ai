@@ -75,7 +75,11 @@ export const conversationRouter = createTRPCRouter({
           projectId: input.projectId,
         },
         include: {
-          messages: true,
+          messages: {
+            orderBy: {
+              createdAt: 'asc',
+            }
+          },
         }
       })
 
@@ -92,6 +96,16 @@ export const conversationRouter = createTRPCRouter({
 
       return summarizeConversation(ctx.org, ctx.project, input.convoId)
     }),
+  clearChatHistory: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.conversation.deleteMany({
+        where: {
+          projectId: input.projectId,
+        }
+      })
+    }),
+
 });
 
 export const summarizeConversation = async (org: Org, project: Project, convoId: string) => {
