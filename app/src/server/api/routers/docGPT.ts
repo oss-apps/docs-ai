@@ -69,17 +69,23 @@ export const getAnswerFromProject = async (orgId: string, projectId: string, que
 
 export const createOrUpdateNewConversation = async (orgId: string, projectId: string, question: string, answer: string, tokens: number, limitReached: boolean, convoId?: string, sources?: string) => {
   let conversation: Conversation;
+  const now = new Date();
+  const currentDateISO = now.toISOString();
+  const nextDateIso = new Date(now.getTime() + 1000).toISOString();
+
   if (convoId) {
     await prisma.messages.createMany({
       data: [{
         convoId,
         user: 'user',
         message: question,
+        createdAt: currentDateISO
       }, {
         convoId,
         user: 'assistant',
         message: answer,
         sources,
+        createdAt: nextDateIso
       }]
     })
 
@@ -106,10 +112,12 @@ export const createOrUpdateNewConversation = async (orgId: string, projectId: st
           create: [{
             user: 'user',
             message: question,
+            createdAt: currentDateISO
           }, {
             user: 'assistant',
             message: answer,
             sources,
+            createdAt: nextDateIso
           }]
         }
       },
@@ -152,6 +160,9 @@ export const getHistoryForConvo = async (convoId: string) => {
   const messages = await prisma.messages.findMany({
     where: {
       convoId,
+    }, 
+    orderBy : {
+      createdAt: 'asc'
     }
   })
 

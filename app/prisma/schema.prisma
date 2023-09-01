@@ -234,6 +234,8 @@ model Messages {
     sources   String?      @db.Text
     convo     Conversation @relation(fields: [convoId], references: [id], onDelete: Cascade)
     createdAt DateTime     @default(now())
+
+    @@index([convoId , createdAt(sort)])
 }
 
 model SlackInstallation {

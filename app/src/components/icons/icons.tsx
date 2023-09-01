@@ -125,13 +125,13 @@ export const IconBot: React.FC<IconProps> = ({ className, primaryClassName, seco
   return (
     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
       <path className={primaryClassName ?? 'fill-zinc-400'} d="M6.657,22.308L5.901,19.99	c-1.612-0.052-2.901-1.369-2.901-2.991V8.001c0-1.657,1.345-3.003,3.003-3.003h11.998c1.657,0,3,1.345,3,3.003v8.998	c0,1.657-1.343,3-3,3h-7.083l-2.589,2.692C7.803,23.235,6.889,23.026,6.657,22.308z"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M9.001,10.001	c0.552,0,1,0.448,1,1.001c0,0.552-0.448,1-1,1c-0.552,0-1-0.448-1-1C8.001,10.449,8.449,10.001,9.001,10.001z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M15.001,10.001	c0.552,0,1,0.448,1,1.001c0,0.552-0.448,1-1,1c-0.552,0-1-0.448-1-1C14.001,10.449,14.449,10.001,15.001,10.001z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M13.506,13.999h-3.005	c-0.276,0-0.5,0.225-0.5,0.501c0,0.043,0.004,0.083,0.012,0.113c0.192,0.916,1.012,1.387,1.993,1.387	c0.981,0,1.796-0.471,1.988-1.387c0.008-0.031,0.012-0.071,0.012-0.113C14.006,14.225,13.782,13.999,13.506,13.999z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M11.002,5V1.992c0-0.551,0.448-1,1-1	c0.551,0,1,0.449,1,1V5H11.002z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M9.991,2c0-0.551,0.448-1,1-1h2.021	c0.551,0,1,0.449,1,1c0,0.552-0.449,1-1,1h-2.021C10.439,3,9.991,2.552,9.991,2z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M1.002,14.005v-3.012	c0-0.548,0.447-0.995,0.995-0.995h1.005v5.001H1.997C1.449,14.999,1.002,14.553,1.002,14.005z" clip-rule="evenodd"></path>
-      <path className={secondaryClassName ?? 'fill-zinc-900'} fill-rule="evenodd" d="M22.999,14.005v-3.012	c0-0.548-0.447-0.995-0.995-0.995h-1.005v5.001h1.005C22.553,14.999,22.999,14.553,22.999,14.005z" clip-rule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M9.001,10.001	c0.552,0,1,0.448,1,1.001c0,0.552-0.448,1-1,1c-0.552,0-1-0.448-1-1C8.001,10.449,8.449,10.001,9.001,10.001z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M15.001,10.001	c0.552,0,1,0.448,1,1.001c0,0.552-0.448,1-1,1c-0.552,0-1-0.448-1-1C14.001,10.449,14.449,10.001,15.001,10.001z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M13.506,13.999h-3.005	c-0.276,0-0.5,0.225-0.5,0.501c0,0.043,0.004,0.083,0.012,0.113c0.192,0.916,1.012,1.387,1.993,1.387	c0.981,0,1.796-0.471,1.988-1.387c0.008-0.031,0.012-0.071,0.012-0.113C14.006,14.225,13.782,13.999,13.506,13.999z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M11.002,5V1.992c0-0.551,0.448-1,1-1	c0.551,0,1,0.449,1,1V5H11.002z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M9.991,2c0-0.551,0.448-1,1-1h2.021	c0.551,0,1,0.449,1,1c0,0.552-0.449,1-1,1h-2.021C10.439,3,9.991,2.552,9.991,2z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M1.002,14.005v-3.012	c0-0.548,0.447-0.995,0.995-0.995h1.005v5.001H1.997C1.449,14.999,1.002,14.553,1.002,14.005z" clipRule="evenodd"></path>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M22.999,14.005v-3.012	c0-0.548-0.447-0.995-0.995-0.995h-1.005v5.001h1.005C22.553,14.999,22.999,14.553,22.999,14.005z" clipRule="evenodd"></path>
     </svg>
   )
 }

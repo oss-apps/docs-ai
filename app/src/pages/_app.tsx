@@ -25,10 +25,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <meta property="og:title" content="DocsAI" />
         <meta name="description" content="Create AI support agent with your documents." />
         <meta property="og:image" content="https://docsai.app/images/app.png" />
-
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="1200" />
         <meta property="twitter:title" content="DocsAI" />
+        <meta property="og:url" content="https://docsai.app"></meta>
         <meta property="twitter:description" content="Create AI support agent with your documents." />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:image" content="https://docsai.app/images/app.png" />
+        <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
         <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="494f02eb-86bc-460d-ac63-db4d351eea9c" async></script>
         {!router.route.startsWith("/embed") && env.NEXT_PUBLIC_NODE_ENV === "production" ? (

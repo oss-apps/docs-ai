@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Conversation, type Messages, type Org, type Project } from "@prisma/client";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler, type FieldValues } from "react-hook-form";
 import { z } from "zod";
 import { Loading } from "~/components/loading/Loading"
@@ -9,7 +9,6 @@ import { api } from "~/utils/api";
 import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
-import tinycolor from 'tinycolor2';
 import { getContrastColor } from "~/utils/color";
 import { IconSend } from "~/components/icons/icons";
 
@@ -213,12 +212,12 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         </div>
         {project.defaultQuestion &&
           <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
-            {project.defaultQuestion.split(',').map(q => (
-              <>
+            {project.defaultQuestion.split(',').map((q ,i) => (
+              <Fragment key={i}>
                 {q && <button onClick={() => getAnswer(q)} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
                   {q}
                 </button>
-                }</>
+                }</Fragment>
             ))}
           </div>
         }
