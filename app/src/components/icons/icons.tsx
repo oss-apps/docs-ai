@@ -250,3 +250,36 @@ export const IconUpdate: React.FC<IconProps> = ({ className, primaryClassName, s
       <path className={secondaryClassName ?? 'fill-zinc-900'} d="M11 6.41V13a1 1 0 0 0 2 0V6.41l1.3 1.3a1 1 0 0 0 1.4-1.42l-3-3a1 1 0 0 0-1.4 0l-3 3a1 1 0 0 0 1.4 1.42L11 6.4z" /></svg>
   )
 }
+
+
+export const IconClear: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M15.78 14.36a1 1 0 0 1-1.42 1.42l-2.82-2.83-2.83 2.83a1 1 0 1 1-1.42-1.42l2.83-2.82L7.3 8.7a1 1 0 0 1 1.42-1.42l2.83 2.83 2.82-2.83a1 1 0 0 1 1.42 1.42l-2.83 2.83 2.83 2.82z" />
+    </svg>
+  )
+}
+
+export const IconDownload: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M15 15v-3a3 3 0 0 0-6 0v3H6a4 4 0 0 1-.99-7.88 5.5 5.5 0 0 1 10.86-.82A4.49 4.49 0 0 1 22 10.5a4.5 4.5 0 0 1-4.5 4.5H15z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M11 18.59V12a1 1 0 0 1 2 0v6.59l1.3-1.3a1 1 0 0 1 1.4 1.42l-3 3a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.42l1.3 1.3z" /></svg>
+  )
+}
+
+export const IconThumbsUp: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M13 4.8l2.92 6.8a1 1 0 0 1 .08.4v8a2 2 0 0 1-2 2H8a4.28 4.28 0 0 1-3.7-2.45L2.07 14.4A1 1 0 0 1 2 14v-2a3 3 0 0 1 3-3h4V5a3 3 0 0 1 3-3 1 1 0 0 1 1 1v1.8z" />
+      <rect width="4" height="12" x="18" y="11" className={secondaryClassName ?? 'fill-zinc-900'} rx="1" /></svg>
+  )
+}
+
+export const IconThumbsDown: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M11 19.2l-2.92-6.8A1 1 0 0 1 8 12V4c0-1.1.9-2 2-2h6c1.5 0 3.11 1.06 3.7 2.45l2.22 5.16A1 1 0 0 1 22 10v2a3 3 0 0 1-3 3h-4v4a3 3 0 0 1-3 3 1 1 0 0 1-1-1v-1.8z" />
+      <rect width="4" height="12" x="2" y="2" className={secondaryClassName ?? 'fill-zinc-900'} rx="1" transform="rotate(180 4 7.5)" /></svg>
+  )
+}

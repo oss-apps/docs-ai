@@ -11,14 +11,33 @@ import { prisma } from "~/server/db";
 import * as docgpt from '~/server/docgpt/index'
 import { getHistoryForConvo } from "./docGPT";
 
+type convoFilter = {
+  filter?: {
+    from?: string | null;
+    to?: string | null;
+    rating?: string | null;
+    feedback?: 'POSITIVE' | 'NEGATIVE' | 'ALL' | 'NO FILTER' | string
+  };
+  orgId?: string;
+  projectId?: string;
+}
+
+const zConvoFilter = z.object({ from: z.string().optional().nullable(), to: z.string().optional().nullable(), rating: z.string().nullable().default('ALL'), feedback: z.string().default('NO FILTER') }).optional()
+
 
 export const conversationRouter = createTRPCRouter({
   getConversations: orgMemberProcedure
-    .input(z.object({ projectId: z.string(), orgId: z.string(), cursor: z.string().nullish() }))
+    .input(z.object({
+      projectId: z.string(), orgId: z.string(), cursor: z.string().nullish(),
+      filter: zConvoFilter
+    }))
     .query(async ({ input, ctx }) => {
       const conversations = await ctx.prisma.conversation.findMany({
         where: {
-          projectId: input.projectId,
+          ...getConvoFilter({ projectId: input.projectId, filter: input.filter }),
+          messages: {
+            ...getMessageFilter({ filter: input.filter })
+          }
         },
         orderBy: {
           id: 'desc',
@@ -105,7 +124,28 @@ export const conversationRouter = createTRPCRouter({
         }
       })
     }),
-
+  downloadConversations: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), filter: zConvoFilter }))
+    .query(async ({ input, ctx }) => {
+      const conversations = await ctx.prisma.conversation.findMany({
+        where: {
+          ...getConvoFilter({ projectId: input.projectId, filter: input.filter }),
+          messages: {
+            ...getMessageFilter({ filter: input.filter })
+          }
+        },
+        select: {
+          summary: true, createdAt: true, projectId: true, rating: true, id: true,
+          messages: {
+            select: { message: true, user: true, id: true, createdAt: true, sources: true, feedback: true },
+            orderBy: { createdAt: 'asc' }
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 50
+      })
+      return conversations
+    })
 });
 
 export const summarizeConversation = async (org: Org, project: Project, convoId: string) => {
@@ -148,4 +188,38 @@ export const summarizeConversation = async (org: Org, project: Project, convoId:
     conversation,
     summary,
   }
+}
+
+const getConvoFilter = (filterObj: convoFilter) => {
+  const filter = {
+    ...(filterObj.projectId ? { projectId: filterObj.projectId } : {}),
+    ...(filterObj?.filter?.from && filterObj?.filter?.to ? {
+      createdAt: {
+        lte: (new Date(filterObj.filter.to)).toISOString(),
+        gte: (new Date(filterObj.filter.from)).toISOString()
+      }
+    } : {}),
+    ...((filterObj?.filter?.rating && filterObj.filter.rating != 'ALL') ? { rating: filterObj.filter.rating as ConvoRating } : {})
+  }
+  console.log("🔥 ~ getConvoFilter ~ filter:", filter, new Date())
+
+  return filter
+}
+
+const getMessageFilter = (filter: convoFilter) => {
+  const filterObj = filter?.filter
+  if (!filterObj?.feedback) return {}
+  const filterr = {
+    ...(filterObj.feedback == 'NO FILTER' ? {} : {
+      some: {
+        feedback: {
+          ...(filterObj.feedback == 'POSITIVE' ? { equals: true } :
+            filterObj.feedback == 'NEGATIVE' ? { equals: false } : { not: null })
+        }
+      }
+    })
+  }
+  console.log("🔥 ~ getMessageFilter ~ filterObj:", filterr, new Date())
+  return filterr
+
 }

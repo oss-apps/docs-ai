@@ -52,6 +52,20 @@ export const docGPTRouter = createTRPCRouter({
         conversation: convo,
       };
     }),
+  updateMessageFeedback: publicProcedure
+    .input(z.object({ id: z.string(), feedback: z.boolean() }))
+    .mutation(async ({ input, ctx }) => {
+      const feedbackRes = await ctx.prisma.messages.update({
+        where: {
+          id: input.id
+        },
+        data: {
+          feedback: input.feedback
+        }
+      })
+      return feedbackRes.feedback
+    })
+
 });
 
 export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback, prompt = DEFAULT_PROMPT) => {

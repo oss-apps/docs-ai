@@ -219,6 +219,9 @@ model Conversation {
     messages   Messages[]
     tokensUsed Int         @default(0)
     project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+    @@index([projectId , createdAt(sort: Desc), rating])
+
 }
 
 enum MessageUser {
@@ -234,6 +237,7 @@ model Messages {
     sources   String?      @db.Text
     convo     Conversation @relation(fields: [convoId], references: [id], onDelete: Cascade)
     createdAt DateTime     @default(now())
+    feedback  Boolean?  
 
     @@index([convoId , createdAt(sort)])
 }

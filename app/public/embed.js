@@ -89,6 +89,12 @@ async function initDocsAI(projectId, primaryColor, url) {
       right: 5px;
     }
   }
+
+  @media print {
+    #chat-button {
+      display : none;
+    }
+  }
   `
 
   if (typeof window !== "undefined" && document.getElementById("docsai-root") === null) {

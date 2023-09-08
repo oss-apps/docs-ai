@@ -110,6 +110,14 @@ const Home: NextPage = () => {
               </p>
             </div>
             <div className="simple-card ">
+              <IconChat />
+              <p className=" font-semibold flex items-center mt-2">
+                Export conversations
+              </p>
+              <p className="mt-2 text-gray-700">
+                Analyze your chat data to identify trends and improve customer satisfaction                </p>
+            </div>
+            <div className="simple-card ">
               <IconSearch />
               <p className=" font-semibold flex items-center mt-2">
                 Unlimited search <span className="pro-chip"> Pro </span>

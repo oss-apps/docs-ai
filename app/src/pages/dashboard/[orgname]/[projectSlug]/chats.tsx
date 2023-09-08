@@ -3,50 +3,75 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { ConvoRating, MessageUser, type Org, type Project } from "@prisma/client";
+import { ConvoRating, MessageUser, Messages, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { MarkDown } from "~/components/MarkDown";
-import { getLinkDirectory } from "~/utils/link";
 import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
 import { LeftChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
-import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import { Dialog, Transition, Listbox, Switch } from "@headlessui/react";
+import React, { Fragment, useState } from "react";
+import { IconClear } from "~/components/icons/icons";
+import { z } from "zod";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input, Label, Select } from "~/components/form/input";
+import { toast } from "react-hot-toast";
+import { NoChat } from "./download_chat";
 
-const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
+export type downloadFilter = { from: string, to: string, rating: string }
+const filterSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  rating: z.string(),
+  feedback: z.string().default('NO FILTER')
+}).required({ from: true, to: true }).superRefine((sch, ctx) => {
+  if (sch.from && sch.from > sch.to) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.invalid_date,
+      message: `Must be > ${new Date(sch.from).toLocaleString()}`,
+      path: ["to"]
+    });
+  }
+})
+const ConvoRatingOptions = ['POSITIVE', 'NEGATIVE', 'NEUTRAL']
+const FeedbackOptions = ['POSITIVE', 'NEGATIVE', 'ALL']
+
+
+export const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 
   if (rating === 'POSITIVE') {
-    return <span className="px-2 py-0.5 text-sm rounded-md bg-green-200 text-green-700">Positive</span>
+    return <span className="px-2 py-0.5 rounded-md bg-green-100 text-green-500">Positive</span>
   } else if (rating === 'NEGATIVE') {
-    return <p className="px-2 py-0.5 text-sm rounded-md bg-red-100 text-red-500">Negative</p>
+    return <span className="px-2 py-0.5  rounded-md bg-red-100 text-red-500">Negative</span>
   }
 
-  return <p>Neutral</p>
+  return <span className="px-2 py-0.5  rounded-md bg-slate-100 text-slate-500">Neutral</span>
 }
-
-
-
 
 const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
   const [showClearConvo, setShowClearConvo] = React.useState(false)
+  const [showDownloadFilter, setShowDownloadFilter] = React.useState(false)
+  const [showFeedbackOnly, setToggleFeedback] = React.useState(false)
+
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
 
   const textColor = getContrastColor(project.primaryColor)
+  // const { convoId } = router.query as { convoId: string | undefined }
 
-  const router = useRouter()
-  const { convoId } = router.query as { convoId: string | undefined }
+  const [convoId, setConvoId] = useState<string | null>(null)
+  const [filterS, setFilters] = useState<any>({})
 
+  const { register, handleSubmit, formState: { errors }, getValues, reset } = useForm<z.input<typeof filterSchema>>({ resolver: zodResolver(filterSchema) });
   const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage, refetch: refetchHistory } =
     api.conversation.getConversations.useInfiniteQuery({
-      orgId: org.id, projectId: project.id
+      orgId: org.id, projectId: project.id, filter: filterS
     }, {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      getNextPageParam: (lastPage) => lastPage.nextCursor
     })
   const { data: currentChat, isLoading, refetch } = api.conversation.getConversation.useQuery({
     convoId: (convoId ?? convoData?.pages[0]?.conversations[0]?.id) || '',
@@ -64,16 +89,58 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
     }
   }
 
-  const closeDialog = () => {
-    setShowClearConvo(false)
+  const closeDialog = (type: 'clear' | 'filter') => {
+    if (type == 'clear') {
+      setShowClearConvo(false)
+    }
+    if (type == 'filter') {
+      setShowDownloadFilter(false)
+    }
+  }
+
+  const onExport = () => {
+    const data = getValues()
+    if (Object.keys(errors).length > 0) {
+      toast.error('Invalid filters')
+      return
+    }
+    const route = `/dashboard/${org.name}/${project.slug}/download_chat?${new URLSearchParams(data).toString()}`
+    window.open(route, '_blank')
   }
 
   const onClearHistory = async () => {
     await clearChatHistory.mutateAsync({ projectId: project.id, orgId: org.id })
-    await refetchHistory()
     setShowClearConvo(false)
   }
 
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log("🔥 ~ onFilter ~ errors:", errors)
+    setShowDownloadFilter(false)
+    setFilters(data)
+    const history = await refetchHistory()
+    const latestConvos = history.data?.pages[0]?.conversations
+    if (latestConvos?.length) {
+      setConvoId(latestConvos[0]!.id)
+    }
+  }
+
+  const viewFeedbackOnly = (messages: Messages[] | undefined | null) => {
+    if (!messages) return []
+    let viewMessages: Messages[] = []
+    if (showFeedbackOnly) {
+      for (let i = 0; i < messages.length - 1; i += 1) {
+        const one = messages[i]
+        const two = messages[i + 1]
+        if (one?.user == 'user' && two?.feedback != null) {
+          viewMessages.push(one, two)
+        }
+      }
+    }
+    else {
+      viewMessages = messages
+    }
+    return viewMessages
+  }
 
   return (
     <>
@@ -84,26 +151,36 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full h-full">
-            {convoData?.pages[0]?.conversations.length ? (
+            {convoData ? (
               <div className="px-0 h-full flex">
                 <div className="w-1/3 border-r overflow-auto ">
                   <div className="text-gray-600 p-4 border-b flex justify-between">
                     <p>
-                      Chats
+                      <b> Chats </b>
                     </p>
-                    <button className="text-red-500" onClick={() => setShowClearConvo(true)}>
-                      Clear
-                    </button>
+                    <div className="flex gap-2">
+                      <button className="rounded-lg  hover:bg-zinc-100 px-2" onClick={() => setShowDownloadFilter(true)} title="Export Chats">
+                        {/* <IconSearch className="w-5 h-5" /> */}
+                        Filter & Export
+                      </button>
+                      <button className=" rounded-lg px-2  text-red-500 hover:bg-red-50" onClick={() => setShowClearConvo(true)} title="Clear Chats">
+                        {/* <IconClear /> */}
+                        Clear
+                      </button>
+                    </div>
                   </div>
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
-                    <button className="w-full" key={conversation.id} onClick={() => router.replace(`/dashboard/${org.name}/${project.slug}/chats?convoId=${conversation.id}`)}>
-                      <div className="p-4 flex justify-between items-center  border-b w-full">
-                        <div>
-                          <div className="text-start">
-                            {conversation.firstMsg}
+                    <button className="w-full" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
+                      <div className={"p-4 flex justify-between items-center  border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
+                        <div className="w-full" title={conversation.firstMsg}>
+                          <p className="text-start truncate overflow-ellipsis">
+                            {conversation.firstMsg} 
+                          </p>
+                          <div className="text-sm text-gray-600 mt-2 text-start">
+                            {conversation.createdAt.toLocaleString()}
                           </div>
-                          <div className="text-sm text-gray-600 mt-2 text-start">{conversation.createdAt.toLocaleString()}</div>
                         </div>
+                        {/* {convoId} {conversation.id} */}
                       </div>
                     </button>
                   )))}
@@ -113,10 +190,10 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   ) : null}
                 </div>
-                <div className="w-2/3 overflow-auto pb-5">
-                  <div className="flex justify-start items-center p-2 px-4">
-                    <Link className="text-blue-500" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
-                      Suggest answer
+                {convoData?.pages[0]?.conversations.length ? <div className="w-2/3 overflow-auto pb-5">
+                  <div className="flex justify-start items-center p-4">
+                    <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
+                      Suggest Answer
                     </Link>
                   </div>
                   <div className="border-b pb-4 px-4">
@@ -152,30 +229,40 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>}
                   </div>
                   {
-                    isLoading ? <div>Loading...</div> : currentChat?.conversation?.messages.map(m => (
-                      m.user === MessageUser.assistant ? <LeftChat key={m.id} sentence={m.message} sources={m.sources} /> :
+                    isLoading ?
+                      <div className="text-center">Loading...</div> :
+                      <div className="mt-2">
+                        <div className="flex ml-2 gap-3 items-center">
+                          <Label>View feedback only</Label>
+
+                          <Switch
+                            className={`${showFeedbackOnly ? 'bg-blue-600' : 'bg-gray-200'
+                              } relative inline-flex h-6 w-11 items-center rounded-full`}
+                            checked={showFeedbackOnly}
+                            onChange={setToggleFeedback}
+                          >
+                            <span className="sr-only">Generate summary</span>
+                            <span
+                              className={`${showFeedbackOnly ? 'translate-x-6' : 'translate-x-1'
+                                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                            />
+                          </Switch>
+                        </div>
+                        {
+                          viewFeedbackOnly(currentChat?.conversation?.messages).map(m => (
+                            m.user === MessageUser.assistant ? <LeftChat key={m.id} sentence={m.message + `${m.feedback != null ? m.feedback ? '(👍🏽)' : '(👎🏽)' : ''}`} sources={m.sources} /> :
                         <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
-                    ))
+                          ))}</div>
                   }
-                </div>
+                </div> : <NoChat isConvoLoading={isLoading} message="No chats to Filter!" />}
               </div>
-            ) : (
-              <div className="w-full h-full flex justify-center mt-48">
-                <div className="w-full mx-auto">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-gray-600 mx-auto">
-                    <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z" />
-                    <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z" />
-                  </svg>
-                  <p className="text-center text-2xl text-gray-600">
-                    {isConvoLoading ? 'Loading...' : 'No chats yet!'}
-                  </p>
-                </div>
-              </div>
-            )}
+            ) : null
+            }
           </div>
         </div>
+
         <Transition appear show={showClearConvo} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={closeDialog}>
+          <Dialog as="div" className="relative z-10" onClose={() => closeDialog("clear")} static={true}> 
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -187,7 +274,6 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
             >
               <div className="fixed inset-0 bg-black bg-opacity-25" />
             </Transition.Child>
-
             <div className="fixed inset-0 overflow-y-auto">
               <div className="flex min-h-full items-center justify-center p-4 text-center">
                 <Transition.Child
@@ -207,20 +293,122 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                       Are you sure?
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        You are trying to the chat history and this action cannot be reversed
+                      <p className="text-base text-gray-500">
+                        You are trying to clear the <b className="text-black"> entire chat history </b>  and this action cannot be reversed
                       </p>
                     </div>
 
-                    <div className="mt-4 flex gap-4">
-                      <PrimaryButton onClick={onClearHistory} disabled={clearChatHistory.isLoading} loading={clearChatHistory.isLoading}>
-                        Yes, Delete
+                    <div className="mt-4 flex flex-row-reverse gap-4">
+                      <PrimaryButton className="border border-gray-700" onClick={() => closeDialog("clear")}>
+                        Close
                       </PrimaryButton>
 
-                      <SecondaryButton className="border border-gray-700" onClick={closeDialog}>
-                        Cancel
+                      <SecondaryButton onClick={onClearHistory} disabled={clearChatHistory.isLoading} loading={clearChatHistory.isLoading ? clearChatHistory.isLoading : undefined}
+                        className="border border-red-500">
+                        <span className="text-red-500">  Yes, Clear </span>
                       </SecondaryButton>
+
                     </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+
+        <Transition appear show={showDownloadFilter} as={Fragment}>
+          <Dialog as="div" className="relative z-10" static={true} onClose={() => closeDialog('filter')}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4 text-center">
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      Filter & Export
+                    </Dialog.Title>
+                    <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label>From </Label>
+                          <Input
+                            type="datetime-local"
+                            placeholder="From"
+                            {...register('from')}
+                            error={errors.from?.message?.toString()}
+                          />
+                        </div>
+                        <div>
+                          <Label>To </Label>
+                          <Input
+                            type="datetime-local"
+                            placeholder="To"
+                            {...register('to')}
+                            error={errors.to?.message?.toString()}
+                          />
+                        </div>
+                        <div>
+                          <Label>Sentiment </Label>
+                          <Select {...register("rating")} defaultValue="ALL">
+                            <option value="ALL"> ALL </option>
+                            {ConvoRatingOptions.map((each, i) => {
+                              return (
+                                <option value={each} key={i}>{each}</option>
+                              )
+                            })}
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Feedback </Label>
+                          <Select {...register("feedback")} defaultValue="NO FILTER">
+                            <option value="NO FILTER"> NO FILTER </option>
+                            {FeedbackOptions.map((each, i) => {
+                              return (
+                                <option value={each} key={i}>{each}</option>
+                              )
+                            })}
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="my-3 rounded-lg bg-blue-50 p-3  text-blue-500"
+                        role="alert">
+                        We can only export 50 conversations at this time.
+                      </div>
+                      <div className="mt-4 flex justify-between gap-4">
+                        <div>
+                          <SecondaryButton type="button" className="justify-center border-none shadow-none bg-zinc-100" onClick={() => { reset() }}>
+                            <IconClear /> Clear </SecondaryButton>
+                        </div>
+                        <div className="flex gap-4">
+                          <SecondaryButton type="submit" className="justify-center">
+                            Search
+                          </SecondaryButton>
+                          <PrimaryButton type="button" onClick={onExport}>
+                            Export
+                          </PrimaryButton>
+                        </div>
+                      </div>
+                    </form>
                   </Dialog.Panel>
                 </Transition.Child>
               </div>

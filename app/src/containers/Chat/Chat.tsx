@@ -10,7 +10,9 @@ import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import { getContrastColor } from "~/utils/color";
-import { IconSend } from "~/components/icons/icons";
+import { IconSend, IconThumbsDown, IconThumbsUp } from "~/components/icons/icons";
+import { toast } from "react-hot-toast";
+
 
 const qnaSchema = z.object({
   question: z.string().min(3),
@@ -77,7 +79,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   const [answer, setAnswer] = useState<string | null>(null)
 
   const chatBox = useRef<HTMLDivElement>(null);
-
+  const updatefeedback = api.docGPT.updateMessageFeedback.useMutation()
   const { register, handleSubmit, formState: { errors }, reset } = useForm({ resolver: zodResolver(qnaSchema) });
 
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
@@ -129,30 +131,43 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     setConversation(null)
   }
 
+  const handleFeedback = async (feedback: boolean, id: string, index: number) => {
+    console.log("🔥 ~ handleFeedback ~ handleFeedback:", feedback, index)
+    const prom = updatefeedback.mutateAsync({ feedback, id })
+    const feedbackRes = await toast.promise(prom, {
+      loading: 'Sending your feedback .. ',
+      success: feedback ? 'Thanks for your feedback!' : 'We will improve our services!',
+      error: 'Something went wrong!',
+    }, { position: embed ? 'top-center' : 'bottom-center' })
+
+  }
+
   useEffect(() => {
     const cb = async () => {
-      const apiUrl = '/api/v1/endConversation';
-      if (conversation) {
-        const blobData = new Blob([JSON.stringify({ projectId: project.id, conversationId: conversation?.id })], { type: 'application/json' });
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(apiUrl, blobData);
-        } else {
-          // Fallback for browsers that don't support sendBeacon()
-          // This may not always work when the page is being closed
-          await fetch(apiUrl, {
-            method: 'POST',
-            body: blobData,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            keepalive: true
-          });
+      if (document.visibilityState === "hidden") {
+        const apiUrl = '/api/v1/endConversation';
+        if (conversation) {
+          const blobData = new Blob([JSON.stringify({ projectId: project.id, conversationId: conversation?.id })], { type: 'application/json' });
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(apiUrl, blobData);
+          } else {
+            // Fallback for browsers that don't support sendBeacon()
+            // This may not always work when the page is being closed
+            await fetch(apiUrl, {
+              method: 'POST',
+              body: blobData,
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              keepalive: true
+            });
+          }
         }
       }
     }
-    window.addEventListener('beforeunload', cb)
+    window.addEventListener('visibilitychange', cb)
 
-    return () => window.removeEventListener('beforeunload', cb)
+    return () => window.removeEventListener('visibilitychange', cb)
   }, [conversation, org.id, project.id, summarizeConversation])
 
   return (
@@ -192,10 +207,10 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
           <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
 
-          {conversation?.messages.map((m) => (
+          {conversation?.messages.map((m, i) => (
             m.user == 'user' ?
               <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
-              : <LeftChat key={m.id} sentence={m.message} sources={m.sources} />
+              : <LeftChat key={m.id} sentence={m.message} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback }} />
           ))}
 
           {latestQuestion ? (
@@ -258,7 +273,8 @@ const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) 
   )
 }
 
-export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null }) => {
+
+export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback: Function, id: string, index: number, isLoading: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
   return (
     <div className="flex m-2 lg:m-4  lg:mt-4 mt-2">
       <div className="rounded-xl rounded-bl-none relative bg-zinc-200 p-2 px-4">
@@ -271,7 +287,16 @@ export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean,
           {sources && <AnswerSources sources={sources} />}
 
         </div>}
-        {/* <LeftArrow /> */}
+
+        {feedback &&
+          <div className="flex justify-end">
+            <button className="rounded-md mt-1 p-1 hover:scale-110" title="Thumbs down!" disabled={feedback.isLoading} onClick={() => feedback.handleFeedback(false, feedback.id, feedback.index)}>
+              <IconThumbsDown className="w-5 h-5" />
+            </button>
+            <button className="rounded-md mb-1 p-0.5 hover:scale-110" title="Thumbs Up!" disabled={feedback.isLoading} onClick={() => feedback.handleFeedback(true, feedback.id, feedback.index)}>
+              <IconThumbsUp className="w-5 h-5" />
+            </button>
+          </div>}
       </div>
 
     </div>
@@ -318,3 +343,18 @@ export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = 
     </>
   )
 }
+
+export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string }> = ({ sentence = null, sources = null, backgroundColor = "#FFF", color = "#000" }) => {
+  return (
+    <div className="flex m-2 mt-2">
+      <div className="rounded-xl rounded-bl-none relative bg-zinc-100" style={{ backgroundColor, color }}>
+        {sentence && <div className="">
+          <MarkDown markdown={sentence} />
+          {sources && <AnswerSources sources={sources} />}
+        </div>}
+      </div>
+    </div>
+  )
+}
+
+

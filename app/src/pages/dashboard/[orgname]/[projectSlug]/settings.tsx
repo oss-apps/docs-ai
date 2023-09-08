@@ -159,6 +159,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                             </Switch>
                             {!isAbovePro(org) ? 'You need to be at least on Pro plan' : null}
                           </div>
+                          {generateSummary ? <p className="ml-1 text-sm text-zinc-500">Summary will use your  chat credits.</p> : ''}
                           <div className="mt-8">
                             <PrimaryButton className="mx-auto flex justify-center gap-2" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
                               <IconUpdate className="w-5 h-5" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" /> Update

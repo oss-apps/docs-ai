@@ -10,7 +10,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(pro
         ref={ref}
         className={`w-full p-2 rounded-md border border-gray-300 focus:border-gray-800 outline-none`}
       />
-      <p className="mt-1 text-sm text-red-400 h-2">{props.error ?? ''}</p>
+      <p className="mt-1 text-sm text-red-400">{props.error ?? ''}</p>
     </>
   );
 });
@@ -39,4 +39,20 @@ export function Label(props: JSX.IntrinsicElements["label"]) {
     </label>
   );
 }
+
+
+type SelectProps = Omit<JSX.IntrinsicElements["select"], "name"> & { name?: string, error?: string };
+
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Input(props, ref) {
+  return (
+    <>
+      <select
+        {...props}
+        ref={ref}
+        className={`w-full p-2 rounded-md border border-gray-300 focus:border-gray-800 outline-none`}
+      />
+      <p className="mt-1 text-sm text-red-400">{props.error ?? ''}</p>
+    </>
+  );
+});
 
