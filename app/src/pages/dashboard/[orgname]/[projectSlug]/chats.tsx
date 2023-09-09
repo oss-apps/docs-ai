@@ -3,7 +3,7 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { ConvoRating, MessageUser, Messages, type Org, type Project } from "@prisma/client";
+import { ConvoRating, MessageUser, type Messages, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
@@ -15,7 +15,7 @@ import { Dialog, Transition, Listbox, Switch } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import { IconClear } from "~/components/icons/icons";
 import { z } from "zod";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Label, Select } from "~/components/form/input";
 import { toast } from "react-hot-toast";
@@ -64,7 +64,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   // const { convoId } = router.query as { convoId: string | undefined }
 
   const [convoId, setConvoId] = useState<string | null>(null)
-  const [filterS, setFilters] = useState<any>({})
+  const [filterS, setFilters] = useState<Record<string, any>>({})
 
   const { register, handleSubmit, formState: { errors }, getValues, reset } = useForm<z.input<typeof filterSchema>>({ resolver: zodResolver(filterSchema) });
   const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage, refetch: refetchHistory } =
@@ -174,7 +174,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                       <div className={"p-4 flex justify-between items-center  border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
                         <div className="w-full" title={conversation.firstMsg}>
                           <p className="text-start truncate overflow-ellipsis">
-                            {conversation.firstMsg} 
+                            {conversation.firstMsg}
                           </p>
                           <div className="text-sm text-gray-600 mt-2 text-start">
                             {conversation.createdAt.toLocaleString()}
@@ -251,7 +251,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                         {
                           viewFeedbackOnly(currentChat?.conversation?.messages).map(m => (
                             m.user === MessageUser.assistant ? <LeftChat key={m.id} sentence={m.message + `${m.feedback != null ? m.feedback ? '(👍🏽)' : '(👎🏽)' : ''}`} sources={m.sources} /> :
-                        <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
+                              <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
                           ))}</div>
                   }
                 </div> : <NoChat isConvoLoading={isLoading} message="No chats to Filter!" />}
@@ -262,7 +262,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
         </div>
 
         <Transition appear show={showClearConvo} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={() => closeDialog("clear")} static={true}> 
+          <Dialog as="div" className="relative z-10" onClose={() => closeDialog("clear")} static={true}>
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

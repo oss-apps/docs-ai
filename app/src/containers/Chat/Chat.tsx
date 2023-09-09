@@ -227,7 +227,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         </div>
         {project.defaultQuestion &&
           <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
-            {project.defaultQuestion.split(',').map((q ,i) => (
+            {project.defaultQuestion.split(',').map((q, i) => (
               <Fragment key={i}>
                 {q && <button onClick={() => getAnswer(q)} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
                   {q}
@@ -274,7 +274,7 @@ const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) 
 }
 
 
-export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback: Function, id: string, index: number, isLoading: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback: (feedback: boolean, id: string, index: number) => void, id: string, index: number, isLoading: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
   return (
     <div className="flex m-2 lg:m-4  lg:mt-4 mt-2">
       <div className="rounded-xl rounded-bl-none relative bg-zinc-200 p-2 px-4">
