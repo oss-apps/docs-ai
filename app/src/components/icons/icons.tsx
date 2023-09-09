@@ -268,18 +268,20 @@ export const IconDownload: React.FC<IconProps> = ({ className, primaryClassName,
   )
 }
 
-export const IconThumbsUp: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+
+export const IconThumb: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
-      <path className={primaryClassName ?? 'fill-zinc-400'} d="M13 4.8l2.92 6.8a1 1 0 0 1 .08.4v8a2 2 0 0 1-2 2H8a4.28 4.28 0 0 1-3.7-2.45L2.07 14.4A1 1 0 0 1 2 14v-2a3 3 0 0 1 3-3h4V5a3 3 0 0 1 3-3 1 1 0 0 1 1 1v1.8z" />
-      <rect width="4" height="12" x="18" y="11" className={secondaryClassName ?? 'fill-zinc-900'} rx="1" /></svg>
+    <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"
+      className={className ?? "w-6 h-6"} height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
   )
 }
 
-export const IconThumbsDown: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+export const IconFeedback: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
-      <path className={primaryClassName ?? 'fill-zinc-400'} d="M11 19.2l-2.92-6.8A1 1 0 0 1 8 12V4c0-1.1.9-2 2-2h6c1.5 0 3.11 1.06 3.7 2.45l2.22 5.16A1 1 0 0 1 22 10v2a3 3 0 0 1-3 3h-4v4a3 3 0 0 1-3 3 1 1 0 0 1-1-1v-1.8z" />
-      <rect width="4" height="12" x="2" y="2" className={secondaryClassName ?? 'fill-zinc-900'} rx="1" transform="rotate(180 4 7.5)" /></svg>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M5 5h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2zm3 7a1 1 0 0 0 0 2h8a1 1 0 0 0 0-2H8zm0 4a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2H8z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M15 4a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V6c0-1.1.9-2 2-2 0-1.1.9-2 2-2h2a2 2 0 0 1 2 2z" />
+    </svg>
   )
 }
