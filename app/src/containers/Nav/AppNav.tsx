@@ -1,19 +1,23 @@
 import { type Project, type Org } from "@prisma/client"
 import { type User } from "next-auth"
-import Image from "next/image"
+import { useSession } from "next-auth/react"
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
-import { IconBot, IconChatHistory, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings } from "~/components/icons/icons"
+import { IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
  */
 const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, org, project }) => {
   const router = useRouter()
+  const { data: sessionData } = useSession();
+
 
   return (
+    <>
     <nav className="w-64 border border-r p-5">
       <div className="flex justify-between items-center">
         <Link href="/dashboard" className="flex items-center">
@@ -72,6 +76,16 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
       </div>
     </nav >
+
+      <div className="absolute text-center bottom-0 mb-6 w-56">
+        <div className="flex flex-col text-sm">
+          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" href="https://docsai.canny.io/featrue-requests">Got an Idea ?</a>
+          <hr className="w-12 text-center mx-auto"></hr>
+          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" href="https://docsai.canny.io/bugs">Report a Bug </a>
+        </div>
+      </div>
+    </>
+
   )
 }
 
