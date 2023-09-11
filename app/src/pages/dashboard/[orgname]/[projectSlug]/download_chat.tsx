@@ -49,20 +49,22 @@ const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string 
                       </div>
                     </div>
                     <div>
+                      {convo.summary ? <div className="p-2 my-2 border rounded-md">
+                        <b>Summary</b> -  {convo.summary}
+                      </div> : <></>}
                       {convo?.messages.map((m, i) => (
+
                         m.user != 'user' ?
-                          <PlainChat key={m.id} sentence={m.message + `${m.feedback != null ? m.feedback ? '(👍🏽)' : '(👎🏽)' : ''}`} />
+                          <PlainChat key={m.id} sentence={m.message} feedback={{ selected: m.feedback }} sources={m.sources} />
                           :
                           <div className="flex items-center" key={i}>
-                            <PlainChat key={m.id} sentence={m.message} sources={m.sources} />
+                            <PlainChat key={m.id} sentence={m.message} color="#000" backgroundColor="#FFF" />
                             ({i / 2 + 1})
                           </div>
 
                       ))}
-                      {convo.summary ? <div className="p-2 px-4 mx-3 mb-3 bg-gray-100 rounded-md">
-                        <b>Summary</b> -  {convo.summary}
-                      </div> : <></>}
-                      <hr className="my-4"></hr>
+
+                      <hr className="my-8"></hr>
                     </div>
                   </div>
                 })

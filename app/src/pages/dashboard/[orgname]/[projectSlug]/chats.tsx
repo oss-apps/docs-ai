@@ -9,7 +9,7 @@ import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
-import { LeftChat, RightChat } from "~/containers/Chat/Chat";
+import { LeftChat, PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
 import { Dialog, Transition, Listbox, Switch } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
@@ -190,7 +190,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   ) : null}
                 </div>
-                {convoData?.pages[0]?.conversations.length ? <div className="w-2/3 overflow-auto pb-5">
+                {convoData?.pages[0]?.conversations.length ? <div className="w-2/3 overflow-auto pb-16">
                   <div className="flex justify-start items-center p-4">
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer
@@ -250,7 +250,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                         </div>
                         {
                           viewFeedbackOnly(currentChat?.conversation?.messages).map(m => (
-                            m.user === MessageUser.assistant ? <LeftChat key={m.id} sentence={m.message + `${m.feedback != null ? m.feedback ? '(👍🏽)' : '(👎🏽)' : ''}`} sources={m.sources} /> :
+                            m.user === MessageUser.assistant ?
+                              <PlainChat key={m.id} sentence={m.message} sources={m.sources} feedback={{ selected: m.feedback }} />
+                              :
                               <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
                           ))}</div>
                   }

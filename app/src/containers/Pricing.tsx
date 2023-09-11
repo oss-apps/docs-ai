@@ -43,7 +43,7 @@ const Pricing: React.FC<{
           If these plans doesn&apos;t suit you or you need custom hosting, Contact <span className="text-zinc-800 font-semibold">hey@docsai.app</span> and we can set it up for you.
         </h2>
         <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
-          <div className="border border-zinc-800 rounded-lg  ">
+          <div className="border flex  border-zinc-800 rounded-lg  ">
           <button
             onClick={() => setBillingInterval('month')}
             className={`${billingInterval === 'month'

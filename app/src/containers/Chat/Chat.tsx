@@ -10,7 +10,7 @@ import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import { getContrastColor } from "~/utils/color";
-import { IconSend, IconThumbsDown, IconThumbsUp } from "~/components/icons/icons";
+import { IconFeedback, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 
 
@@ -131,8 +131,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     setConversation(null)
   }
 
-  const handleFeedback = async (feedback: boolean, id: string, index: number) => {
-    console.log("🔥 ~ handleFeedback ~ handleFeedback:", feedback, index)
+  const handleFeedback = async (feedback: boolean, id?: string, index?: number) => {
+    if (!id) return
     const prom = updatefeedback.mutateAsync({ feedback, id })
     const feedbackRes = await toast.promise(prom, {
       loading: 'Sending your feedback .. ',
@@ -274,32 +274,35 @@ const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) 
 }
 
 
-export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback: (feedback: boolean, id: string, index: number) => void, id: string, index: number, isLoading: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+// This LeftChat applicable only for streaming / chat purposes . Not for static display. Use Plain Chat for that.
+export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
   return (
-    <div className="flex m-2 lg:m-4  lg:mt-4 mt-2">
-      <div className="rounded-xl rounded-bl-none relative bg-zinc-200 p-2 px-4">
+    <div className="mx-2 mb-3 lg:m-4  lg:mt-4 mt-2" >
+      <div className="flex ">
+        <div className="rounded-xl rounded-bl-none relative border bg-zinc-100 p-2 px-4">
         {isThinking && <div className="markdown">
           <div className="text-gray-600">Thinking...</div>
         </div>}
 
-        {sentence && <div className="">
+          {sentence && <div>
           <MarkDown markdown={sentence} />
-          {sources && <AnswerSources sources={sources} />}
-
+            {sources && <AnswerSources sources={sources} />}
         </div>}
-
-        {feedback &&
-          <div className="flex justify-end">
-            <button className="rounded-md mt-1 p-1 hover:scale-110" title="Thumbs down!" disabled={feedback.isLoading} onClick={() => feedback.handleFeedback(false, feedback.id, feedback.index)}>
-              <IconThumbsDown className="w-5 h-5" />
-            </button>
-            <button className="rounded-md mb-1 p-0.5 hover:scale-110" title="Thumbs Up!" disabled={feedback.isLoading} onClick={() => feedback.handleFeedback(true, feedback.id, feedback.index)}>
-              <IconThumbsUp className="w-5 h-5" />
-            </button>
-          </div>}
+        </div>
       </div>
-
+      {
+        feedback &&
+        <div className="flex justify-end gap-1 mt-2">
+          <button title="Thumbs down!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(false, feedback.id, feedback.index)}>
+              <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600 rotate-180 hover:fill-zinc-200" />
+            </button>
+          <button title="Thumbs Up!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(true, feedback.id, feedback.index)}>
+              <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
+          </button>
+        </div>
+      }
     </div>
+
   )
 }
 
@@ -344,13 +347,21 @@ export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = 
   )
 }
 
-export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string }> = ({ sentence = null, sources = null, backgroundColor = "#FFF", color = "#000" }) => {
+export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string, feedback?: { selected: boolean | null } }> = ({ sentence = null, sources = null, backgroundColor, color, feedback }) => {
   return (
-    <div className="flex m-2 mt-2">
-      <div className="rounded-xl rounded-bl-none relative bg-zinc-100" style={{ backgroundColor, color }}>
+    <div className="m-2 mt-2">
+      <div className="rounded-md relative bg-zinc-100 p-2" style={{ backgroundColor, color }}>
         {sentence && <div className="">
           <MarkDown markdown={sentence} />
+
           {sources && <AnswerSources sources={sources} />}
+          {<div className="flex justify-start gap-1">
+            <div className="flex gap-2 mt-2 items-center">
+              {feedback?.selected == null ? '' : feedback.selected ? <> <IconThumb className="w-4 h-4 stroke-green-500 " /><span>Feedback</span> </> : <><IconThumb className="w-4 h-4 rotate-180 stroke-red-500" />  <span> Feedback</span> </>}
+
+            </div>
+
+          </div>}
         </div>}
       </div>
     </div>
