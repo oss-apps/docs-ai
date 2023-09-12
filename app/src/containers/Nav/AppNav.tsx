@@ -1,7 +1,5 @@
 import { type Project, type Org } from "@prisma/client"
 import { type User } from "next-auth"
-import { useSession } from "next-auth/react"
-import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
@@ -13,9 +11,6 @@ import { IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, Ic
  */
 const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, org, project }) => {
   const router = useRouter()
-  const { data: sessionData } = useSession();
-
-
   return (
     <>
     <nav className="w-64 border border-r p-5">
