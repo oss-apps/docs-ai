@@ -187,7 +187,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         }
       </style>
       <div className="h-full bg-white ">
-        <div ref={chatBox} id="docs-ai-chat-box " className="h-[83vh] lg:h-[70vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
+        <div ref={chatBox} id="docs-ai-chat-box " className="h-[83vh] lg:h-[70vh]  lg:max-h-[45rem] no-scrollbar overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
           {embed ? (
             <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
               <p>
@@ -296,7 +296,7 @@ export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean,
       </div>
       {
         feedback &&
-        <div className="flex justify-start gap-2 my-2 mx-2 lg:mx-4">
+        <div className="flex justify-start gap-2 m-2 lg:m-4 ">
           <button title="Thumbs Up!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(true, feedback.id, feedback.index)}>
             <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
           </button>
