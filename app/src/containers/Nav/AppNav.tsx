@@ -74,9 +74,9 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
       <div className="absolute text-center bottom-0 mb-6 w-56">
         <div className="flex flex-col text-sm">
-          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" ref="noreferrer" href="https://docsai.canny.io/featrue-requests">Got an Idea ?</a>
+          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/featrue-requests">Got an Idea ?</a>
           <hr className="w-12 text-center mx-auto"></hr>
-          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" ref="noreferrer" href="https://docsai.canny.io/bugs">Report a Bug </a>
+          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/bugs">Report a Bug </a>
         </div>
       </div>
     </>
