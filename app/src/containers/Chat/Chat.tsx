@@ -10,7 +10,7 @@ import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import { getContrastColor } from "~/utils/color";
-import { IconFeedback, IconSend, IconThumb } from "~/components/icons/icons";
+import { IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 
 
@@ -18,7 +18,7 @@ const qnaSchema = z.object({
   question: z.string().min(3),
 })
 
-const getStreamAnswer = async (projectId: string, question: string, convoId: string, onMessage: (token: string) => void, onEnd: (convoId: string) => void) => {
+const getStreamAnswer = async (projectId: string, question: string, convoId: string, onMessage: (token: string) => void, onEnd: (convoId: string, isError: boolean) => void) => {
   const res = await fetch('/api/web/chat', {
     method: 'POST',
     body: JSON.stringify({
@@ -48,7 +48,7 @@ const getStreamAnswer = async (projectId: string, question: string, convoId: str
         if (dataResults.startsWith('DOCSAI_CONVO_ID')) {
           const convoId = dataResults.split(':')[1];
           if (convoId) {
-            onEnd(convoId)
+            onEnd(convoId, false)
           }
           break;
         }
@@ -57,12 +57,12 @@ const getStreamAnswer = async (projectId: string, question: string, convoId: str
       }
 
       if (done) {
-        onEnd(convoId)
+        onEnd(convoId, false)
         break;
       }
     }
   } else {
-    onEnd(convoId)
+    onEnd(convoId, true)
   }
 }
 
@@ -99,12 +99,16 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
       await getStreamAnswer(project.id, question, conversation?.id ?? 'new', (token) => {
         setAnswer(token)
         setThinking(false)
-      }, async (convoId) => {
+      }, async (convoId, error) => {
+        if (error) {
+          setAnswer("Something Happened! Try again later!")
+          setThinking(false)
+        }
         const { conversation } = await client.conversation.getConversation.query({ orgId: org.id, projectId: project.id, convoId: convoId })
-        setConversation(conversation)
-        setAnswer(null)
         setLatestQuestion(null)
-      });
+        setAnswer(null)
+        setConversation(conversation)
+      })
     } catch (e) {
       setThinking(false)
       console.log(e)
@@ -183,7 +187,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         }
       </style>
       <div className="h-full bg-white ">
-        <div ref={chatBox} id="docs-ai-chat-box " className="lg:h-[70vh] h-[85vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
+        <div ref={chatBox} id="docs-ai-chat-box " className="h-[83vh] lg:h-[70vh]  lg:max-h-[45rem]  overflow-auto lg:border lg:border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
           {embed ? (
             <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
               <p>
@@ -277,9 +281,9 @@ const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) 
 // This LeftChat applicable only for streaming / chat purposes . Not for static display. Use Plain Chat for that.
 export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
   return (
-    <div className="mx-2 mb-3 lg:m-4  lg:mt-4 mt-2" >
-      <div className="flex ">
-        <div className="rounded-xl rounded-bl-none relative border bg-zinc-100 p-2 px-4">
+    <div>
+      <div className="flex m-2 lg:m-4  lg:mt-4 mt-2 ">
+        <div className="relative p-2 px-4 bg-zinc-100 rounded-xl rounded-bl-none border">
         {isThinking && <div className="markdown">
           <div className="text-gray-600">Thinking...</div>
         </div>}
@@ -292,13 +296,14 @@ export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean,
       </div>
       {
         feedback &&
-        <div className="flex justify-end gap-1 mt-2">
+        <div className="flex justify-start gap-2 my-2 mx-2 lg:mx-4">
+          <button title="Thumbs Up!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(true, feedback.id, feedback.index)}>
+            <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
+          </button>
           <button title="Thumbs down!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(false, feedback.id, feedback.index)}>
               <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600 rotate-180 hover:fill-zinc-200" />
             </button>
-          <button title="Thumbs Up!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(true, feedback.id, feedback.index)}>
-              <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
-          </button>
+
         </div>
       }
     </div>
@@ -349,9 +354,9 @@ export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = 
 
 export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string, feedback?: { selected: boolean | null } }> = ({ sentence = null, sources = null, backgroundColor, color, feedback }) => {
   return (
-    <div className="m-2 mt-2">
+    <div className="m-2 lg:m-4 mt-2">
       <div className="rounded-md relative bg-zinc-100 p-2" style={{ backgroundColor, color }}>
-        {sentence && <div className="">
+        {sentence && <div>
           <MarkDown markdown={sentence} />
 
           {sources && <AnswerSources sources={sources} />}
