@@ -26,8 +26,10 @@ const Home: NextPage = () => {
             </h1>
           </div>
           <AuthButton />
-          <section className="mt-20 rounded-lg pb-20">
-            <Image src="/images/app.png" alt="App" width={900} height={800} className="rounded-lg border z-50 relative mx-auto shadow-2xl"></Image>
+          <section className="my-16 rounded-lg  flex justify-center ">
+            <div className="conic rounded-lg">
+              <Image src="/images/app.webp" alt="App" width={1000} height={800} className="rounded-lg border border-blue-100 relative"></Image>
+            </div>
           </section>
         </main>
 
@@ -40,7 +42,7 @@ const Home: NextPage = () => {
                 <p className=" font-semibold flex items-center mt-2 text-xl">
                   Train data
                 </p>
-                <p className="mt-2 text-slate-300">Add your Website / Text you want to train (more sources coming)</p>
+                <p className="mt-2 text-slate-300">Add your Websites / PDFs / Docx / Text you want to train.</p>
               </div>
               <div className="">
                 <div className="text-lg font-semibold border border-slate-100 rounded-full w-10 h-10 flex justify-center items-center p-1 text-slate-100">2</div>
@@ -180,7 +182,7 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <div className="mt-10 lg:mt-0">
-                <Image src="/images/customer-agent.png" alt="App" width={350} height={800} className="rounded-lg border shadow-xl z-50 relative  mx-auto"></Image>
+                <Image src="/images/customer-agent.webp" alt="App" width={375} height={800} className="rounded-lg border shadow-xl z-50 relative  mx-auto"></Image>
 
               </div>
             </div>
