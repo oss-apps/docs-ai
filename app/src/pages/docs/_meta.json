@@ -1,5 +1,11 @@
 {
   "getting-started": "Getting Started",
   "integrations": "Integrations",
-  "faq": "FAQ"
+  "faq": {
+    "title": "FAQs",
+    "theme": {
+      "toc": false
+    }
+  },
+  "release-notes": "Release Notes"
 }

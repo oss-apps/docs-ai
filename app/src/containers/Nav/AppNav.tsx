@@ -13,7 +13,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
   const router = useRouter()
   return (
     <>
-    <nav className="w-64 border border-r p-5">
+      <nav className="w-64 border border-r p-4">
       <div className="flex justify-between items-center">
         <Link href="/dashboard" className="flex items-center">
           <Avatar square size={24} src={org.imageUrl} uid={org.id} />

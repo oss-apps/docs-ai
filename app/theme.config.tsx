@@ -1,6 +1,4 @@
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { useConfig } from "nextra-theme-docs"
 import Footer from "~/containers/Footer"
 import type { DocsThemeConfig } from 'nextra-theme-docs';
 
@@ -40,6 +38,7 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'light',
+    forcedTheme: 'light'
   }
 }
 

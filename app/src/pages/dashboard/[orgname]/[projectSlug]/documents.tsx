@@ -11,6 +11,7 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { IconChatHistory } from "~/components/icons/icons";
 
 const Status = ({ status }: { status: IndexStatus }) => {
   switch (status) {
@@ -61,9 +62,18 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
             <div className="p-5 px-10">
               <div className="flex justify-between">
                 <h2 className="text-lg">Documents</h2>
+                <div className="flex justify-end gap-4">
+                  {project.documentTokens ? (
+                    <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`}>
+                      <SecondaryButton className="mx-auto justify-center gap-2">
+                        <IconChatHistory className="w-5 h-5" />
+                        Talk to your Docs</SecondaryButton>
+                    </Link>
+                  ) : null}
                 <Link href={`/dashboard/${org.name}/${project.slug}/new_document`}>
                   <PrimaryButton>+ Add document</PrimaryButton>
                 </Link>
+                </div>
               </div>
               {isLoading ? <div>Loading...</div> :
                 data?.documents?.length === 0 ? (

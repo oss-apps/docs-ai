@@ -18,6 +18,7 @@ import { isAbovePro } from "~/utils/license";
 import { toast } from "react-hot-toast";
 import { IconUpdate } from "~/components/icons/icons";
 import { DEFAULT_PROMPT } from "~/server/constants";
+import Link from "next/link";
 
 
 const projectSchema = z.object({
@@ -170,18 +171,18 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                     </div>
                   </div>
                   <div className="mt-10">
-                    <p className="text-gray-800 text-lg">API settings</p>
+                    <p className="text-gray-800 text-lg">API Settings </p>
                     <div className="mt-4 border-t" />
                     <div className="flex gap-10">
                       <div className="w-full">
                         <div className="p-4">
                           <Label>API key</Label>
-                          <div className="p-3 px-4 bg-zinc-100 rounded">
+                          <div className="p-3 bg-zinc-100 rounded-lg">
                             {apiKey ? (
                               <div className="flex justify-between items-center">
                                 <p className="text-zinc-600">***************{apiKey.substring(apiKey.length - 4, apiKey.length)}</p>
                                 <div className="flex gap-2">
-                                  <button onClick={onApiCopy} className="border border-zinc-400 rounded p-1 hover:bg-zinc-200">
+                                  <button onClick={onApiCopy} className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200">
                                     {isCopied ? (
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -193,11 +194,17 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                                       </svg>
                                     )}
                                   </button>
-                                  <button onClick={onGenerateApiKey} className="border border-zinc-400 rounded p-1 hover:bg-zinc-200">
+                                  <button onClick={onGenerateApiKey} className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                     </svg>
                                   </button>
+
+                                  <Link href="/docs/integrations#api" className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200" target="_blank" title="View Documentation">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                    </svg>
+                                  </Link>
                                 </div>
                               </div>
                             ) : (
@@ -210,7 +217,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                               </div>
                             )}
                           </div>
-                          <div className="mt-10 text-zinc-500">Project ID: <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span></div>
+                          <div className="mt-4 text-zinc-500">Project ID: <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span></div>
                         </div>
                       </div>
                     </div>

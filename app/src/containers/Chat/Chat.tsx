@@ -10,7 +10,7 @@ import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import { getContrastColor } from "~/utils/color";
-import { IconSend, IconThumb } from "~/components/icons/icons";
+import { IconEmail, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 
 
@@ -138,7 +138,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   const handleFeedback = async (feedback: boolean, id?: string, index?: number) => {
     if (!id) return
     const prom = updatefeedback.mutateAsync({ feedback, id })
-    const feedbackRes = await toast.promise(prom, {
+    await toast.promise(prom, {
       loading: 'Sending your feedback .. ',
       success: feedback ? 'Thanks for your feedback!' : 'We will improve our services!',
       error: 'Something went wrong!',
@@ -214,7 +214,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           {conversation?.messages.map((m, i) => (
             m.user == 'user' ?
               <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
-              : <LeftChat key={m.id} sentence={m.message} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback }} />
+              : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback }} />
           ))}
 
           {latestQuestion ? (
@@ -261,14 +261,14 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   )
 }
 
-const LeftArrow: React.FC = () => {
+export const LeftArrow: React.FC = () => {
   return (
     <div className="absolute left-0 top-4 transform -translate-x-1/3 rotate-45 w-4 h-2 bg-gray-100 ">
     </div>
   )
 }
 
-const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) => {
+export const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) => {
   return (
     <div className="absolute right-0 top-4 transform translate-x-1/3 rotate-45 w-4 h-2"
       style={{
@@ -279,10 +279,17 @@ const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundColor }) 
 
 
 // This LeftChat applicable only for streaming / chat purposes . Not for static display. Use Plain Chat for that.
-export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ botName = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ showSupportEmail = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+  const copySupportEmail = () => {
+    if (!showSupportEmail) return
+    navigator.clipboard.writeText(showSupportEmail).then(() => {
+      toast.success(`${showSupportEmail} copied`, { position: 'top-center' })
+    }).catch(() => { toast.error('Something went wrong!', { position: 'top-center' }) })
+
+  }
   return (
     <div>
-      <div className="flex m-2 lg:m-4  lg:mt-4 mt-2 ">
+      <div className="flex m-2  lg:mt-4 lg:mx-4 mt-2 ">
         <div className="relative p-2 px-4 bg-zinc-100 rounded-xl rounded-bl-none border">
         {isThinking && <div className="markdown">
           <div className="text-gray-600">Thinking...</div>
@@ -296,14 +303,23 @@ export const LeftChat: React.FC<{ botName?: string | null, isThinking?: boolean,
       </div>
       {
         feedback &&
-        <div className="flex justify-start gap-2 m-2 lg:m-4 ">
+        <div className="flex justify-between lg:justify-start m-2 lg:mx-4 gap-2">
+          <div className="flex gap-2 ">
           <button title="Thumbs Up!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(true, feedback.id, feedback.index)}>
             <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
           </button>
           <button title="Thumbs down!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(false, feedback.id, feedback.index)}>
               <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600 rotate-180 hover:fill-zinc-200" />
             </button>
-
+            </div>
+            {showSupportEmail && <div className="flex gap-2">
+              <a title="Support" href={`mailto:${showSupportEmail}`} className="flex  items-center rounded-md border hover:cursor-pointer bg-zinc-100 px-1.5 hover:bg-zinc-200">
+                <IconEmail className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
+              </a>
+              <button title="Copy Email" className="flex items-center rounded-md border hover:cursor-pointer bg-zinc-100 px-1.5  hover:bg-zinc-200" onClick={() => copySupportEmail()}>
+                <span className="text-zinc-600 text-lg"> @ </span>
+              </button>
+            </div>}
         </div>
       }
     </div>
@@ -372,5 +388,4 @@ export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | 
     </div>
   )
 }
-
 
