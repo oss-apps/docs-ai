@@ -141,6 +141,7 @@ model Project {
     Conversation     Conversation[]
     slackInstalation SlackInstallation?
     projectToken     ProjectToken?
+    supportEmail     String?
 
     @@unique([orgId, slug])
 }

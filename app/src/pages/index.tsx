@@ -28,7 +28,7 @@ const Home: NextPage = () => {
           <AuthButton />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="conic rounded-lg">
-              <Image src="/images/app.webp" alt="App" width={1000} height={800} className="rounded-lg border border-blue-100 relative"></Image>
+              <Image src="/images/app.webp" alt="App" width={1000} height={800} className="rounded-lg border border-blue-100 relative shadow-2xl"></Image>
             </div>
           </section>
         </main>

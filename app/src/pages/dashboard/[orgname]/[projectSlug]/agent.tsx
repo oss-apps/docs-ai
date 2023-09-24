@@ -3,18 +3,16 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type ProjectToken, type Org, type Project } from "@prisma/client";
+import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
-import { QnA } from "~/containers/QnA/QnA";
 import { ChatBox } from "~/containers/Chat/Chat";
-import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
-import { env } from "~/env.mjs";
+import PrimaryButton, { SecondaryButton } from "~/components/form/button";
 import { type Dispatch, Fragment, type SetStateAction, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MarkDown } from "~/components/MarkDown";
 import { Input, Label } from "~/components/form/input";
-import { type FieldValues, type SubmitHandler, useForm, FieldValue } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/utils/api";
 import { z } from "zod";
@@ -27,7 +25,8 @@ export const projectSchema = z.object({
   defaultQuestion: z.string().min(3),
   botName: z.string().min(3),
   initialQuestion: z.string().min(3),
-  primaryColor: z.string()
+  primaryColor: z.string(),
+  supportEmail: z.string().email().optional().nullable().or(z.literal('')).transform((val) => val || null),
 })
 
 const projectDefaultValues = {
@@ -79,11 +78,11 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
           <AppNav user={user} org={org} project={project} />
 
 
-          <div className="w-1/2 max-w-4xl p-4">
+          <div className="w-3/5 max-w-4xl p-4">
             <BotSetting project={project} setProject={setProject} />
           </div>
-          <div className="w-1/2 max-w-xl p-4">
-            <div className=" mx-auto">
+          <div className="w-2/5 max-w-xl p-4">
+            <div className="mx-auto">
               <ChatBox org={org} project={projectState} embed />
               <div className="flex justify-center gap-4 mt-4">
                 <PrimaryButton onClick={openModal} className="justify-center gap-2 w-20">
@@ -164,8 +163,8 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
   const updateProject = api.project.updateBotSettings.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { defaultQuestion, botName, initialQuestion, primaryColor } = data as any as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ initialQuestion, projectId: project.id, defaultQuestion, botName, primaryColor })
+    const { defaultQuestion, botName, initialQuestion, primaryColor, supportEmail } = data as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ initialQuestion, projectId: project.id, defaultQuestion, botName, primaryColor, supportEmail })
   };
 
   const onFormChange = () => {
@@ -185,7 +184,7 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
 
   return (
     <section id="projectForm" className="max-w-xl">
-      <p className="text-gray-800 text-lg">Bot appearance</p>
+      <p className="text-gray-800 text-lg">Bot Appearance</p>
       <div className="mt-4 border-t" />
       <form onSubmit={handleSubmit(onSubmit)} onChange={onFormChange} className="p-4 rounded-md">
 
@@ -217,9 +216,20 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
           />
         </div>
 
+        <div className="w-full mt-4">
+          <Label title="Each answer will show @ along with feedbacks">Support Email</Label>
+          <Input
+            defaultValue={project.supportEmail || ''}
+            placeholder="hey@support.com "
+            {...register('supportEmail')}
+            type="email"
+            error={errors.supportEmail?.message?.toString()}
+          />
+        </div>
+
         <div className="mt-4 flex items-end">
           <div>
-            <Label title="Play with colors">Primary Color</Label>
+            <Label title="Use your brand colors">Primary Color</Label>
             <input className="ml-1 py-0.5 px-1 w-20 rounded-lg" type="color" defaultValue={project.primaryColor}
               {...register('primaryColor')}
             />
