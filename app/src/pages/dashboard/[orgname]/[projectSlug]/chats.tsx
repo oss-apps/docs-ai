@@ -152,8 +152,8 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
           <AppNav user={user} org={org} project={project} />
           <div className="w-full h-full">
             {convoData ? (
-              <div className="px-0 h-full flex">
-                <div className="w-1/3 border-r overflow-auto ">
+              <div className="px-0 h-full flex flex-wrap sm:flex-nowrap flex-row-reverse sm:flex-row ">
+                <div className="w-full sm:w-1/3 border overflow-auto ">
                   <div className="text-gray-600 p-4 border-b flex justify-between">
                     <p>
                       <b> Chats </b>
@@ -171,12 +171,12 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                   </div>
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
                     <button className="w-full" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
-                      <div className={"p-4 flex justify-between items-center  border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
+                      <div className={"p-4 border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
                         <div className="w-full" title={conversation.firstMsg}>
-                          <p className="text-start truncate overflow-ellipsis">
-                            {conversation.firstMsg}
+                          <p className="max-w-full text-left">
+                            {conversation.firstMsg.slice(0, 60) + (conversation.firstMsg.length > 50 ? '...' : '')}
                           </p>
-                          <div className="text-sm text-gray-600 mt-2 text-start">
+                          <div className="text-sm text-gray-600 mt-2 text-start ">
                             {conversation.createdAt.toLocaleString()}
                           </div>
                         </div>
@@ -190,7 +190,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   ) : null}
                 </div>
-                {convoData?.pages[0]?.conversations.length ? <div className="w-2/3 overflow-auto pb-16">
+                {convoData?.pages[0]?.conversations.length ? <div className="w-full border sm:w-2/3 overflow-auto pb-16">
                   <div className="flex justify-start items-center p-4">
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer

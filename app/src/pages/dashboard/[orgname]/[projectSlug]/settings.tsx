@@ -16,7 +16,7 @@ import { type MouseEventHandler, useEffect, useState } from "react";
 import { Switch } from "@headlessui/react";
 import { isAbovePro } from "~/utils/license";
 import { toast } from "react-hot-toast";
-import { IconUpdate } from "~/components/icons/icons";
+import { IconLink, IconUpdate } from "~/components/icons/icons";
 import { DEFAULT_PROMPT } from "~/server/constants";
 import Link from "next/link";
 
@@ -89,31 +89,33 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full h-full overflow-auto pb-20">
-            <div className="mt-10 p-5 px-10">
+            <div className="mt-10 p-2 sm:p-5">
               <div className="max-w-5xl mx-auto">
                 <div>
-                  <p className="text-gray-800 text-lg">Integrations</p>
-                  <div className="mt-4 border-t" />
-                  <div className="mt-4 flex p-4 bg-gray-100 rounded-md items-center justify-between">
+                  <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">Integrations
+                  </div>
+                  <div className="m-2 mt-4 p-3 bg-gray-100 rounded-md flex items-center justify-between">
                     {project.slackInstalation ? (
                       <div>
                         Slack connected with the workspace <span className="bg-orange-100 text-orange-500 p-1 rounded">{project.slackInstalation.teamName}</span>
                       </div>
                     ) : (
-                      <>
+                        <div className="flex w-full justify-between  items-center flex-col gap-y-4 sm:flex-row">
                         <p>Connect slack to ask questions in your channels</p>
-                        <a href={`https://slack.com/oauth/v2/authorize?client_id=5026673231779.5023868711141&scope=app_mentions:read,chat:write,commands&state=${project.id}`}>
-                          <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-                        </a>
-                      </>
+                          <div className="flex justify-center">
+                            <a href={`https://slack.com/oauth/v2/authorize?client_id=5026673231779.5023868711141&scope=app_mentions:read,chat:write,commands&state=${project.id}`}>
+                              <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+                            </a>
+                          </div>
+
+                        </div>
                     )}
                   </div>
                   <div className="mt-10">
-                    <p className="text-gray-800 text-lg">Project settings</p>
-                    <div className="mt-4 border-t" />
+                    <p className="text-gray-800 text-lg border-b-2 pb-2">Project settings</p>
                     <div className="flex gap-10">
                       <div className="w-full">
-                        <form onSubmit={handleSubmit(onSubmit)} className="p-4 rounded-md">
+                        <form onSubmit={handleSubmit(onSubmit)} className="my-4 rounded-md">
                           <div className="w-full">
                             <Label>Project Name</Label>
                             <Input
@@ -133,7 +135,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                             />
                           </div>
                           <div className="w-full mt-6">
-                            <Label>System Prompt <span className="text-sm">(Changing this might affect bot performance)</span></Label>
+                            <Label title="Changing this might affect bot performance">System Prompt</Label>
                             <TextArea
                               error={errors.src?.message?.toString()}
                               rows={5}
@@ -171,8 +173,10 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                     </div>
                   </div>
                   <div className="mt-10">
-                    <p className="text-gray-800 text-lg">API Settings </p>
-                    <div className="mt-4 border-t" />
+                    <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">API Settings
+                      <Link href="/docs/integrations#api" className=" rounded-lg p-1 hover:bg-zinc-100" target="_blank" title="View Documentation">
+                        <IconLink />
+                      </Link></div>
                     <div className="flex gap-10">
                       <div className="w-full">
                         <div className="p-4">
@@ -180,7 +184,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                           <div className="p-3 bg-zinc-100 rounded-lg">
                             {apiKey ? (
                               <div className="flex justify-between items-center">
-                                <p className="text-zinc-600">***************{apiKey.substring(apiKey.length - 4, apiKey.length)}</p>
+                                <p className="text-zinc-600 tracking-wider">************{apiKey.substring(apiKey.length - 4, apiKey.length)}</p>
                                 <div className="flex gap-2">
                                   <button onClick={onApiCopy} className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200">
                                     {isCopied ? (
@@ -201,9 +205,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                                   </button>
 
                                   <Link href="/docs/integrations#api" className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200" target="_blank" title="View Documentation">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                    </svg>
+                                    <IconLink />
                                   </Link>
                                 </div>
                               </div>
@@ -217,7 +219,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                               </div>
                             )}
                           </div>
-                          <div className="mt-4 text-zinc-500">Project ID: <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span></div>
+                          <div className="mt-4 text-zinc-500">Project ID <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span></div>
                         </div>
                       </div>
                     </div>

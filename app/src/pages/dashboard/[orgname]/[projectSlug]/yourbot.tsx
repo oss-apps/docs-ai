@@ -6,10 +6,8 @@ import { getServerAuthSession } from "~/server/auth";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
-import { QnA } from "~/containers/QnA/QnA";
 import { ChatBox } from "~/containers/Chat/Chat";
-import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
-import { env } from "~/env.mjs";
+import PrimaryButton, { SecondaryButton } from "~/components/form/button";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MarkDown } from "~/components/MarkDown";
@@ -50,27 +48,30 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
         <title>Docs AI - Bot</title>
       </Head>
       <main className="h-full">
-        <div className="h-full flex">
+        <div className="flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full">
-            <div className="mt-5 p-5 px-10">
-              <div className="max-w-5xl mx-auto">
-                <div className="flex justify-end gap-4 mb-4">
-                  <SecondaryButton onClick={openModal} className="justify-center gap-2 w-20">
-                    <IconEmbed className="h-4 w-4" />
-                    Embed
+          <div className="w-full ">
+            <div className="mt-4 p-2 sm:p-5">
+              <div className="max-w-5xl flex gap-y-6 sm:gap-y-0 sm:flex-col flex-col-reverse">
+                <div className="flex justify-start gap-4 mb-2 pb-4 border-t-2 pt-4 sm:pt-0 sm:border-none sm:justify-end">
+                  <SecondaryButton onClick={openModal} className="hidden sm:flex justify-center gap-2">
+                    <IconEmbed className="h-5 w-5" />
+                    <span> Embed </span>
                   </SecondaryButton>
-                  <SecondaryButton onClick={onShareClick} className="justify-center gap-2 w-20">
-                    <IconShare className="h-4 w-4" /> {shareText}
+                  <SecondaryButton onClick={onShareClick} className="justify-center gap-2">
+                    <IconShare className="h-5 w-5" /> {shareText}
                   </SecondaryButton>
                   <Link href={`/dashboard/${org.name}/${project.slug}/agent`}>
-                    <SecondaryButton className="flex justify-center gap-2  w-36">
-                      <IconCustomize className="h-4 w-4" />
+                    <SecondaryButton className="flex justify-center gap-2">
+                      <IconCustomize className="h-5 w-5" />
                       Customize
                     </SecondaryButton>
                   </Link>
                 </div>
+                <div>
                 <ChatBox org={org} project={project} />
+                </div>
+
               </div>
             </div>
           </div>

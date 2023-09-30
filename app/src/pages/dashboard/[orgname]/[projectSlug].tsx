@@ -34,15 +34,15 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
       <Head>
         <title>Docs AI - Dashboard</title>
       </Head>
-      <main className="h-full">
-        <div className="h-full flex">
+      <main >
+        <div className=" flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full h-full">
-            <div className="p-5 px-10 overflow-auto h-full flex">
-              <div className=" w-1/2">
+          <div className="p-2 sm:p-5  flex flex-wrap w-full">
+            <div className="w-full sm:w-7/12">
+              <div className="m-2">
                 <div className="text-gray-600">This week</div>
-                <div className="bg-gray-100 p-4 rounded-md mt-2 flex justify-between items-center">
-                  <div>
+                <div className="bg-gray-100 p-4 rounded-md mt-2 flex gap-3 flex-wrap justify-center sm:justify-between items-center">
+                  <div className="text-center">
                     <p className="text-zinc-500 text-center">Conversations</p>
                     <p className="text-center text-3xl mt-2">{dashboardData?.weeklyCount}</p>
                   </div>
@@ -67,8 +67,11 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     </div>
                   </div>
                 </div>
-                <div className="text-gray-600 mt-10">This month</div>
-                <div className="bg-gray-100 p-4 rounded-md mt-2 flex justify-between items-center">
+              </div>
+
+              <div className="m-2">
+                <div className="text-gray-600 m-2">This month</div>
+                <div className="bg-gray-100 p-4 rounded-md mt-2 flex gap-3  flex-wrap justify-center sm:justify-between items-center">
                   <div>
                     <p className="text-zinc-500 text-center">Conversations</p>
                     <p className="text-center text-3xl mt-2">{dashboardData?.monthlyConversationCount}</p>
@@ -94,7 +97,9 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                     </div>
                   </div>
                 </div>
-                <div className="mt-10">
+              </div>
+
+              <div className="my-6">
                   {project.documentTokens ? (
                     <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`}>
                       <PrimaryButton className="mx-auto justify-center gap-2">
@@ -108,9 +113,10 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                   )}
                 </div>
               </div>
-              <div className=" w-1/2 px-20">
-                <div className="text-gray-600">Usage</div>
-                <div className="mt-2 bg-gray-100 rounded-md p-4 w-72">
+            <div className="w-full sm:w-5/12">
+              <div className="m-2">
+                <p className="text-gray-600">Usage</p>
+                <div className="mt-2 bg-gray-100 rounded-md p-4">
                   <div className="flex justify-between items-center">
                     <p className="text-zinc-500">Chat credits used</p>
                     <p className="">{project.chatUsed}</p>
@@ -121,6 +127,7 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

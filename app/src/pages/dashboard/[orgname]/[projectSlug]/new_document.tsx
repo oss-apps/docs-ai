@@ -3,16 +3,13 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type OrgUser, type Org, type Project, DocumentType } from "@prisma/client";
+import { type Org, type Project, DocumentType } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
-import { Tab } from '@headlessui/react'
-import classNames from "classnames";
 import { URLDocument } from "~/containers/NewDocument/URLDocument";
 import { useRouter } from 'next/router'
 import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
-import { useState } from "react";
 import { FileDocument } from "~/containers/NewDocument/FileDocument";
 
 
@@ -40,9 +37,10 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
       <main className="h-full">
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full">
+          <div className="w-full m-2">
             <div className="max-w-4xl mx-auto mt-5">
               <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
+
               <p className="mt-10 text-lg text-gray-800">{!docType ? 'Available sources' : null}</p>
               {docType ? (
                 <div className="max-w-2xl mx-auto">
@@ -50,7 +48,7 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
                 </div>
               ) : (
 
-                <div className="flex gap-12 flex-wrap mt-10">
+                  <div className="flex justify-center sm:justify-start gap-6 sm:gap-12  flex-wrap mt-10">
                   <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
                   <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
                   <DocumentSource name="Files" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />

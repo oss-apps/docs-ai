@@ -59,19 +59,21 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full">
-            <div className="p-5 px-10">
-              <div className="flex justify-between">
-                <h2 className="text-lg">Documents</h2>
+            <div className="p-2 sm:p-5">
+              <div className="flex justify-between items-center m-2 ">
+                <h2 className="text-lg text-left">Documents</h2>
                 <div className="flex justify-end gap-4">
                   {project.documentTokens ? (
-                    <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`}>
+                    <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="hidden sm:block">
                       <SecondaryButton className="mx-auto justify-center gap-2">
                         <IconChatHistory className="w-5 h-5" />
                         Talk to your Docs</SecondaryButton>
                     </Link>
                   ) : null}
                 <Link href={`/dashboard/${org.name}/${project.slug}/new_document`}>
-                  <PrimaryButton>+ Add document</PrimaryButton>
+                    <PrimaryButton>+
+                      Add <span className="hidden sm:block"> &nbsp; document </span>
+                    </PrimaryButton>
                 </Link>
                 </div>
               </div>
@@ -84,20 +86,19 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   <div className="border mt-4  rounded-md">
                     <ul>
                       {data?.documents.map((document) => (
-                        <li key={document.id} className="p-5 grid grid-cols-3 gap-20 border-b last:border-none">
-                          <div>
+                        <li key={document.id} className="p-2 flex gap-3 flex-wrap sm:p-5  sm:grid  sm:grid-cols-3 sm:gap-20 border-b last:border-none">
+                          <div className="">
                             <div className="font-semibold">{document.title}</div>
-                            <div className="text-sm text-gray-500 truncate max-w-2xl">
+                            <div className="text-sm text-gray-500 ">
                               {document.documentType === DocumentType.URL ?
                                 <a href={document.src} className="hover:underline underline-offset-1" target="_blank" rel="noreferrer">
-                                  {document.src}
+                                  {document.src.slice(0, 60) + (document.src.length > 60 ? '...' : '')}
                                 </a> :
-                                document.src}
+                                document.src.slice(0, 60) + (document.src.length > 60 ? '...' : '')} 
                             </div>
                           </div>
-                          <div className="flex items-center gap-4">
+                          <div className="flex  items-center gap-4">
                             <Status status={document.indexStatus} />
-
                             {
                               document.indexStatus !== IndexStatus.SUCCESS && document.documentType !== "FILES" ? (
                                 <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
@@ -107,7 +108,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                             }
 
                           </div>
-                          <div className="flex items-center gap-2 justify-end">
+                          <div className="flex items-center gap-2  ml-auto">
                             {document.documentType !== "FILES" ? (
                               <button>
                                 <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
@@ -172,13 +173,13 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                       </p>
                     </div>
 
-                    <div className="mt-4 flex gap-4">
-                      <PrimaryButton onClick={() => onDelete(docToDelete?.id || '')} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
+                    <div className="mt-4 justify-end flex gap-4">
+                      <SecondaryButton className="justify-center border border-red-500 text-red-500" onClick={() => onDelete(docToDelete?.id || '')} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
                         Yes, Delete
-                      </PrimaryButton>
-                      <SecondaryButton className="border border-gray-700" onClick={onClose}>
-                        Cancel
                       </SecondaryButton>
+                      <PrimaryButton className="border border-gray-700" onClick={onClose}>
+                        Cancel
+                      </PrimaryButton>
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>

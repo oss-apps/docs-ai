@@ -76,12 +76,11 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
       <main className="h-full">
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
-
-
-          <div className="w-3/5 max-w-4xl p-4">
+          <section className="flex flex-wrap md:flex-nowrap w-full p-2 sm:p-4">
+            <div className="w-full sm:2/5 md:w-3/5 max-w-4xl">
             <BotSetting project={project} setProject={setProject} />
           </div>
-          <div className="w-2/5 max-w-xl p-4">
+            <div className="w-full sm:3/5 md:w-2/5 max-w-2xl ">
             <div className="mx-auto">
               <ChatBox org={org} project={projectState} embed />
               <div className="flex justify-center gap-4 mt-4">
@@ -95,7 +94,7 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
               </div>
             </div>
           </div>
-
+          </section>
         </div>
         <Transition appear show={isEmbedOpen} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={closeModal}>
