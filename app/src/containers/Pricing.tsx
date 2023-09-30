@@ -40,7 +40,7 @@ const Pricing: React.FC<{
           Our Plans
         </h1>
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
-          If these plans doesn&apos;t suit you or you need custom hosting, Contact <span className="text-zinc-800 font-semibold">hey@docsai.app</span> and we can set it up for you.
+          If these plans doesn&apos;t suit you or you need custom hosting, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a> and we can set it up for you.
         </h2>
         <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
           <div className="border flex  border-zinc-800 rounded-lg  ">

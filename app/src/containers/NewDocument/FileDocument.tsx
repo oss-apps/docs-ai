@@ -159,15 +159,18 @@ export const FileDocument: React.FC<{ org: Org, project: Project, document?: Doc
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
             </svg>
-            <p className="ml-2">
-              Choose files
+            <p className="ml-2 flex gap-1">
+              Choose <span className="hidden sm:block">files </span>
             </p>
           </label>
           <div className="flex items-center px-2 text-ellipsis whitespace-nowrap overflow-hidden">
-            {files.length === 0 ? 'Supported format: .txt, .pdf, .docx' : files.length > 1 ? `${files.length} files selected` : files[0]?.fileName}
+            {files.length === 0 ? 'No files selected' : files.length > 1 ? `${files.length} files selected` : files[0]?.fileName.slice(0, 25)}
           </div>
         </div>
-        <div className="text-zinc-600 mt-2 text-sm">Note: File size limit is 50MB, the size shown below is plain text size and not file size</div>
+        <ul className="text-zinc-600 mt-2 list-inside list-disc text-sm">
+          <li> Supported formats - .txt,  .docx,  .pdf</li>
+          <li className="mb-1"> Note: File size limit is 50MB, the size shown below is plain text size and not file size. </li>
+        </ul>
         {error ? <div className="mt-2 text-red-500">{error}</div> : null}
         {files.length > 0 ? (
           <div className="mt-10">

@@ -27,15 +27,15 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
       <Head>
         <title>Docs AI - Dashboard</title>
       </Head>
-      <main className="h-full p-5">
-        <Nav org={org?.org} />
+      <Nav org={org?.org} />
+      <main className="h-full p-3 sm:p-5">
         <div className="max-w-6xl mx-auto mt-10">
           {org ? (
             <div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
+              <div className="flex justify-between gap-4 flex-col sm:flex-row items-center">
+                <div className="flex gap-4 items-center">
                   <Avatar src={org.org.imageUrl} uid={org.orgId} />
-                  <span className="ml-4 text-3xl">
+                  <span className="text-3xl">
                     {org.org.name}
                   </span>
                 </div>

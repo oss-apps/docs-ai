@@ -1,15 +1,14 @@
 import { type Project, type Org, type Document, type Prisma } from "@prisma/client";
-import { type User } from "next-auth";
 import { z } from "zod";
 import { api } from "~/utils/api";
-import { type FieldValues, type SubmitHandler, useForm, Controller } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import PrimaryButton from "~/components/form/button";
 import { Input, Label } from "~/components/form/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Switch } from "@headlessui/react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { type ParsedUrls, type ParsedDocs } from "~/types";
+import { type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 import { toast } from "react-hot-toast";
 
@@ -96,7 +95,7 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
 
 
     return (
-      <>
+      <div className="sm:p-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Label>URL</Label>
           <Input
@@ -141,12 +140,12 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
             <p className="text-zinc-500 text-lg">Fetched pages</p>
             <div className="max-h-[35vh] border border-gray-400 rounded-md w-full overflow-auto">
               {parsedUrls.map((doc) => (
-                <div key={doc.id} className={`p-2 border-b flex justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.id] ? 'bg-red-50' : ''}`}>
-                  <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-500 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
+                <div key={doc.id} className={`py-2 sm:p-2 border-b flex  justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.id] ? 'bg-red-50' : ''}`}>
+                  <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-500 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
                     {doc.uniqueId}
                   </a>
-                  <div className="flex gap-4 items-center">
-                    <p className="text-zinc-600">
+                  <div className="flex sm:justify-end sm:gap-4 items-center">
+                    <p className="text-zinc-600 hidden sm:block">
                       {(doc.size / 1000).toFixed(1)} KB
                     </p>
                     {skippedUrls[doc.id] ?
@@ -164,16 +163,14 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
                 </div>
               ))}
             </div>
-            <div className="flex justify-end p-2">
+            <div className="flex flex-wrap justify-start sm:justify-between my-1 sm:p-2">
               <div>
-                <div>
-                  <span className="text-zinc-500">Total: </span>
+                <span className="text-zinc-500">Total </span>
                   <span className={`${isQuotaExceeded ? 'text-red-500' : 'text-green-500'}`}>{totalSize / 1000} KB</span>
                 </div>
-                <div>
-                  <span className="text-sm text-zinc-500">Quota left:  </span>
-                  <span className="text-sm">{quota < 0 ? 0 : quota} KB</span>
-                </div>
+              <div className="flex justify-center">
+                <span className=" text-zinc-500">Quota Remaninig &nbsp;  </span>
+                <span className="">{quota < 0 ? 0 : quota} KB</span>
               </div>
             </div>
           </div>
@@ -184,13 +181,13 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
             onClick={onIndex}
             disabled={indexUrlDocument.isLoading || isQuotaExceeded}
             loading={indexUrlDocument.isLoading}
-            className="mx-auto mt-6">
+            className="mx-auto mt-2">
             Create document
           </PrimaryButton>
         ) : null}
         {isQuotaExceeded ? (
           <div className="text-red-400 mt-2 text-center">Quota exceeded</div>
         ) : null}
-      </>
+      </div>
     )
   }

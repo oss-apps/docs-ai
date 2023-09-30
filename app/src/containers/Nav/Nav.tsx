@@ -7,11 +7,11 @@ import { IconLogOut } from "~/components/icons/icons";
 
 const Nav: React.FC<{ org?: Org }> = ({ org }) => {
   return (
-    <nav className="p-5 border-b">
+    <nav className="p-3 sm:p-5 border-b">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <Image src="/images/logo.png" width={30} height={30} alt="logo" className="rounded-lg"></Image>
-          <h2 className="ml-2 text-2xl">DocsAI</h2>
+          <Image src="/images/logo.png" width={30} height={30} alt="logo" className=" rounded-lg"></Image>
+          <h2 className="ml-2 text-2xl hidden sm:block">DocsAI</h2>
         </Link>
         <div className="flex gap-4 items-center">
           {org ? (
@@ -19,7 +19,7 @@ const Nav: React.FC<{ org?: Org }> = ({ org }) => {
               Subscription
             </Link>
           ) : null}
-          <SecondaryButton className="border border-gray-700 justify-center gap-2" onClick={() => void signOut()}>
+          <SecondaryButton className="justify-center gap-2" onClick={() => void signOut()}>
             <IconLogOut /> Log out
           </SecondaryButton>
         </div>

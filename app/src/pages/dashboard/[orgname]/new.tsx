@@ -52,7 +52,7 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
       </Head>
       <Nav />
       <main>
-        <div className="max-w-2xl mx-auto mt-5">
+        <div className="max-w-2xl p-3 sm:p-5 mx-auto mt-5">
           <NavBack href="/dashboard" ></NavBack>
           <p className="flex justify-center gap-3 items-center text-4xl mt-10">
             <IconNewProject className="h-10 w-10" />  New project

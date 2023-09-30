@@ -36,16 +36,14 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
       <Head>
         <title>Docs AI - Dashboard</title>
       </Head>
-      <main className="h-full">
-        <div className="h-full flex">
+      <main className="h-full ">
+        <div className="w-full flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full">
-            <div className="max-w-4xl mx-auto mt-5">
-              <div className="max-w-2xl mx-auto">
+          <div className=" w-full">
+            <div className="max-w-2xl mx-auto p-2">
                 <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
-                <div className="mt-10">
-                  <CreateDocumentForm org={org} project={project} docType={document.documentType} document={document} />
-                </div>
+              <div className="mt-4">
+                <CreateDocumentForm org={org} project={project} docType={document.documentType} document={document} />
               </div>
             </div>
           </div>

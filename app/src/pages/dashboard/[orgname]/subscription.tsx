@@ -1,17 +1,14 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import superjson from "superjson";
 import { api } from "~/utils/api";
-import Image from "next/image";
 import PrimaryButton from "~/components/form/button";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
-import { Plan, Subscription, type Org, type OrgUser } from "@prisma/client";
+import { Subscription, type Org, type OrgUser } from "@prisma/client";
 import Nav from "~/containers/Nav/Nav";
 import { getPrices } from "~/server/stripe";
 import NavBack from "~/components/NavBack";
-import { useState } from "react";
 import { getLimits } from "~/utils/license";
 import Pricing from "~/containers/Pricing";
 
@@ -63,7 +60,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         </Head>
         <div className="h-full">
           <Nav />
-          <main className="max-w-6xl mx-auto pt-10 pb-10">
+          <main className="max-w-6xl mx-auto  px-2 pb-16">
             <NavBack href={`/dashboard/${org.org.name}`} />
             {subscription ? (
               <div className="mt-10">
