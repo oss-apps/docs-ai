@@ -64,6 +64,7 @@ export const orgRouter = createTRPCRouter({
         const session = await stripe.checkout.sessions.create({
           mode: 'subscription',
           customer: org.stripeCustomerId,
+          allow_promotion_codes: true,
           line_items: [
             {
               price: input.price,

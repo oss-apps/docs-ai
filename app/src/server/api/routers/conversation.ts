@@ -201,7 +201,6 @@ const getConvoFilter = (filterObj: convoFilter) => {
     } : {}),
     ...((filterObj?.filter?.rating && filterObj.filter.rating != 'ALL') ? { rating: filterObj.filter.rating as ConvoRating } : {})
   }
-  console.log("🔥 ~ getConvoFilter ~ filter:", filter, new Date())
 
   return filter
 }
@@ -219,7 +218,6 @@ const getMessageFilter = (filter: convoFilter) => {
       }
     })
   }
-  console.log("🔥 ~ getMessageFilter ~ filterObj:", filterr, new Date())
   return filterr
 
 }

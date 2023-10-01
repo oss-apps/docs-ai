@@ -1,8 +1,6 @@
 import { type Org, Plan } from "@prisma/client"
-import Link from "next/link"
 import { useState } from "react"
 import PrimaryButton from "~/components/form/button"
-import { getPrices } from "~/server/stripe";
 import { api } from "~/utils/api";
 
 const Pricing: React.FC<{
@@ -40,8 +38,7 @@ const Pricing: React.FC<{
           Our Plans
         </h1>
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
-          If these plans doesn&apos;t suit you or you need custom hosting, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a> and we can set it up for you.
-        </h2>
+          If these plans doesn&apos;t suit you, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a> so that we can give you a 🎉 discount on <b className="text-zinc-800 ">Basic</b> and <b className="text-zinc-800 ">Professional</b> plans.        </h2>
         <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
           <div className="border flex  border-zinc-800 rounded-lg  ">
           <button
