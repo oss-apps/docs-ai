@@ -3,10 +3,8 @@ import Head from "next/head";
 import { prisma } from "~/server/db";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import { QnA } from "~/containers/QnA/QnA";
 import Avatar from "~/components/Avatar";
 import { ChatBox } from "~/containers/Chat/Chat";
-import { useEffect } from "react";
 
 // Hide chat widget for chat page
 if (typeof window !== "undefined") {
@@ -38,6 +36,18 @@ const QnAPage: NextPage<{ orgJson: string | null, projectJson: string | null }> 
     <>
       <Head>
         <title>{org.name}</title>
+        <meta property="og:title" content={project.botName} />
+        <meta name="description" content={project.description || 'Create AI Support Agents with your docs'} />
+        <meta property="og:image" content="https://docsai.app/images/app.png" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="twitter:title" content={project.botName} />
+        <meta property="og:url" content={`https://docsai.app/chat/${project.id}`}></meta>
+        <meta property="twitter:description" content={project.description || 'Create AI Support Agents with your docs'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:image" content="https://docsai.app/images/app.png" />
+        <meta property="og:type" content="website"></meta>
+        <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <main className="h-full">
         <div className="h-full flex">

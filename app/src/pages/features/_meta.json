@@ -3,9 +3,10 @@
     "title": "Overview"
   },
   "organization": "Organization",
-  "project": "Project",
+  "project": "Dashboard",
   "documents": "Adding documents",
   "talkToYourDocs": "Talk to your docs",
   "botAppearence": "Bot Appearence",
-  "chatHistory": "Chat History"
+  "chatHistory": "Chat History",
+  "projectSettings": "Settings"
 }
