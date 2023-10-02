@@ -169,7 +169,7 @@ export const FileDocument: React.FC<{ org: Org, project: Project, document?: Doc
         </div>
         <ul className="text-zinc-600 mt-2 list-inside list-disc text-sm">
           <li> Supported formats - .txt,  .docx,  .pdf</li>
-          <li className="mb-1"> Note: File size limit is 50MB, the size shown below is plain text size and not file size. </li>
+          <li className="mb-1"> Note: Max File size limit is 50MB, the size shown below is plain text size and not file size. </li>
         </ul>
         {error ? <div className="mt-2 text-red-500">{error}</div> : null}
         {files.length > 0 ? (
@@ -201,8 +201,8 @@ export const FileDocument: React.FC<{ org: Org, project: Project, document?: Doc
                   <span className={`${isQuotaExceeded ? 'text-red-500' : 'text-green-500'}`}>{size / 1000} KB</span>
                 </div>
                 <div>
-                  <span className="text-sm text-zinc-500">Quota left:  </span>
-                  <span className="text-sm">{quota < 0 ? 0 : quota} KB</span>
+                  <span className=" text-zinc-500">Quota left:  </span>
+                  <span className="">{quota < 0 ? 0 : quota} KB</span>
                 </div>
               </div>
             </div>

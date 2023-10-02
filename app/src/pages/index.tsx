@@ -63,7 +63,7 @@ const Home: NextPage = () => {
 
         </section>
         <section className="mx-auto max-w-6xl px-4 lg:px-0">
-          <p className="mt-16 text-center text-2xl font-semibold title-underline">Features</p>
+          <h3 className="mt-16 text-center text-3xl font-semibold">Features</h3>
           <section className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-20 pb-10 px-4">
             <div className="simple-card ">
               <IconCollection />
@@ -135,96 +135,97 @@ const Home: NextPage = () => {
             </div>
 
           </section>
-          <section className="mt-32 px-4 lg:px-0 pb-32">
-            <p className="text-center text-2xl font-semibold">Use cases</p>
-            <div className="w-full mt-20 justify-between border-b pb-20 flex flex-wrap">
-              <div>
-                <p className="font-semibold text-2xl">Customer support agent</p>
-                <div className="flex gap-2 items-start mt-5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className="lg:text-xl text-gray-600">
-                    Answers customer questions
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Read through chats and provide suggestion
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Generate summary for each conversation
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Get customer mood
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Integrate with tools like crisp (coming soon)
-                  </p>
-                </div>
-              </div>
-              <div className="mt-10 lg:mt-0">
-                <Image src="/images/customer-agent.webp" alt="App" width={375} height={800} className="rounded-lg border shadow-xl z-50 relative  mx-auto"></Image>
 
-              </div>
-            </div>
-            <div className="w-full flex mt-32 justify-between border-b pb-20 flex-wrap">
-              <div>
-                <p className="font-semibold text-2xl">HR bot</p>
-                <div className="flex gap-2 items-start mt-5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Answers employee questions
-                  </p>
-                </div>
-                <div className="flex gap-2 items-start mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                  </svg>
-                  <p className=" lg:text-xl text-gray-600">
-                    Ask questions directly from slack
-                  </p>
-                </div>
-              </div>
-              <div className="mt-10 lg:mt-0">
-                <Image src="/images/slack.png" alt="App" width={350} height={800} className="rounded-lg border shadow-xl z-50 relative  mx-auto"></Image>
-              </div>
-            </div>
-
-            <div className="mt-10">
-              <p className="text-2xl text-center font-semibold">Go wild</p>
-              <p className="text-center mt-4 text-xl max-w-lg mx-auto text-gray-600">
-                These are just examples and you can get creative on how to use DocsAI! Possibilities are endless!
-              </p>
-              <Link href="/dashboard">
-                <PrimaryButton className="mt-10 mx-auto">
-                  Create your agent
-                </PrimaryButton>
-              </Link>
+          <h3 className="mt-16 text-center text-3xl font-semibold">Customize your bot</h3>
+          <section className="my-8 rounded-lg  flex justify-center">
+            <div className="flex justify-center flex-col rounded-lg ">
+              <Image src="/images/customize.webp" alt="customize" width={1000} height={800} className="rounded-lg border border-blue-100 relative shadow-2xl"></Image>
+              <small className="text-center text-zinc-600 mt-4">
+                <a href="/features/project" target="_blank"> Discover the key features of your chatbot </a>
+              </small>
             </div>
           </section>
-          <Footer />
+
         </section>
+        <section className=" bg-gradient-to-r from-sky-50 to-indigo-50">
+          <div className="max-w-6xl mx-auto mt-32 px-4 lg:px-0 py-16">
+            <p className="text-center text-2xl font-semibold mb-8">Customer Support Agents</p>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-3  gap-2 md:gap-8">
+              <div className="flex flex-col gap-y-4 md:gap-y-10 md:mt-12 text-base md:text-lg align-bottom">
+                <div className="border shadow-sm items-center p-2  md:p-4 rounded-lg bg-white">
+                  💡  Provides comprehensive answers to user&apos;s questions.
+                </div>
+                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
+                  💯 Collect valuable feedback from your users
+                </div>
+                <div className="border shadow-sm items-center p-2 px-4 rounded-lg  bg-white">
+                  📨 Allow users to easily contact you via email from your chatbot
+                </div>
+              </div>
+
+              <div className="my-4 sm:my-0 flex justify-center flex-col rounded-lg ">
+                <Image src="/images/customer-agent.png" alt="App" width={375} height={800} className="rounded-lg  shadow-sms  mx-auto"></Image>
+                <small className="text-center text-zinc-600">
+                  <a href="/features/project" target="_blank"> Discover the key features of your chatbot </a>
+                </small>
+              </div>
+
+              <div className="flex  sm:self-end flex-col gap-y-4 md:gap-y-10 md:mb-12 text-base md:text-lg">
+                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
+                  📝 Provides you with a high-level overview of each conversation
+                </div>
+                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
+                  💭 Detect user&apos;s sentiment and mood of each conversation
+                </div>
+                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
+                  🤝 Read through chats and provide suggestion
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 lg:px-0">
+          <div className="flex mt-32 justify-between border-b pb-20 flex-wrap">
+            <div>
+              <p className="font-semibold text-2xl">HR bot</p>
+              <div className="flex gap-2 items-start mt-5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
+                  <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                </svg>
+                <p className=" lg:text-xl text-gray-600">
+                  Answers employee questions
+                </p>
+              </div>
+              <div className="flex gap-2 items-start mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-zinc-500 mt-1.5">
+                  <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                </svg>
+                <p className=" lg:text-xl text-gray-600">
+                  Ask questions directly from slack
+                </p>
+              </div>
+            </div>
+            <div className="mt-10 lg:mt-0">
+              <Image src="/images/slack.png" alt="App" width={350} height={800} className="rounded-lg border shadow-xl z-50 relative  mx-auto"></Image>
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <p className="text-2xl text-center font-semibold">Go wild</p>
+            <p className="text-center mt-4 text-xl max-w-lg mx-auto text-gray-600">
+              These are just examples and you can get creative on how to use DocsAI! Possibilities are endless!
+            </p>
+            <Link href="/dashboard">
+              <PrimaryButton className="mt-10 mx-auto">
+                Create your agent
+              </PrimaryButton>
+            </Link>
+          </div>
+        </section>
+
+        <Footer />
+
       </div >
 
     </>
