@@ -300,3 +300,28 @@ export const IconLink: React.FC<IconProps> = ({ className, primaryClassName, sec
     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
   </svg>)
 }
+
+export const IconSlack: React.FC<IconProps> = ({ className }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54" fill="none" className={className ?? 'w-5 h-5'}>
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.8023 0C16.8199 0 14.4023 2.41831 14.4023 5.4016C14.4023 8.38488 16.8199 10.8032 19.8023 10.8032H25.2023V5.4016C25.2023 2.41831 22.7847 0 19.8023 0Z" fill="#44BEDF" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.7999 14.4043H5.39997C2.41759 14.4043 0 16.8226 0 19.8059C0 22.7892 2.41759 25.2075 5.39997 25.2075H19.7999C22.7823 25.2075 25.1999 22.7892 25.1999 19.8059C25.1999 16.8226 22.7823 14.4043 19.7999 14.4043Z" fill="#44BEDF" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M53.9992 19.8059C53.9992 16.8226 51.5816 14.4043 48.5992 14.4043C45.6168 14.4043 43.1992 16.8226 43.1992 19.8059V25.2075H48.5992C51.5816 25.2075 53.9992 22.7892 53.9992 19.8059Z" fill="#2BAC76" />
+      <mask id="mask0_804_13257" style={{ "maskType": "alpha" }} maskUnits="userSpaceOnUse" x="28" y="0" width="12" height="54">
+        <path fillRule="evenodd" clipRule="evenodd" d="M28.8008 0H39.6007V54H28.8008V0Z" fill="white" />
+      </mask>
+      <g mask="url(#mask0_804_13257)">
+        <path fillRule="evenodd" clipRule="evenodd" d="M39.6007 19.8059V5.4016C39.6007 2.41831 37.1831 0 34.2008 0C31.2184 0 28.8008 2.41831 28.8008 5.4016V19.8059C28.8008 22.7891 31.2184 25.2074 34.2008 25.2074C37.1831 25.2074 39.6007 22.7891 39.6007 19.8059Z" fill="#2BAC76" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M34.2008 54.0161C37.1831 54.0161 39.6007 51.5978 39.6007 48.6145C39.6007 45.6312 37.1831 43.2129 34.2008 43.2129H28.8008V48.6145C28.8008 51.5978 31.2184 54.0161 34.2008 54.0161Z" fill="#E2AC37" />
+      </g>
+      <path fillRule="evenodd" clipRule="evenodd" d="M34.2008 39.6118H48.6007C51.5831 39.6118 54.0006 37.1935 54.0006 34.2102C54.0006 31.2269 51.5831 28.8086 48.6007 28.8086H34.2008C31.2184 28.8086 28.8008 31.2269 28.8008 34.2102C28.8008 37.1935 31.2184 39.6118 34.2008 39.6118Z" fill="#E2AC37" />
+      <mask id="mask1_804_13257" style={{ "maskType": "alpha" }} maskUnits="userSpaceOnUse" x="0" y="28" width="26" height="26">
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 28.8086H25.1999V54H0V28.8086Z" fill="white" />
+      </mask>
+      <g mask="url(#mask1_804_13257)">
+        <path fillRule="evenodd" clipRule="evenodd" d="M0 34.2102C0 37.1935 2.41759 39.6118 5.39997 39.6118C8.38235 39.6118 10.7999 37.1935 10.7999 34.2102V28.8086H5.39997C2.41759 28.8086 0 31.2269 0 34.2102Z" fill="#CD2553" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M14.4023 34.2102V48.6144C14.4023 51.5977 16.8199 54.016 19.8023 54.016C22.7847 54.016 25.2023 51.5977 25.2023 48.6144V34.2102C25.2023 31.2266 22.7847 28.8086 19.8023 28.8086C16.8199 28.8086 14.4023 31.2269 14.4023 34.2102Z" fill="#CD2553" />
+      </g>
+    </svg>
+  )
+}

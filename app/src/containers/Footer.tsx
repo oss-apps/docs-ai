@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="mx-auto  max-w-6xl pb-10">
+    <footer className="mx-auto my-10 max-w-6xl pb-10">
       <div className="text-lg text-center text-zinc-500">Contact
         <a className=" text-lg text-blue-500 font-bold" href="mailto:hey@docsai.app"> hey@docsai.app</a>
       </div>
