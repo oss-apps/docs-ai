@@ -162,7 +162,6 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   const onUserIdSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { userId } = data as z.input<typeof userIdSchema>
-
     if (conversation?.id && userId) {
       const prom = updateUserIdAndCustomFields.mutateAsync({ userId, convoId: conversation.id })
       await toast.promise(prom, {
@@ -281,7 +280,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               <Fragment key={i}>
                 {q &&
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                  <button onClick={() => getAnswer(q, userIdValues("root.userId"))} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
+                  <button onClick={() => getAnswer(q, userIdValues("userId"))} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
                   {q}
                 </button>
                 }</Fragment>
