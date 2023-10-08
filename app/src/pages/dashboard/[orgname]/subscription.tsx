@@ -56,12 +56,12 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         <Head>
           <title>Docs AI</title>
           <link rel="icon" href="/images/favicon.ico" />
+          <script src='https://cdn.paritydeals.com/banner.js' async></script>
 
         </Head>
         <div className="h-full">
           <Nav />
           <main className="max-w-6xl mx-auto  px-2 pb-16">
-            <NavBack href={`/dashboard/${org.org.name}`} />
             {subscription ? (
               <div className="mt-10">
                 <p className="text-lg">Your current plan</p>

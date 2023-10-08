@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
-import { IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings } from "~/components/icons/icons"
+import { IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
@@ -74,6 +74,14 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
                 Settings </span>
           </SecondaryButton>
         </Link>
+
+          <Link href={`/dashboard/${org.name}/subscription`} className="w-full">
+            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+              <IconSubscription className="h-5 w-5" />
+              <span className="hidden sm:block">
+                Subscription </span>
+            </SecondaryButton>
+          </Link>
       </div>
     </nav >
 

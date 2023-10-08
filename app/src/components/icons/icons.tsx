@@ -351,3 +351,13 @@ export const IconFastForward: React.FC<IconProps> = ({ className, primaryClassNa
       <path className={secondaryClassName ?? ''} d="M9 5a1 1 0 0 1 1.5-.86l12 7a1 1 0 0 1 0 1.72l-12 7A1 1 0 0 1 9 19V5z" /></svg>
   )
 }
+
+export const IconSubscription: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-5 h-5'}>
+      <circle cx="12" cy="12" r="10" className={primaryClassName ?? 'fill-zinc-400'}></circle>
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M14 10h2a1 1 0 0 1 .81 1.58l-5 7A1 1 0 0 1 10 18v-4H8a1 1 0 0 1-.81-1.58l5-7A1 1 0 0 1 14 6v4z">
+      </path>
+    </svg>
+  )
+}
