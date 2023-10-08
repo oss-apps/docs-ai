@@ -76,7 +76,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
 
           <Link href={`/dashboard/${org.name}/subscription`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center `}>
               <IconSubscription className="h-5 w-5" />
               <span className="hidden sm:block">
                 Subscription </span>
