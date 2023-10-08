@@ -24,7 +24,7 @@ const PricingPage: NextPage<{ props: any }> = ({ props }) => {
         <meta property="twitter:image" content="https://docsai.app/images/og-pricing.png" />
         <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
-        <script src='https://cdn.paritydeals.com/banner.js' async></script>
+        {/* <script src='https://cdn.paritydeals.com/banner.js' async></script> */}
       </Head>
       <HomeNav />
       <main className="mx-auto  max-w-6xl pb-32 px-4 lg:px-0">
