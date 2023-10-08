@@ -7,7 +7,7 @@ type PrimaryButtonProps = React.ComponentPropsWithoutRef<"button"> & { loading?:
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, className, loading, ...rest }) => {
 
   return (
-    <button className={classNames('min-w-[120px] flex justify-center px-4 py-1 bg-black border border-transparent rounded-md shadow-md hover:bg-gray-800 text-white disabled:bg-gray-700 items-center', className)} {...rest}>
+    <button className={classNames('min-w-[120px] flex justify-center px-4 py-1 bg-black border  rounded-md shadow-md hover:bg-gray-800 text-white disabled:bg-gray-700 items-center ', className)} {...rest}>
       {loading ? <Loading /> : children}
     </button>
   )

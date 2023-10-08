@@ -1,49 +1,13 @@
+
+import { Cards, Card } from 'nextra/components'
+
 # Integrations
 
-## Embed Chatbot
-Embed chat bot in your website by adding the below script to your website. You can get the project id from settings page.
+DocsAI currently supports the following integrations and constantly adding more. Let us know in the [Feature Requests](https://docsai.canny.io/featrue-requests) if you're looking for other integrations.
 
-```html
-<script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
-```
-
-
-
-## Slack
-- In order to use the slack integration, go to `Settings` tab and click on `Add to Slack` button.
-- You will be redirected to Slack's authorization page. You can install it to any of your Slack workspaces.
-- Goto any channel and type `@docsAI <your_question_here>` and bot will reply with the answer.
-
-## API
-If you need any custom integration, you can use our chat API. You need the API key for that. You can get the API key from `Settings` tab. If the Key is not generated, click on `Generate` button and copy the key.
-
-**Example**
-```js
-
-fetch('https://docsai.app/api/v1/chat', {
-    method: 'POST',
-    body: JSON.stringify({ projectId: '<project_id>', question: '<your_question>' }),
-    headers: {
-        'Authorization': 'Bearer <api_key>',
-        'Content-Type': 'application/json'
-    }
-})
-```
-
-Parameters:
-| Parameter |  description| Required |
-| --- | --- | --- |
-| projectId | Can be taken from settings page | Yes|
-| question | Question you want to ask | Yes|
-| conversationId | Chat ID to have continuous conversation | No |
-
-Response:
-```json
-{
-    "tokens": 724,
-    "answer": "The answer to your question",
-    "sources": "https://docsai.app/pricing,https://docsai.app/dashboard,https://docsai.app",
-    "limitReached": false,
-    "conversationId": "clgyrh8vm0003u1kix801l4qz"
-}
-```
+ 
+<Cards>
+  <Card  title="Embed in website" href="/docs/guide/built-ins/callout" />
+  <Card  title="API Reference" href="/docs/guide/built-ins/tabs" />
+  <Card  title="Slack Intgeration" href="/docs/guide/built-ins/steps" />
+</Cards>

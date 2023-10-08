@@ -27,6 +27,8 @@ export const projectSchema = z.object({
   initialQuestion: z.string().min(3),
   primaryColor: z.string(),
   supportEmail: z.string().email().optional().nullable().or(z.literal('')).transform((val) => val || null),
+  askUserId: z.string().max(55).optional().nullable().or(z.literal('')).transform((val) => val || null),
+
 })
 
 const projectDefaultValues = {
@@ -83,11 +85,11 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className="w-full sm:3/5 md:w-2/5 max-w-2xl ">
             <div className="mx-auto">
               <ChatBox org={org} project={projectState} embed />
-              <div className="flex justify-center gap-4 mt-4">
-                <PrimaryButton onClick={openModal} className="justify-center gap-2 w-20">
-                  <IconEmbed className="h-4 w-4" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" />
+                <div className="flex justify-center gap-4 mt-4 mb-6">
+                  <SecondaryButton onClick={openModal} className="justify-center gap-2 w-20">
+                    <IconEmbed className="h-4 w-4" />
                   Embed
-                </PrimaryButton>
+                  </SecondaryButton>
                 <SecondaryButton onClick={onShareClick} className="justify-center gap-2 w-20">
                   <IconShare className="h-4 w-4" /> {shareText}
                 </SecondaryButton>
@@ -162,8 +164,8 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
   const updateProject = api.project.updateBotSettings.useMutation()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { defaultQuestion, botName, initialQuestion, primaryColor, supportEmail } = data as z.input<typeof projectSchema>
-    await updateProject.mutateAsync({ initialQuestion, projectId: project.id, defaultQuestion, botName, primaryColor, supportEmail })
+    const { defaultQuestion, botName, initialQuestion, primaryColor, supportEmail, askUserId } = data as z.input<typeof projectSchema>
+    await updateProject.mutateAsync({ initialQuestion, projectId: project.id, defaultQuestion, botName, primaryColor, supportEmail, askUserId })
   };
 
   const onFormChange = () => {
@@ -223,6 +225,17 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
             {...register('supportEmail')}
             type="email"
             error={errors.supportEmail?.message?.toString()}
+          />
+        </div>
+
+        <div className="w-full mt-4">
+          <Label title="Leave blank if not applicable.">Prompt user email</Label>
+          <Input
+            defaultValue={project.askUserId || ''}
+            placeholder="Enter your email address to be notified of updates."
+            {...register('askUserId')}
+            type="text"
+            error={errors.askUserId?.message?.toString()}
           />
         </div>
 

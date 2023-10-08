@@ -1,4 +1,4 @@
-import { type DetailedHTMLProps, forwardRef, type TextareaHTMLAttributes } from "react";
+import { forwardRef } from "react";
 
 type InputProps = Omit<JSX.IntrinsicElements["input"], "name"> & { name?: string, error?: string };
 
@@ -8,7 +8,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(pro
       <input
         {...props}
         ref={ref}
-        className={`w-full p-2 rounded-md border border-gray-300 focus:border-gray-800 outline-none`}
+        className={`w-full p-2 rounded-md border border-gray-300 focus:border-gray-800 outline-none ${props.className ?? ''}`}
       />
       <p className="mt-1 text-sm text-red-400">{props.error ?? ''}</p>
     </>
@@ -33,9 +33,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
 
 export function Label(props: JSX.IntrinsicElements["label"]) {
   return (
-    <label {...props} className={`block text-zinc-500 ml-1 mb-1 ${props?.className || ''}`}>
+    <label {...props} className={`block text-zinc-600 ml-1 mb-1 ${props?.className || ''}`}>
       <span>  {props.children} </span>
-      {props.title ? <p className="font-light text-xs mb-0 text-zinc-400"> {props.title}</p> : null}
+      {props.title ? <p className="font-light text-xs mb-0 text-zinc-500"> {props.title}</p> : null}
     </label>
   );
 }

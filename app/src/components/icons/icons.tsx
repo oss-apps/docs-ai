@@ -234,7 +234,6 @@ export const IconNewProject: React.FC<IconProps> = ({ className, primaryClassNam
 
 
 
-
 export const IconBack: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
@@ -289,14 +288,14 @@ export const IconFeedback: React.FC<IconProps> = ({ className, primaryClassName,
 export const IconEmail: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className={className ?? 'w-6 h-6'}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" className={className ?? 'w-6 h-6'}>
       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
       <polyline points="22,6 12,13 2,6"></polyline></svg>)
 }
 
 export const IconLink: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
 
-  return (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className ?? 'w-5 h-5'}>
+  return (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className ?? 'w-5 h-5'}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
   </svg>)
 }
@@ -323,5 +322,32 @@ export const IconSlack: React.FC<IconProps> = ({ className }) => {
         <path fillRule="evenodd" clipRule="evenodd" d="M14.4023 34.2102V48.6144C14.4023 51.5977 16.8199 54.016 19.8023 54.016C22.7847 54.016 25.2023 51.5977 25.2023 48.6144V34.2102C25.2023 31.2266 22.7847 28.8086 19.8023 28.8086C16.8199 28.8086 14.4023 31.2269 14.4023 34.2102Z" fill="#CD2553" />
       </g>
     </svg>
+  )
+}
+export const IconUserCheck: React.FC<IconProps> = ({ className }) => {
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className ?? 'w-5 h-5'} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="8.5" cy="7" r="4"></circle>
+      <polyline points="17 11 19 13 23 9"></polyline>
+    </svg>
+  )
+}
+
+export const IconCircleCheck: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className ?? 'w-5 h-5'} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" >
+      <path className={primaryClassName ?? ''} d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline className={secondaryClassName ?? ''} points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+  )
+}
+
+export const IconFastForward: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-5 h-5'}>
+      <path className={primaryClassName ?? ''} d="M1 5a1 1 0 0 1 1.5-.86l12 7a1 1 0 0 1 0 1.72l-12 7A1 1 0 0 1 1 19V5z" />
+      <path className={secondaryClassName ?? ''} d="M9 5a1 1 0 0 1 1.5-.86l12 7a1 1 0 0 1 0 1.72l-12 7A1 1 0 0 1 9 19V5z" /></svg>
   )
 }

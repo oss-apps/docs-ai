@@ -81,6 +81,8 @@ export const projectRouter = createTRPCRouter({
       initialQuestion: z.string().min(3),
       primaryColor: z.string().min(4),
       supportEmail: z.string().email().optional().nullable(),
+      askUserId: z.string().optional().nullable(),
+
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -93,7 +95,8 @@ export const projectRouter = createTRPCRouter({
             botName: input.botName,
             initialQuestion: input.initialQuestion,
             primaryColor: input.primaryColor,
-            supportEmail: input.supportEmail
+            supportEmail: input.supportEmail,
+            askUserId: input.askUserId
           }
         })
         return {

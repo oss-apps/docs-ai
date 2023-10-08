@@ -3,7 +3,7 @@ import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 import { prisma } from "~/server/db";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { projectId, question, conversationId } = req.body as { projectId: string, question: string, conversationId: string }
+  const { projectId, question, conversationId, userId } = req.body as { projectId: string, question: string, conversationId: string, userId: string }
 
   const apiKey = req.headers.authorization?.split(' ')[1]
 
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (project.projectToken?.projectApiKey !== apiKey) return res.status(401).send({ message: 'unauthourised request' })
 
-  const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId, undefined, project.defaultPrompt)
+  const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId, undefined, project.defaultPrompt, userId)
 
   return res.status(200).send(result)
 }

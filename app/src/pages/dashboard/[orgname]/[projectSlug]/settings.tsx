@@ -174,7 +174,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                   </div>
                   <div className="mt-10">
                     <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">API Settings
-                      <Link href="/docs/integrations#api" className=" rounded-lg p-1 hover:bg-zinc-100" target="_blank" title="View Documentation">
+                      <Link href="/docs/integrations/integration-api" className=" rounded-lg p-1 hover:bg-zinc-100" target="_blank" title="View Documentation">
                         <IconLink />
                       </Link></div>
                     <div className="flex gap-10">
@@ -204,7 +204,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                                     </svg>
                                   </button>
 
-                                  <Link href="/docs/integrations#api" className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200" target="_blank" title="View Documentation">
+                                  <Link href="/docs/integrations/integration-api" className="border border-zinc-400 rounded-lg p-1 hover:bg-zinc-200" target="_blank" title="View Documentation">
                                     <IconLink />
                                   </Link>
                                 </div>
