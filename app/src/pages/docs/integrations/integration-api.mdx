@@ -1,0 +1,35 @@
+# API Reference
+
+If you need any custom integration, you can use our chat API. You need the API key for that. You can get the API key from `Settings` tab. If the Key is not generated, click on `Generate` button and copy the key.
+
+### Example
+```js copy
+
+fetch('https://docsai.app/api/v1/chat', {
+    method: 'POST',
+    body: JSON.stringify({ projectId: '<project_id>', question: '<your_question>' }),
+    headers: {
+        'Authorization': 'Bearer <api_key>',
+        'Content-Type': 'application/json'
+    }
+})
+```
+
+### Parameters
+| Parameter |  Description| Required |
+| --- | --- | --- |
+| **`projectId`** * | From the settings page under API section | Yes|
+| **`question`** * | Question you want to ask | Yes|
+| **`userId`** | Identify users with email or unique id which can be viewed in chat history  | Optional |
+| **`conversationId`** | Chat ID to have continuous conversation | Optional |
+
+### Response
+```json
+{
+    "tokens": 724,
+    "answer": "The answer to your question",
+    "sources": "https://docsai.app/pricing,https://docsai.app/dashboard,https://docsai.app",
+    "limitReached": false,
+    "conversationId": "clgyrh8vm0003u1kix801l4qz"
+}
+```

@@ -1,0 +1,124 @@
+import { Tabs } from 'nextra/components'
+import { Callout } from 'nextra/components'
+
+
+# Embed Chatbot in your website
+
+## Custom Coded Websites
+
+<Callout type="info">
+  You can get the **`project-id`** from settings page
+</Callout>
+
+<Tabs items={['HTML', 'Angular', 'React', 'NextJs']} >
+  <Tabs.Tab>
+   To embed a chatbot in your website
+
+    - Open your website's **`index.html`** file in a text editor.
+    - Paste the script just before the **`</head>`** tag.
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
+    ```html copy
+    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    ```
+  </Tabs.Tab>
+  
+  <Tabs.Tab>
+   To embed a chatbot in your **Angular** website
+
+    - Open your **`Angular project`** → **`src`** → **`index.html`**.
+    - Paste the script just before the **`</head>`** tag.
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
+    ```html copy
+    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    ```
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+     There are so many ways to embed a chatbot in your **React** website. We're going to use **`react-helmet`** in this sample.
+     ```bash copy
+     npm i react-helmet
+      ```
+
+    When using TypeScript, install type definitions.
+
+      ```bash copy
+      npm i --save-dev @types/react-helmet 
+      ```      
+
+    In your `app.jsx` or `app.tsx` file 
+
+    ``` js copy
+    import { Helmet } from "react-helmet"
+
+    function App() {
+      return (
+        <>
+          <Helmet>
+            <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+          </Helmet>
+        </>
+        )
+    }  
+    ```     
+    React offers a variety of ways to add `<script>` tags to your website. [See alternate methods here.](https://dev.to/collegewap/how-to-add-script-tag-to-reactjsx-2888)
+  </Tabs.Tab>
+
+    <Tabs.Tab>
+   To embed a chatbot in your **Nextjs** website
+
+    - Open your **`NextJs project`** → **`src`** → **`_app.jsx`**.
+    - Paste the script just before the **`</Head>`** tag.
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
+    ```html copy
+    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    ```
+    Learn more about how to use [`<Script>` tags](https://nextjs.org/docs/pages/building-your-application/optimizing/scripts) in nextjs.
+
+  </Tabs.Tab>
+
+</Tabs>
+
+## Wordpress
+
+Using a wordpress plugin we can easily embed a chat bot in your wordpress site. Learn how to add [JS Plugin](https://wordpress.com/go/website-building/how-to-properly-add-javascript-to-wordpress-3-top-methods/).
+In this we're going to use [WPCode](https://wordpress.com/plugins/insert-headers-and-footers) plugin.
+
+- Install and activate the free plugin on your site.
+- Go to Code Snippets → + Add Snippet in your WP Admin.
+- Hover over the option to Add Your Custom Code (New Snippet) and choose Use Snippet.
+- Add a title to help you remember what the snippet does. You’re the only person who will see this.
+-  Set the Code Type equal to JavaScript Snippet.
+- Add the below code for your snippet to the Code Preview. The plugin will automatically add the opening and closing `<script>` tags so you don’t need to include that portion of the JavaScript snippet.
+- The most important options here are the Insertion settings. You can add your snippet sitewide to the header, footer, or body. For important snippets, you should choose the header, though the footer is slightly better from a performance perspective.
+
+For [visual references](https://wordpress.com/go/website-building/how-to-properly-add-javascript-to-wordpress-3-top-methods/)  use docs from official website.
+
+```html copy
+<script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+```
+
+## Integrators
+We support other website builders, such as **Webflow**, **Wix**, and **Squarespace**, which allow you to insert the `<script>` tag.
+
+## Troubleshooting 
+
+**I don't see any chat bot widget in my website**
+
+If you are seeing this error, it means that the `<script>` tag is not loading on your website. Please check the HTML source code to ensure that the tag is correct.
+
+
+**I see blue chatbot widget in my website and it says 404 project not found**
+
+This means the `project-id` is incorrect. Make sure you get the valid `project-id` from your settings.
+
+
+
+
+
+

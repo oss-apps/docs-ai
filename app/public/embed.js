@@ -65,7 +65,7 @@ async function initDocsAI(projectId, primaryColor, url) {
     position: fixed;
     bottom: 90px;
     right: 20px;
-    width: 400px;
+    width: 450px;
     height: 80vh;
     border: none;
     border-radius: 10px;

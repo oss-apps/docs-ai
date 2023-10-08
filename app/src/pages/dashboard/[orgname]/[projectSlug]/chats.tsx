@@ -9,11 +9,11 @@ import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import PrimaryButton, { SecondaryButton, SmallButton } from "~/components/form/button";
-import { LeftChat, PlainChat, RightChat } from "~/containers/Chat/Chat";
+import { PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
-import { Dialog, Transition, Listbox, Switch } from "@headlessui/react";
+import { Dialog, Transition, Switch } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
-import { IconClear } from "~/components/icons/icons";
+import { IconClear, IconUserCheck } from "~/components/icons/icons";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -152,7 +152,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
           <AppNav user={user} org={org} project={project} />
           <div className="w-full h-full">
             {convoData ? (
-              <div className="px-0 h-full flex flex-wrap sm:flex-nowrap flex-row-reverse sm:flex-row ">
+              <div className="px-0 h-full flex flex-wrap sm:flex-nowrap flex-row sm:flex-row ">
                 <div className="w-full sm:w-1/3 border overflow-auto ">
                   <div className="text-gray-600 p-4 border-b flex justify-between">
                     <p>
@@ -176,8 +176,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                           <p className="max-w-full text-left">
                             {conversation.firstMsg.slice(0, 60) + (conversation.firstMsg.length > 50 ? '...' : '')}
                           </p>
-                          <div className="text-sm text-gray-600 mt-2 text-start ">
+                          <div className="text-sm flex justify-between items-baseline text-gray-600 mt-2 ">
                             {conversation.createdAt.toLocaleString()}
+                            <span className={`px-2  font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck /> </span>
                           </div>
                         </div>
                         {/* {convoId} {conversation.id} */}
@@ -191,7 +192,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                   ) : null}
                 </div>
                 {convoData?.pages[0]?.conversations.length ? <div className="w-full border sm:w-2/3 overflow-auto pb-16">
-                  <div className="flex justify-start items-center p-4">
+                  <div className="flex justify-between items-center p-4">
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer
                     </Link>
@@ -232,9 +233,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     isLoading ?
                       <div className="text-center">Loading...</div> :
                       <div className="mt-2">
-                        <div className="flex ml-2 gap-3 items-center">
-                          <Label>View feedback only</Label>
-
+                        <div className="flex mx-4 mb-4 flex-wrap justify-between gap-3 items-center">
+                          <span className={`px-2  font-semibold ${currentChat?.conversation?.userId ? 'block' : 'invisible'}`}>  {currentChat?.conversation?.userId}</span>
+                          <div className="flex gap-3">
                           <Switch
                             className={`${showFeedbackOnly ? 'bg-blue-600' : 'bg-gray-200'
                               } relative inline-flex h-6 w-11 items-center rounded-full`}
@@ -247,6 +248,10 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                                 } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                             />
                           </Switch>
+                            <Label>View feedback only</Label>
+
+                          </div>
+
                         </div>
                         {
                           viewFeedbackOnly(currentChat?.conversation?.messages).map(m => (

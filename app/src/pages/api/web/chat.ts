@@ -4,9 +4,9 @@ import { prisma } from "~/server/db";
 
 
 export default async function handleChat(req: NextApiRequest & { userId?: number }, res: NextApiResponse) {
-  const { projectId, question, conversationId } = req.body as { projectId: string, question: string, conversationId?: string }
+  const { projectId, question, conversationId, userId } = req.body as { projectId: string, question: string, conversationId?: string, userId: string }
 
-  console.log('handleChat', projectId, question, conversationId)
+  console.log('handleChat', projectId, question, conversationId, userId)
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     include: {
@@ -24,7 +24,7 @@ export default async function handleChat(req: NextApiRequest & { userId?: number
   }
 
   try {
-    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback, project.defaultPrompt)
+    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback, project.defaultPrompt, userId)
     if (convo.conversationId) {
       res.write(encoder.encode(`DOCSAI_CONVO_ID:${convo.conversationId}`));
     }

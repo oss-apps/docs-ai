@@ -8,7 +8,6 @@ import { AuthButton } from "~/containers/Nav/AuthButton";
 import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
 import { IconChat, IconCode, IconCollection, IconLockOpen, IconPieChart, IconSearch, IconSettings, IconSlack, IconWebsite, IconWidget } from "~/components/icons/icons";
-import { Disclosure } from '@headlessui/react'
 
 const Home: NextPage = () => {
 
@@ -217,7 +216,7 @@ const Home: NextPage = () => {
 
                   <div className="text-xl  flex justify-center mt-4 text-gray-200 font-semibold mb-1">
                     <Link href="/dashboard">
-                      <PrimaryButton className=" border border-gray-50 mx-auto">
+                      <PrimaryButton className="border border-gray-50">
                         Create your agent
                       </PrimaryButton>
                     </Link>

@@ -10,21 +10,28 @@ import { MarkDown } from "~/components/MarkDown";
 import { getLinkDirectory } from "~/utils/link";
 import { useRouter } from "next/router";
 import { getContrastColor } from "~/utils/color";
-import { IconEmail, IconSend, IconThumb } from "~/components/icons/icons";
+import { IconEmail, IconFastForward, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
+import { Input } from "~/components/form/input";
 
 
 const qnaSchema = z.object({
   question: z.string().min(3),
 })
 
-const getStreamAnswer = async (projectId: string, question: string, convoId: string, onMessage: (token: string) => void, onEnd: (convoId: string, isError: boolean) => void) => {
+const userIdSchema = z.object({
+  userId: z.string().max(60).nullable().or(z.literal('')).transform((val) => val || null),
+})
+
+const getStreamAnswer = async (projectId: string, question: string, convoId: string, userId: string | null, onMessage: (token: string) => void, onEnd: (convoId: string, isError: boolean) => void) => {
   const res = await fetch('/api/web/chat', {
     method: 'POST',
     body: JSON.stringify({
       projectId: projectId,
       question: question,
-      conversationId: convoId
+      conversationId: convoId,
+      userId: userId
+
     }),
     headers: {
       'Content-Type': 'application/json'
@@ -66,7 +73,7 @@ const getStreamAnswer = async (projectId: string, question: string, convoId: str
   }
 }
 
-export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean, embed?: boolean }> = ({ org, project, isPublic, embed }) => {
+export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean, embed?: boolean }> = ({ org, project, embed = false }) => {
   const router = useRouter();
   const primaryColor = router.query.primaryColor as string || project.primaryColor || '#000000';
   const backgroundColor = primaryColor.toString() || '#000000'
@@ -80,23 +87,30 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   const chatBox = useRef<HTMLDivElement>(null);
   const updatefeedback = api.docGPT.updateMessageFeedback.useMutation()
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({ resolver: zodResolver(qnaSchema) });
+  const updateUserIdAndCustomFields = api.docGPT.updateUserIdAndCustomFields.useMutation()
+
+  const { register, handleSubmit, formState: { errors }, resetField } = useForm({ resolver: zodResolver(qnaSchema) });
+  const { register: userIdReg, getValues: userIdValues, handleSubmit: userIdSubmit, formState: { errors: userIdErrors }, resetField: userIdResetField } = useForm({ resolver: zodResolver(userIdSchema) });
+
 
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
   const { client } = api.useContext()
 
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const { question } = data as any as z.input<typeof qnaSchema>
-    await getAnswer(question)
+    const { question } = data as z.input<typeof qnaSchema>
+    const { userId } = userIdValues() as z.input<typeof userIdSchema>
+
+    await getAnswer(question, userId)
   };
 
-  const getAnswer = async (question: string) => {
+
+  const getAnswer = async (question: string, userId: string | null) => {
     setLatestQuestion(question)
     try {
-      reset()
+      resetField('question')
       setThinking(true)
-      await getStreamAnswer(project.id, question, conversation?.id ?? 'new', (token) => {
+      await getStreamAnswer(project.id, question, conversation?.id ?? 'new', userId, (token) => {
         setAnswer(token)
         setThinking(false)
       }, async (convoId, error) => {
@@ -144,6 +158,19 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
       error: 'Something went wrong!',
     }, { position: embed ? 'top-center' : 'bottom-center' })
 
+  }
+
+  const onUserIdSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const { userId } = data as z.input<typeof userIdSchema>
+
+    if (conversation?.id && userId) {
+      const prom = updateUserIdAndCustomFields.mutateAsync({ userId, convoId: conversation.id })
+      await toast.promise(prom, {
+        loading: 'Loading ... ',
+        success: 'We will get back to you soon.',
+        error: 'Something went wrong!',
+      }, { position: embed ? 'top-center' : 'bottom-center' })
+    }
   }
 
   useEffect(() => {
@@ -217,9 +244,28 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback }} />
           ))}
 
+
+          {!project?.askUserId ? null :
+            <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
+              <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-lg rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
+                <Input type='email'
+                  className=" border-none"
+                  placeholder={project.askUserId}
+                  {...userIdReg('userId')}
+                  error={userIdErrors.userId?.message?.toString()} />
+                <button className="mr-2" type="submit">
+                  <IconFastForward className="w-5 h-5 hover:cursor-pointer" secondaryClassName={`fill-[var(--chat-primary-color)]`}
+                    primaryClassName={`fill-[var(--chat-secondary-color)]`} />
+                </button>
+
+              </form>
+            </div>
+          }
           {latestQuestion ? (
             <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
           ) : null}
+
+
 
           {answer ? (
             <LeftChat key={answer} sentence={answer} />
@@ -233,7 +279,9 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           <div className="pt-2 flex gap-3 lg:px-0 px-2 flex-wrap shrink-0 lg:border-0 border-b border-b-gray-200 pb-2">
             {project.defaultQuestion.split(',').map((q, i) => (
               <Fragment key={i}>
-                {q && <button onClick={() => getAnswer(q)} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
+                {q &&
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                  <button onClick={() => getAnswer(q, userIdValues("root.userId"))} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
                   {q}
                 </button>
                 }</Fragment>

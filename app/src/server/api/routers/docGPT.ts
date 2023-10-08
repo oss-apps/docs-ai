@@ -1,6 +1,5 @@
 import { type Conversation, ConvoRating } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { type CallbackManager } from "langchain/dist/callbacks";
 import { z } from "zod";
 
 import {
@@ -22,7 +21,7 @@ export const docGPTRouter = createTRPCRouter({
       const result = await docgpt.getChat(input.orgId, input.projectId, input.question, [], project?.botName || '', project?.defaultPrompt);
 
       const convo = input.saveConvo ?
-        await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources) : null
+        await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, null, input.convoId, result.sources) : null
 
       return {
         ...result,
@@ -47,7 +46,7 @@ export const docGPTRouter = createTRPCRouter({
       }
       const chatHistory = input.convoId ? await getHistoryForConvo(input.convoId) : []
       const result = await docgpt.getChat(input.orgId, input.projectId, input.question, chatHistory, project.botName, project.defaultPrompt)
-      const convo = await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, input.convoId, result.sources)
+      const convo = await createOrUpdateNewConversation(input.orgId, input.projectId, input.question, result.answer, result.tokens, result.limitReached, null, input.convoId, result.sources)
       return {
         conversation: convo,
       };
@@ -64,16 +63,28 @@ export const docGPTRouter = createTRPCRouter({
         }
       })
       return feedbackRes.feedback
+    }),
+  updateUserIdAndCustomFields: publicProcedure
+    .input(z.object({ userId: z.string(), convoId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const convo = await ctx.prisma.conversation.update({
+        where: {
+          id: input.convoId
+        },
+        data: {
+          userId: input.userId
+        }
+      })
     })
 
 });
 
-export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback, prompt = DEFAULT_PROMPT) => {
+export const getAnswerFromProject = async (orgId: string, projectId: string, question: string, botName: string, convoId?: string, cb?: ChatCallback, prompt = DEFAULT_PROMPT, userId: string | null = null) => {
   const chatHistory = convoId ? await getHistoryForConvo(convoId) : []
 
   const result = await docgpt.getChat(orgId, projectId, question, chatHistory, botName, prompt, cb)
 
-  const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, convoId, result.sources)
+  const convo = await createOrUpdateNewConversation(orgId, projectId, question, result.answer, result.tokens, result.limitReached, userId, convoId, result.sources)
 
   return {
     ...result,
@@ -81,7 +92,7 @@ export const getAnswerFromProject = async (orgId: string, projectId: string, que
   };
 }
 
-export const createOrUpdateNewConversation = async (orgId: string, projectId: string, question: string, answer: string, tokens: number, limitReached: boolean, convoId?: string, sources?: string) => {
+export const createOrUpdateNewConversation = async (orgId: string, projectId: string, question: string, answer: string, tokens: number, limitReached: boolean, userId: string | null, convoId?: string, sources?: string) => {
   let conversation: Conversation;
   const now = new Date();
   const currentDateISO = now.toISOString();
@@ -106,6 +117,7 @@ export const createOrUpdateNewConversation = async (orgId: string, projectId: st
     conversation = await prisma.conversation.update({
       where: { id: convoId },
       data: {
+        userId: userId,
         tokensUsed: {
           increment: tokens
         }
@@ -133,7 +145,8 @@ export const createOrUpdateNewConversation = async (orgId: string, projectId: st
             sources,
             createdAt: nextDateIso
           }]
-        }
+        },
+        userId: userId
       },
       include: {
         messages: true,
