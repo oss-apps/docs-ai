@@ -85,6 +85,10 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   const [latestQuestion, setLatestQuestion] = useState<string | null>(null)
   const [answer, setAnswer] = useState<string | null>(null)
 
+  // Once submitted hide the askUserId Input
+  const [showAskUserId, setShowAskUserId] = useState(true)
+
+
   const chatBox = useRef<HTMLDivElement>(null);
   const updatefeedback = api.docGPT.updateMessageFeedback.useMutation()
   const updateUserIdAndCustomFields = api.docGPT.updateUserIdAndCustomFields.useMutation()
@@ -107,6 +111,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   const getAnswer = async (question: string, userId: string | null) => {
     setLatestQuestion(question)
+    if (userId) setShowAskUserId(false)
     try {
       resetField('question')
       setThinking(true)
@@ -162,6 +167,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   const onUserIdSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { userId } = data as z.input<typeof userIdSchema>
+
     if (conversation?.id && userId) {
       const prom = updateUserIdAndCustomFields.mutateAsync({ userId, convoId: conversation.id })
       await toast.promise(prom, {
@@ -169,6 +175,13 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         success: 'We will get back to you soon.',
         error: 'Something went wrong!',
       }, { position: embed ? 'top-center' : 'bottom-center' })
+      setShowAskUserId(false)
+
+    }
+
+    if (!conversation?.id && userId) {
+      setShowAskUserId(false)
+      toast.success('We will get back to you soon.', { position: embed ? 'top-center' : 'bottom-center' })
     }
   }
 
@@ -244,21 +257,20 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           ))}
 
 
-          {!project?.askUserId ? null :
-            <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
-              <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-lg rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
-                <Input type='email'
-                  className=" border-none"
-                  placeholder={project.askUserId}
-                  {...userIdReg('userId')}
-                  error={userIdErrors.userId?.message?.toString()} />
-                <button className="mr-2" type="submit">
-                  <IconFastForward className="w-5 h-5 hover:cursor-pointer" secondaryClassName={`fill-[var(--chat-primary-color)]`}
-                    primaryClassName={`fill-[var(--chat-secondary-color)]`} />
-                </button>
+          {(project?.askUserId && showAskUserId) ? <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
+            <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-xl rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
+              <Input type='email'
+                className=" border-none focus:bg-transparent"
+                placeholder={project.askUserId}
+                {...userIdReg('userId')}
+                error={userIdErrors.userId?.message?.toString()} />
+              <button className="mr-2" type="submit">
+                <IconFastForward className="w-5 h-5 hover:cursor-pointer" secondaryClassName={`fill-[var(--chat-primary-color)]`}
+                  primaryClassName={`fill-[var(--chat-secondary-color)]`} />
+              </button>
 
-              </form>
-            </div>
+            </form>
+          </div> : null             
           }
           {latestQuestion ? (
             <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
