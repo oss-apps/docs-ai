@@ -258,7 +258,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
 
           {(project?.askUserId && showAskUserId) ? <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
-            <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-xl rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
+            <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-lg rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
               <Input type='email'
                 className=" border-none focus:bg-transparent"
                 placeholder={project.askUserId}
