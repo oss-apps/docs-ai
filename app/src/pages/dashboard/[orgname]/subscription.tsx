@@ -56,7 +56,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         <Head>
           <title>Docs AI</title>
           <link rel="icon" href="/images/favicon.ico" />
-          {/* <script src='https://cdn.paritydeals.com/banner.js' async></script> */}
+          <script src='https://cdn.paritydeals.com/banner.js' async></script>
 
         </Head>
         <div className="h-full">
