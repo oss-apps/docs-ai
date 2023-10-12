@@ -8,7 +8,6 @@ import { prisma } from "~/server/db";
 import { Subscription, type Org, type OrgUser } from "@prisma/client";
 import Nav from "~/containers/Nav/Nav";
 import { getPrices } from "~/server/stripe";
-import NavBack from "~/components/NavBack";
 import { getLimits } from "~/utils/license";
 import Pricing from "~/containers/Pricing";
 
@@ -56,7 +55,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         <Head>
           <title>Docs AI</title>
           <link rel="icon" href="/images/favicon.ico" />
-          {/* <script src='https://cdn.paritydeals.com/banner.js' async></script> */}
+          <script src='https://cdn.paritydeals.com/banner.js' async></script>
 
         </Head>
         <div className="h-full">

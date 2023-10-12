@@ -32,13 +32,14 @@ const Pricing: React.FC<{
 
 
   return (
-    <div className="mt-5">
+    <div className="mt-5" >
       <div className="sm:flex sm:flex-col sm:align-center">
         <h1 className="text-2xl font-semibold text-center sm:text-2xl">
           Our Plans
         </h1>
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
-          If these plans doesn&apos;t suit you, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a> so that we can give you a 🎉 discount on <b className="text-zinc-800 ">Basic</b> and <b className="text-zinc-800 ">Professional</b> plans.        </h2>
+          If these plans doesn&apos;t suit you, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a>.
+        </h2>
         <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
           <div className="border flex  border-zinc-800 rounded-lg  ">
           <button
@@ -87,7 +88,7 @@ const Pricing: React.FC<{
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
-                  <p >25 Messages/Month</p>
+                  <p >30 Messages/Month</p>
                 </div>
               </div>
               <p className="mt-8">

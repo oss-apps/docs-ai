@@ -226,7 +226,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         }
       </style>
       <div className="h-full bg-white ">
-        <div ref={chatBox} id="docs-ai-chat-box " className="h-[83vh] lg:h-[70vh]  lg:max-h-[45rem] no-scrollbar overflow-auto border border-gray-200 rounded-lg text-sm lg:text-base leading-tight ">
+        <div ref={chatBox} id="docs-ai-chat-box " className="h-[83vh] lg:h-[70vh]  lg:max-h-[45rem] no-scrollbar overflow-auto sm:border  rounded-lg text-sm lg:text-base leading-tight ">
           {embed ? (
             <div className=" p-2.5 items-center flex justify-between text-lg  sticky top-0 z-10  bg-white" style={{ backgroundColor: backgroundColor, color: textColor }}>
               <p>
