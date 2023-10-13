@@ -142,7 +142,7 @@ model Project {
     slackInstalation SlackInstallation?
     projectToken     ProjectToken?
     supportEmail     String?
-    askUserId        String?            @default("Enter your email address to be notified of updates.")
+    askUserId        String?            
 
     @@unique([orgId, slug])
 }

@@ -110,6 +110,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
 
   const getAnswer = async (question: string, userId: string | null) => {
+    // when answering don't take another questions
+    if (answer) return
     setLatestQuestion(question)
     if (userId) setShowAskUserId(false)
     try {
