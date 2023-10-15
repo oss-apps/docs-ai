@@ -8,6 +8,9 @@ function toggleChat() {
     if (chatIframe.style.display === "block") {
       chatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" style="margin-top: 4px;" viewBox="0 0 24 24" height="25" width="25" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" /></svg>';
     } else {
+      console.log("🤖 Sending to docsai ", window.DOCS_AI)
+      chatIframe.contentWindow.postMessage({ userDetails: window.DOCS_AI, source: "docsai" }, "*")
+      // when opening the window pass the userId values , handle the null values in docsai
       chatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="25" width="25" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>';
     }
     chatIframe.style.display =
@@ -106,13 +109,13 @@ async function initDocsAI(projectId, primaryColor, url) {
     const _primaryColor =
       (primaryColor === '#000000' || primaryColor === '#000' || !primaryColor) ? projectData?.primaryColor : primaryColor;
 
-    console.log(projectData, _primaryColor)
     root.appendChild(getChatChatButton(_primaryColor, projectData?.textColor));
-    root.appendChild(createChatIframe(projectId, { primaryColor: _primaryColor }));
-    console.log('docsai chat loaded 1')
+    const chatIframe = createChatIframe(projectId, { primaryColor: _primaryColor })
+    root.appendChild(chatIframe);
+    console.log('🤖 Docsai chat loaded')
 
     if (document.body) {
-      console.log('docsai chat loaded 2')
+      console.log('🤖 Docsai chat body loaded ')
       document.body.appendChild(root);
       const style = document.createElement('style');
       style.innerText = DOCS_AI_STYLE;
@@ -138,7 +141,7 @@ async function initDocsAI(projectId, primaryColor, url) {
 }
 
 (function () {
-  console.log('docsai chat loaded')
+  console.log("🤖 Intializing your chat bot")
   const projectId = document.currentScript.getAttribute('project-id');
   const primaryColor = document.currentScript.getAttribute('primary-color');
   const docsAiUrl = document.currentScript.getAttribute('docs-url') || 'https://docsai.app';
@@ -163,7 +166,6 @@ async function getRequest(url, endpoint, queryParams) {
 
     const response = await fetch(`${DOCS_AI_URL}/api/${endpoint}?${new URLSearchParams(queryParams)}`)
     const data = await response.json()
-    console.log("🔥 ~ getRequest ~ data:", data)
     return data
   }
   catch (err) {

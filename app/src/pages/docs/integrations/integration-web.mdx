@@ -1,5 +1,7 @@
 import { Tabs } from 'nextra/components'
 import { Callout } from 'nextra/components'
+import { Steps } from 'nextra/components'
+
 
 
 # Embed Chatbot in your website
@@ -11,33 +13,122 @@ import { Callout } from 'nextra/components'
 </Callout>
 
 <Tabs items={['HTML', 'Angular', 'React', 'NextJs']} >
+
   <Tabs.Tab>
-   To embed a chatbot in your website
+  <Steps>
+  ### Embed a chatbot in your website 
 
     - Open your website's **`index.html`** file in a text editor.
     - Paste the script just before the **`</head>`** tag.
-    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
-    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
-
+    
     ```html copy
     <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
     ```
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
+
+
+  ### Identify users (Optional)  
+
+
+  <Callout type="warning">
+    The values should be set whenever the page loads and before user clicks the chat bot icon.
+  </Callout>
+  
+  ```html copy
+  <script>
+    window.DOCS_AI = {
+      userId: "u_id_1234xyt81qlgs", 
+      // userId can also be email or your system identifier
+      additionalFields: {
+        userEmail: "hey@docsai.app",
+        name: "Shrihari",
+        companyId: "c_id_124xyt6yqlgs"
+      }
+  }
+  </script>
+  ```
+
+- Set the **`DOCS_AI`** object to the **`window`** so that it is accessible to the chatbot whenever the user clicks the chatbot icon. 
+- `DOCS_AI` object can only have 2 fields `userId` and `additionalFields`.
+- The script is customizable and can be adapted to your specific needs.
+
+
+</Steps>
   </Tabs.Tab>
   
   <Tabs.Tab>
+  <Steps>
+  ### Embed a chatbot in your website 
    To embed a chatbot in your **Angular** website
 
     - Open your **`Angular project`** → **`src`** → **`index.html`**.
     - Paste the script just before the **`</head>`** tag.
-    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
-    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
 
     ```html copy
     <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
     ```
+
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
+  ### Identify users (Optional) 
+
+  <Callout type="warning">
+  The values should be set whenever the page loads and before user clicks the chat bot icon.
+  </Callout>
+
+
+  ```ts 
+  import { Component, OnInit } from '@angular/core';
+
+  type TDOCS_AI = {
+    userId: string,
+    additionalFields: { [key: string]: unknown; } | undefined 
+  }
+
+  export interface CustomWindow extends Window {
+    DOCS_AI: TDOCS_AI;
+  }
+
+  declare let window: CustomWindow;
+
+  @Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
+  })
+
+  export class AppComponent implements OnInit {
+
+    constructor() { }
+
+    ngOnInit() {
+      window.DOCS_AI = {
+        userId: "u_id_1234xyt81qlgs",
+        // userId can also be email or your system identifier
+        additionalFields: {
+          userEmail: "hey@docsai.app",
+          name: "Shrihari",
+          companyId: "c_id_124xyt6yqlgs"
+        }
+      }
+    }
+  }
+  ```
+  - Set the **`DOCS_AI`** object to the **`window`** so that it is accessible to the chatbot whenever the user clicks the chatbot icon. 
+  - `DOCS_AI` object can only have 2 fields `userId` and `additionalFields`.
+  - The script is customizable and can be adapted to your specific needs.
+  - There are several methods to set values in window object [see here](https://stackoverflow.com/q/12709074/8514864)
+
+  </Steps>
+
   </Tabs.Tab>
 
   <Tabs.Tab>
+    <Steps>
+    ### Embed a chatbot in your website
      There are so many ways to embed a chatbot in your **React** website. We're going to use **`react-helmet`** in this sample.
      ```bash copy
      npm i react-helmet
@@ -58,31 +149,137 @@ import { Callout } from 'nextra/components'
       return (
         <>
           <Helmet>
-            <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+            <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+            </script>
           </Helmet>
         </>
         )
     }  
     ```     
     React offers a variety of ways to add `<script>` tags to your website. [See alternate methods here.](https://dev.to/collegewap/how-to-add-script-tag-to-reactjsx-2888)
+
+    ### Identify users (Optional)
+    <Callout type="warning">
+      The values should be set whenever the page loads and before user clicks the chat bot icon.
+    </Callout>
+
+    ```js copy
+    import { useEffect } from 'react';
+
+    declare global {
+      interface Window {
+        DOCS_AI: TDOCS_AI;
+      }
+    }
+
+    type TDOCS_AI = {
+      userId: string,
+      additionalFields: { [key: string]: unknown; } | undefined
+    }
+
+    function App() {
+
+    useEffect(() => {
+      window.DOCS_AI = {
+        userId: "u_id_1234xyt81qlgs",
+        // userId can also be email or your system identifier
+        additionalFields: {
+          userEmail: "hey@docsai.app",
+          name: "Shrihari",
+          companyId: "c_id_124xyt6yqlgs"
+        }
+      }
+    }, [])
+
+    return (
+      <>
+        <Helmet>
+          <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+          </script>
+        </Helmet>
+      </>
+      )
+    }
+  ```
+  - Set the **`DOCS_AI`** object to the **`window`** so that it is accessible to the chatbot whenever the user clicks the chatbot icon. 
+  - `DOCS_AI` object can only have 2 fields `userId` and `additionalFields`.
+  - The script is customizable and can be adapted to your specific needs.
+
+  </Steps>
   </Tabs.Tab>
 
-    <Tabs.Tab>
-   To embed a chatbot in your **Nextjs** website
+  <Tabs.Tab>
+  <Steps>
+    ### Embed a chatbot in your website
+      To embed a chatbot in your **Nextjs** website
 
     - Open your **`NextJs project`** → **`src`** → **`_app.jsx`**.
     - Paste the script just before the **`</Head>`** tag.
-    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
-    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
 
     ```html copy
     <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
     ```
+
+    - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+    - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
+
     Learn more about how to use [`<Script>` tags](https://nextjs.org/docs/pages/building-your-application/optimizing/scripts) in nextjs.
 
-  </Tabs.Tab>
+    ### Identify users (Optional)
+    <Callout type="warning">
+      The values should be set whenever the page loads and before user clicks the chat bot icon.
+    </Callout>
+
+    ```js copy
+    import { useEffect } from 'react';
+    import Head from "next/head";
+
+    declare global {
+      interface Window {
+        DOCS_AI: TDOCS_AI;
+      }
+    }
+
+    type TDOCS_AI = {
+      userId: string,
+      additionalFields: { [key: string]: unknown; } | undefined
+    }
+
+    function App() {
+
+     useEffect(() => {
+      window.DOCS_AI = {
+        userId: "u_id_1234xyt81qlgs",
+        // userId can also be email or your system identifier
+        additionalFields: {
+          userEmail: "hey@docsai.app",
+          name: "Shrihari",
+          companyId: "c_id_124xyt6yqlgs"
+        }
+      }
+    }, [])
+
+    return ( 
+      <Head> 
+        <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+        </script>
+      </Head> 
+    )
+    }
+  ```
+  - Set the **`DOCS_AI`** object to the **`window`** so that it is accessible to the chatbot whenever the user clicks the chatbot icon. 
+  - `DOCS_AI` object can only have 2 fields `userId` and `additionalFields`.
+  - The script is customizable and can be adapted to your specific needs.
+
+</Steps>
+
+</Tabs.Tab>
 
 </Tabs>
+
+<Callout >
+  If you are having problems with chatbot, please see the **[troubleshooting guide](#troubleshooting)**.
+</Callout>
 
 ## Wordpress
 
@@ -108,14 +305,67 @@ We support other website builders, such as **Webflow**, **Wix**, and **Squarespa
 
 ## Troubleshooting 
 
-**I don't see any chat bot widget in my website**
+**The chatbot widget is not visible on your website.**
 
-If you are seeing this error, it means that the `<script>` tag is not loading on your website. Please check the HTML source code to ensure that the tag is correct.
+If you are seeing this , it means that the `<script>` tag is not loading on your website. Please check the HTML source code to ensure that the tag is correct.
 
-
-**I see blue chatbot widget in my website and it says 404 project not found**
+**The chatbot widget is loading, but the project it is trying to connect to is not found.**
 
 This means the `project-id` is incorrect. Make sure you get the valid `project-id` from your settings.
+
+
+**Identifying users not working , there is no users in the chat history**
+
+To identify the problem, you can inspect the browser log. To do this, open the developer tools in your browser and navigate to the console tab. 
+Once the chatbot icon appears, you should see three logs in the console window.
+
+```
+🤖 Intializing your chat bot
+🤖 Docsai chat loaded
+🤖 Docsai chat body loaded 
+```
+
+After clicking on the chat icon, you should see an additional log appear in the console window.
+
+This log should contain all of the data that you are trying to send to DocsAI.
+If the log does not contain any values, then the **`DOCS_AI`** object in the window object is not set properly.
+
+```
+🤖 Sending to docsai  
+
+{
+    "userId": "u_id_1234xyt81qlgs",
+    "additionalFields": {
+        "userEmail": "hey@docsai.app",
+        "name": "Shrihari",
+        "companyId": "c_id_124xyt6yqlgs"
+    }
+}
+```
+
+Make sure the data is received at the chat also. You can verify this by changing the top console window to `chat-iframe` .
+
+![troubleshoot](/docs/troubleshoot-1.webp)
+
+```
+🤖 Received identification 
+{
+    "userDetails": {
+        "userId": "u_id_1234xyt81qlgs",
+        "additionalFields": {
+            "userEmail": "hey@docsai.app",
+            "name": "Shrihari",
+            "companyId": "c_id_124xyt6yqlgs"
+        }
+    },
+    "source": "docsai"
+}
+```
+
+This `🤖 Sending to docsai ` and `🤖 Received identification`  log should apperar whenever the chat bot opens.
+
+If all this is happening to you and you still not see users in your chat history contact hey@docsai.app
+
 
 
 

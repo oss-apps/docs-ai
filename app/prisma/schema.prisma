@@ -222,7 +222,7 @@ model Conversation {
     tokensUsed Int         @default(0)
     project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
     userId     String?
-    customFields Json?
+    additionalFields  Json?
 
     @@index([projectId , createdAt(sort: Desc), rating])
 

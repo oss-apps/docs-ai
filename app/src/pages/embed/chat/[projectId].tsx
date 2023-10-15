@@ -3,10 +3,8 @@ import Head from "next/head";
 import { prisma } from "~/server/db";
 import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import { QnA } from "~/containers/QnA/QnA";
 import Avatar from "~/components/Avatar";
 import { ChatBox } from "~/containers/Chat/Chat";
-import { useEffect } from "react";
 
 // Hide chat widget for chat page
 if (typeof window !== "undefined") {

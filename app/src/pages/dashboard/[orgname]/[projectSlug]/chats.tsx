@@ -13,13 +13,14 @@ import { PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
 import { Dialog, Transition, Switch } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
-import { IconClear, IconUserCheck } from "~/components/icons/icons";
+import { IconClear, IconIdentification, IconUserCheck } from "~/components/icons/icons";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Label, Select } from "~/components/form/input";
 import { toast } from "react-hot-toast";
 import { NoChat } from "./download_chat";
+import { MarkDown } from "~/components/MarkDown";
 
 export type downloadFilter = { from: string, to: string, rating: string }
 const filterSchema = z.object({
@@ -55,6 +56,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   const [showClearConvo, setShowClearConvo] = React.useState(false)
   const [showDownloadFilter, setShowDownloadFilter] = React.useState(false)
   const [showFeedbackOnly, setToggleFeedback] = React.useState(false)
+  const [showAddtionalDetails, setshowAddtionalDetails] = React.useState(false)
 
 
   const org: Org = superjson.parse(orgJson)
@@ -170,7 +172,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   </div>
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
-                    <button className="w-full" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
+                    <button className="w-full select-text" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
                       <div className={"p-4 border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
                         <div className="w-full" title={conversation.firstMsg}>
                           <p className="max-w-full text-left">
@@ -181,7 +183,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                             <span className={`px-2  font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck /> </span>
                           </div>
                         </div>
-                        {/* {convoId} {conversation.id} */}
+                        {/* <span>   {conversation.id} </span> */}
                       </div>
                     </button>
                   )))}
@@ -234,7 +236,59 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                       <div className="text-center">Loading...</div> :
                       <div className="mt-2">
                         <div className="flex mx-4 mb-4 flex-wrap justify-between gap-3 items-center">
-                          <span className={`px-2  font-semibold ${currentChat?.conversation?.userId ? 'block' : 'invisible'}`}>  {currentChat?.conversation?.userId}</span>
+                          <div className="flex gap-1">
+                            <span className={`px-2  font-semibold ${currentChat?.conversation?.userId ? 'block' : 'invisible'}`}>
+                              {currentChat?.conversation?.userId}
+                            </span>
+                            {currentChat?.conversation?.additionalFields &&
+                              <button className="hover:bg-slate-100 border rounded-md px-2" onClick={() => setshowAddtionalDetails(true)}>
+                                <IconIdentification />
+                              </button>}
+                          </div>
+                          <Transition appear show={showAddtionalDetails} as={Fragment} >
+                            <Dialog as="div" className="relative z-10" onClose={() => closeDialog("clear")} static={true}>
+                              <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0"
+                                enterTo="opacity-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100"
+                                leaveTo="opacity-0"
+                              >
+                                <div className="fixed inset-0 bg-black bg-opacity-25" />
+                              </Transition.Child>
+                              <div className="fixed inset-0 overflow-y-auto">
+                                <div className="flex min-h-full items-center justify-center p-4 text-center">
+                                  <Transition.Child
+                                    as={Fragment}
+                                    enter="ease-out duration-300"
+                                    enterFrom="opacity-0 scale-95"
+                                    enterTo="opacity-100 scale-100"
+                                    leave="ease-in duration-200"
+                                    leaveFrom="opacity-100 scale-100"
+                                    leaveTo="opacity-0 scale-95"
+                                  >
+                                    <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                      <Dialog.Title
+                                        as="h3"
+                                        className="text-lg font-medium mb-4 leading-6 text-gray-900"
+                                      >
+                                        <span> {currentChat?.conversation?.userId} - </span>    Additional Details
+                                      </Dialog.Title>
+                                      <MarkDown markdown={`${JSON.stringify(currentChat?.conversation?.additionalFields, null, 4)}`} />
+                                      <div className="mt-4 flex flex-row-reverse gap-4">
+                                        <SecondaryButton className="justify-center border border-gray-700" onClick={() => setshowAddtionalDetails(false)}>
+                                          Okay
+                                        </SecondaryButton>
+
+                                      </div>
+                                    </Dialog.Panel>
+                                  </Transition.Child>
+                                </div>
+                              </div>
+                            </Dialog>
+                          </Transition>
                           <div className="flex gap-3">
                           <Switch
                             className={`${showFeedbackOnly ? 'bg-blue-600' : 'bg-gray-200'
@@ -268,7 +322,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
           </div>
         </div>
 
-        <Transition appear show={showClearConvo} as={Fragment}>
+        <Transition appear show={showClearConvo} as={Fragment} >
           <Dialog as="div" className="relative z-10" onClose={() => closeDialog("clear")} static={true}>
             <Transition.Child
               as={Fragment}

@@ -2,11 +2,14 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 import { prisma } from "~/server/db";
 
+export type AdditionalFields = { [key: string]: unknown; } | undefined;
+export type HandleChat = { projectId: string, question: string, conversationId?: string, userId: string, additionalFields: AdditionalFields }
 
 export default async function handleChat(req: NextApiRequest & { userId?: number }, res: NextApiResponse) {
-  const { projectId, question, conversationId, userId } = req.body as { projectId: string, question: string, conversationId?: string, userId: string }
+  const { projectId, question, conversationId, userId, additionalFields } = req.body as HandleChat
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 
-  console.log('handleChat', projectId, question, conversationId, userId)
+  console.log('Incoming Question', projectId, question, conversationId, userId, additionalFields)
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     include: {
@@ -24,7 +27,7 @@ export default async function handleChat(req: NextApiRequest & { userId?: number
   }
 
   try {
-    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback, project.defaultPrompt, userId)
+    const convo = await getAnswerFromProject(project.orgId, project.id, question, project.botName, conversationId === 'new' ? undefined : conversationId, callback, project.defaultPrompt, userId, additionalFields)
     if (convo.conversationId) {
       res.write(encoder.encode(`DOCSAI_CONVO_ID:${convo.conversationId}`));
     }
