@@ -1,14 +1,16 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { getAnswerFromProject } from "~/server/api/routers/docGPT";
 import { prisma } from "~/server/db";
+import { type HandleChat } from "../web/chat";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { projectId, question, conversationId, userId } = req.body as { projectId: string, question: string, conversationId: string, userId: string }
 
-  const apiKey = req.headers.authorization?.split(' ')[1]
+  try {
 
+    const { projectId, question, conversationId, userId, additionalFields } = req.body as HandleChat
 
-  if (!apiKey) return res.status(401).send({ message: 'unauthourised request' })
+    const apiKey = req.headers.authorization?.split(' ')[1]
+    if (!apiKey) return res.status(401).send({ message: 'unauthourised request' })
 
   const project = await prisma.project.findUnique({
     where: { id: projectId },
@@ -21,7 +23,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (project.projectToken?.projectApiKey !== apiKey) return res.status(401).send({ message: 'unauthourised request' })
 
-  const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId, undefined, project.defaultPrompt, userId)
+    const result = await getAnswerFromProject(project.orgId, projectId, question, project.botName, conversationId, undefined, project.defaultPrompt, userId, additionalFields)
 
   return res.status(200).send(result)
+  }
+  catch (err: any) {
+    return res.status(400).send({
+      message: "Something happened! Please check your data validity or contact help"
+    })
+
+  }
 }

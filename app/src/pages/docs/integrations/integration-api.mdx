@@ -1,8 +1,26 @@
+import { Callout } from 'nextra/components'
+
+
 # API Reference
 
 If you need any custom integration, you can use our chat API. You need the API key for that. You can get the API key from `Settings` tab. If the Key is not generated, click on `Generate` button and copy the key.
 
+<Callout type="warning">
+Do not expose your **`API`** keys and **`tokens`** in the frontend. Instead, use a backend service to proxy your API calls. This will help to protect your credentials from attackers.
+</Callout>
+
+### Parameters
+| Parameter | Type |  Description | Required |
+| --- | --- | --- | -- |
+| **`projectId`** * | **string** | From the settings page under API section | Yes|
+| **`question`** * | **string** | Question you want to ask | Yes|
+| **`conversationId`** | **string** | Chat ID to have continuous conversation | Optional |
+| **`userId`** | **string** | Identify users with email or unique id which can be viewed in chat history  | Optional |
+| **`additionalDetails`** | **json** | Add custom fields like email , name and other ids you would like to see in the chat history | Optional
+
+
 ### Example
+
 ```js copy
 
 fetch('https://docsai.app/api/v1/chat', {
@@ -15,15 +33,8 @@ fetch('https://docsai.app/api/v1/chat', {
 })
 ```
 
-### Parameters
-| Parameter |  Description| Required |
-| --- | --- | --- |
-| **`projectId`** * | From the settings page under API section | Yes|
-| **`question`** * | Question you want to ask | Yes|
-| **`userId`** | Identify users with email or unique id which can be viewed in chat history  | Optional |
-| **`conversationId`** | Chat ID to have continuous conversation | Optional |
 
-### Response
+### Sucess response
 ```json
 {
     "tokens": 724,
@@ -33,3 +44,24 @@ fetch('https://docsai.app/api/v1/chat', {
     "conversationId": "clgyrh8vm0003u1kix801l4qz"
 }
 ```
+
+### Error response
+
+If your `projectId` is not valid
+```json
+{ "message": "project not found" }
+```
+
+If `Bearer` token is not valid 
+```json
+{ "message": "unauthourised request" }
+```
+
+The request `body` data is not in the expected format or there was an error on our servers. If you think there is something wrong with the servers
+please contact us hey@docsai.app
+
+```json 
+{ "message": "Something happened! Please check your data validity or contact help" }
+```
+
+

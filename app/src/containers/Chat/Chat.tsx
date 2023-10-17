@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Conversation, type Messages, type Org, type Project } from "@prisma/client";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -23,14 +25,15 @@ const userIdSchema = z.object({
   userId: z.string().max(60).nullable().or(z.literal('')).transform((val) => val || null),
 })
 
-const getStreamAnswer = async (projectId: string, question: string, convoId: string, userId: string | null, onMessage: (token: string) => void, onEnd: (convoId: string, isError: boolean) => void) => {
+const getStreamAnswer = async (projectId: string, question: string, convoId: string, userId: string | null, additionalFields: any, onMessage: (token: string) => void, onEnd: (convoId: string, isError: boolean) => void) => {
   const res = await fetch('/api/web/chat', {
     method: 'POST',
     body: JSON.stringify({
       projectId: projectId,
       question: question,
       conversationId: convoId,
-      userId: userId
+      userId,
+      additionalFields
 
     }),
     headers: {
@@ -87,6 +90,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   // Once submitted hide the askUserId Input
   const [showAskUserId, setShowAskUserId] = useState(true)
+  const [additionalFields, setAdditionalFields] = useState<any>()
+
 
 
   const chatBox = useRef<HTMLDivElement>(null);
@@ -94,30 +99,63 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
   const updateUserIdAndCustomFields = api.docGPT.updateUserIdAndCustomFields.useMutation()
 
   const { register, handleSubmit, formState: { errors }, resetField } = useForm({ resolver: zodResolver(qnaSchema) });
-  const { register: userIdReg, getValues: userIdValues, handleSubmit: userIdSubmit, formState: { errors: userIdErrors }, resetField: userIdResetField } = useForm({ resolver: zodResolver(userIdSchema) });
+  const { register: userIdReg, getValues: userIdValues, handleSubmit: userIdSubmit, formState: { errors: userIdErrors }, resetField: userIdResetField, setValue: setUserId } = useForm({ resolver: zodResolver(userIdSchema) });
 
 
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
   const { client } = api.useContext()
 
+  useEffect(() => {
+    const myDiv = chatBox.current;
+    if (myDiv) {
+      myDiv.scrollTop = myDiv.scrollHeight;
+    }
+
+    const windowEventListener = (ev: MessageEvent) => {
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      if (ev.data?.source == 'docsai') {
+        const userDetails = ev.data.userDetails
+        if (userDetails?.userId) {
+          setUserId('userId', ev.data.userDetails.userId)
+          setShowAskUserId(false)
+        }
+
+        if (userDetails?.additionalFields) {
+          setAdditionalFields(userDetails.additionalFields)
+        }
+        console.log("🤖 Received identification", ev.data)
+
+      }
+      // Do something with the message event
+    };
+    window.addEventListener('message', windowEventListener);
+
+    return () => {
+      window.removeEventListener('message', windowEventListener);
+    };
+  }, [latestQuestion, conversation, answer])
+
+
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { question } = data as z.input<typeof qnaSchema>
-    const { userId } = userIdValues() as z.input<typeof userIdSchema>
 
-    await getAnswer(question, userId)
+    await getAnswer(question)
   };
 
 
-  const getAnswer = async (question: string, userId: string | null) => {
+  const getAnswer = async (question: string) => {
     // when answering don't take another questions
+    const { userId } = userIdValues() as z.input<typeof userIdSchema>
+
     if (answer) return
     setLatestQuestion(question)
     if (userId) setShowAskUserId(false)
     try {
       resetField('question')
       setThinking(true)
-      await getStreamAnswer(project.id, question, conversation?.id ?? 'new', userId, (token) => {
+      await getStreamAnswer(project.id, question, conversation?.id ?? 'new', userId, additionalFields, (token) => {
         setAnswer(token)
         setThinking(false)
       }, async (convoId, error) => {
@@ -136,12 +174,6 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
     }
   }
 
-  useEffect(() => {
-    const myDiv = chatBox.current;
-    if (myDiv) {
-      myDiv.scrollTop = myDiv.scrollHeight;
-    }
-  }, [latestQuestion, conversation, answer])
 
   const onClose = () => {
     if (window.parent) {
@@ -259,7 +291,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           ))}
 
 
-          {(project?.askUserId && showAskUserId) ? <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
+          {(project?.askUserId && showAskUserId) ?
+            <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
             <form onSubmit={userIdSubmit(onUserIdSubmit)} className={`flex items-center outline-none border-2 rounded-lg rounded-bl-none `} style={{ borderColor: project.primaryColor + '80' }} >
               <Input type='email'
                 className=" border-none focus:bg-transparent"
@@ -272,7 +305,8 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               </button>
 
             </form>
-          </div> : null             
+            </div>
+            : null             
           }
           {latestQuestion ? (
             <RightChat key={latestQuestion} backgroundColor={backgroundColor} color={textColor} sentence={latestQuestion} />
@@ -294,7 +328,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
               <Fragment key={i}>
                 {q &&
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                  <button onClick={() => getAnswer(q, userIdValues("userId"))} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
+                  <button onClick={() => getAnswer(q)} key={q} disabled={thinking || Boolean(answer)} className="text-xs text-gray-600 bg-gray-100 rounded-md py-0.5 px-1 border border-gray-300">
                   {q}
                 </button>
                 }</Fragment>
