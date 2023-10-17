@@ -21,6 +21,7 @@ import { Input, Label, Select } from "~/components/form/input";
 import { toast } from "react-hot-toast";
 import { NoChat } from "./download_chat";
 import { MarkDown } from "~/components/MarkDown";
+import Avatar from "~/components/Avatar";
 
 export type downloadFilter = { from: string, to: string, rating: string }
 const filterSchema = z.object({
@@ -275,8 +276,8 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                                         className="text-lg font-medium mb-4 leading-6 text-gray-900"
                                       >
                                         <span> {currentChat?.conversation?.userId} - </span>    Additional Details
-                                      </Dialog.Title>
-                                      <MarkDown markdown={`${JSON.stringify(currentChat?.conversation?.additionalFields, null, 4)}`} />
+                                      </Dialog.Title>                       
+                                      <MarkDown markdown={'```json \n' + JSON.stringify(currentChat?.conversation?.additionalFields, null, 1) + '\n```'} />
                                       <div className="mt-4 flex flex-row-reverse gap-4">
                                         <SecondaryButton className="justify-center border border-gray-700" onClick={() => setshowAddtionalDetails(false)}>
                                           Okay

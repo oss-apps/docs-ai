@@ -33,7 +33,7 @@ import { Steps } from 'nextra/components'
 
 
   <Callout type="warning">
-    The values should be set whenever the page loads and before user clicks the chat bot icon.
+    The values should be set in the `window` object whenever the page loads.
   </Callout>
   
   ```html copy
@@ -76,7 +76,7 @@ import { Steps } from 'nextra/components'
   ### Identify users (Optional) 
 
   <Callout type="warning">
-  The values should be set whenever the page loads and before user clicks the chat bot icon.
+  The values should be set in the `window` object whenever the page loads.
   </Callout>
 
 
@@ -160,12 +160,13 @@ import { Steps } from 'nextra/components'
 
     ### Identify users (Optional)
     <Callout type="warning">
-      The values should be set whenever the page loads and before user clicks the chat bot icon.
+      The values should be set in the `window` object whenever the page loads.
     </Callout>
 
     ```js copy
     import { useEffect } from 'react';
 
+    // Types are not neccessary if using javascript
     declare global {
       interface Window {
         DOCS_AI: TDOCS_AI;
@@ -227,13 +228,14 @@ import { Steps } from 'nextra/components'
 
     ### Identify users (Optional)
     <Callout type="warning">
-      The values should be set whenever the page loads and before user clicks the chat bot icon.
+      The values should be set in the `window` object whenever the page loads
     </Callout>
 
     ```js copy
     import { useEffect } from 'react';
     import Head from "next/head";
 
+    // Types are not neccessary if using javascript
     declare global {
       interface Window {
         DOCS_AI: TDOCS_AI;
