@@ -371,3 +371,11 @@ export const IconIdentification: React.FC<IconProps> = ({ className, primaryClas
     </svg>
   )
 }
+
+export const IconTick: React.FC = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  )
+}

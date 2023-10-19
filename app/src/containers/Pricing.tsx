@@ -1,6 +1,7 @@
 import { type Org, Plan } from "@prisma/client"
 import { useState } from "react"
 import PrimaryButton from "~/components/form/button"
+import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
 
 const Pricing: React.FC<{
@@ -40,7 +41,7 @@ const Pricing: React.FC<{
         <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
           If these plans doesn&apos;t suit you, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a>.
         </h2>
-        <div className="relative self-center mt-6  p-0.5 flex flex-col sm:mt-8 ">
+        <div className="relative self-center p-0.5 flex flex-col mt-4 ">
           <div className="border flex  border-zinc-800 rounded-lg  ">
           <button
             onClick={() => setBillingInterval('month')}
@@ -61,46 +62,10 @@ const Pricing: React.FC<{
             Yearly
           </button>
           </div>
-          <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">2 months</span> on yearly plans. </p>
-
         </div>
-        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
-          <div className="bg-white rounded-md border">
-            <div className="p-6">
-              <h2 className="text-2xl leading-6 font-semibold">
-                Free
-              </h2>
-              <p className="mt-2 text-zinc-500">You are just trying out</p>
-              <div className="mt-5 h-60">
-                <div className="flex items-start gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p>1 Project</p>
-                </div>
-                <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p>2 MB storage</p>
-                </div>
-                <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p >30 Messages/Month</p>
-                </div>
-              </div>
-              <p className="mt-8">
-                <span className="text-5xl font-extrabold white">
-                  $0
-                </span>
-                <span className="text-base font-medium">
-                  /{billingInterval}
-                </span>
-              </p>
-            </div>
-          </div>
+        <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans. </p>
+
+        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
           <div className="bg-white rounded-md border">
             <div className="p-6">
               <h2 className="text-2xl leading-6 font-semibold">
@@ -109,22 +74,20 @@ const Pricing: React.FC<{
               <p className="mt-2 text-zinc-500">You have a small website</p>
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p>2 Projects</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p>5 MB storage</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >1000 Messages/Month</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p >API Integration</p>
                 </div>
               </div>
               <p className="mt-8">
@@ -152,34 +115,28 @@ const Pricing: React.FC<{
               <p className="mt-2 text-zinc-500">Best suited for startups</p>
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p>5 Projects</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >25 MB storage</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >5000 Messages/Month</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p >Generate summary and mood for conversation</p>
+                  <IconTick />
+                  <p >API Integration</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >Unlimited search after credits</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p >Generate summary and mood for conversation</p>
                 </div>
               </div>
               <p className="mt-8">
@@ -208,34 +165,28 @@ const Pricing: React.FC<{
               <p className="mt-2 text-zinc-500">Best suited for big companies</p>
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p>Unlimited Projects</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >100 MB storage</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >12000 Messages/Month</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p >Generate summary and mood for conversation</p>
+                  <IconTick />
+                  <p >API Integration</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                  <IconTick />
                   <p >Unlimited search after credits</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p >Generate summary and mood for conversation</p>
                 </div>
               </div>
               <p className="mt-8">
@@ -256,6 +207,8 @@ const Pricing: React.FC<{
             </div>
           </div>
         </div>
+        <h1 className="text-center text-lg my-4"> Try out our <b> free plan </b> with 1 project, 2 MB storage, and 30 messages/month.</h1>
+        <hr></hr>
       </div>
     </div>
   )

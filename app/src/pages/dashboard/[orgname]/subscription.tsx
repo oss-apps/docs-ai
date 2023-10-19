@@ -2,7 +2,7 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
 import superjson from "superjson";
 import { api } from "~/utils/api";
-import PrimaryButton from "~/components/form/button";
+import PrimaryButton, { SecondaryButton } from "~/components/form/button";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 import { Subscription, type Org, type OrgUser } from "@prisma/client";
@@ -62,22 +62,31 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
           <Nav />
           <main className="max-w-6xl mx-auto  px-2 pb-16">
             {subscription ? (
-              <div className="mt-10">
-                <p className="text-lg">Your current plan</p>
-                <p className="mt-5 font-semibold">{org.org.plan}
-                  <span className="ml-2 font-normal">${subscription.amount / 100}/{getRecurring(subscription.priceId, prices)}</span>
-                </p>
-                <PrimaryButton onClick={onManageClick} className="mt-4" loading={createManageSession.isLoading} disabled={createManageSession.isLoading}>
-                  Manage
-                </PrimaryButton>
-                <div className="mt-20">
-                  <p className="text-lg">Usage</p>
-                  <p className="mt-4">Message credits left: {org.org.chatCredits}</p>
-                  <p className="mt-4">Documents: {(Number(org.org.documentTokens) / 1e6).toFixed(2)} MB / {getLimits(org.org.plan)?.documentSize / 1e6}</p>
+              <>
+                <div className="mt-10 grid sm:grid-cols-2 md:grid-cols-4 cols-1 sm:gap-6 gap-3 ">
+                  <div className="shadow-md rounded-lg border p-4">
+                    <p className="text-sm  my-1"> <span>  {org.org.plan}</span> </p>
+                    <span className="font-semibold text-slate-900 text-3xl my-2">${subscription.amount / 100}/{getRecurring(subscription.priceId, prices)}</span>
+                    <div className="mt-4 flex justify-center">
+                      <SecondaryButton onClick={onManageClick} className="justify-center" loading={createManageSession.isLoading} disabled={createManageSession.isLoading}>
+                        Manage
+                      </SecondaryButton>
+                    </div>
+                  </div>
+                  <div className="shadow-md rounded-lg border p-4">
+                    <p className="text-sm my-1">Usage</p>
+                    <p className="mt-4">Message credits left <span className="font-semibold"> {org.org.chatCredits} </span></p>
+                    <p className="mt-4">Documents <span className="font-semibold"> {(Number(org.org.documentTokens) / 1e6).toFixed(2)} MB / {getLimits(org.org.plan)?.documentSize / 1e6} </span></p>
+                  </div>
                 </div>
-              </div>
+                <hr className="my-3 sm:my-6"></hr>
+                <Pricing org={org.org} prices={planToPrices} />
+              </>
+
             ) : (
-              <Pricing org={org.org} prices={planToPrices} />
+                <>                 
+                  <Pricing org={org.org} prices={planToPrices} />
+                </>
             )}
           </main>
         </div>

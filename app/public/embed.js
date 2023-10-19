@@ -51,14 +51,19 @@ async function initDocsAI(projectId, primaryColor, url) {
     text-align: center;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     border: none;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: 0.3s;
   }
-  
+
+  #chat-button:hover {
+    transform : scale(1.1);
+ }
+
   #mobile-chat-close {
     display: none;
   }

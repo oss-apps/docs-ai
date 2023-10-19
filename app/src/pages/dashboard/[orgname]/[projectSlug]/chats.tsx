@@ -21,7 +21,6 @@ import { Input, Label, Select } from "~/components/form/input";
 import { toast } from "react-hot-toast";
 import { NoChat } from "./download_chat";
 import { MarkDown } from "~/components/MarkDown";
-import Avatar from "~/components/Avatar";
 
 export type downloadFilter = { from: string, to: string, rating: string }
 const filterSchema = z.object({
@@ -174,7 +173,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                   </div>
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
                     <button className="w-full select-text" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
-                      <div className={"p-4 border-b w-full " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
+                      <div className={"p-4 border-b w-full hover:bg-gray-50 " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
                         <div className="w-full" title={conversation.firstMsg}>
                           <p className="max-w-full text-left">
                             {conversation.firstMsg.slice(0, 60) + (conversation.firstMsg.length > 50 ? '...' : '')}
