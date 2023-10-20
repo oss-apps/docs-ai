@@ -60,7 +60,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
         </Head>
         <div className="h-full">
           <Nav />
-          <main className="max-w-6xl mx-auto  px-2 pb-16">
+          <main className="max-w-6xl mx-auto  px-2">
             {subscription ? (
               <>
                 <div className="mt-10 grid sm:grid-cols-2 md:grid-cols-4 cols-1 sm:gap-6 gap-3 ">

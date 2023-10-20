@@ -26,7 +26,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
         <div className="mt-10 flex flex-col gap-y-2.5">
         <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full">
-          <SecondaryButton className={`border-0 w-full flex  gap-2 text-left shadow-none focus:bg-gray-100 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 w-full flex  gap-2 text-left shadow-none focus:bg-gray-100 items-center hover:font-semibold ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconDashboard className="h-5 w-5" />
               <span className="hidden sm:block">
               Dashboard
@@ -35,14 +35,14 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
 
         <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center hover:font-semibold ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconBot className="h-5 w-5" />
               <span className="hidden sm:block">
                 Your bot </span>
           </SecondaryButton>
         </Link>
         <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  hover:font-semibold ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconPaintBrush className="h-5 w-5" />
               <span className="hidden sm:block">
                 Bot Appearance </span>
@@ -54,21 +54,21 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </SecondaryButton>
         </Link> */}
           <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center hover:font-semibold ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconFolderOpen className="h-5 w-5" />
               <span className="hidden sm:block">
                 Documents </span>
           </SecondaryButton>
         </Link>
           <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center hover:font-semibold ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconHistory className="h-5 w-5" />
               <span className="hidden sm:block">
                 Chat history </span>
           </SecondaryButton>
         </Link>
           <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center hover:font-semibold  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconSettings className="h-5 w-5" />
               <span className="hidden sm:block">
                 Settings </span>
@@ -76,7 +76,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
         </Link>
 
           <Link href={`/dashboard/${org.name}/subscription`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center `}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center hover:font-semibold `}>
               <IconSubscription className="h-5 w-5" />
               <span className="hidden sm:block">
                 Subscription </span>

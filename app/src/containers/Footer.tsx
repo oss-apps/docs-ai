@@ -2,11 +2,11 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="mx-auto my-10 max-w-6xl pb-10">
-      <div className="text-lg text-center text-zinc-500">Contact
-        <a className=" text-lg text-blue-500 font-bold" href="mailto:hey@docsai.app"> hey@docsai.app</a>
+    <footer className="mx-auto my-10 max-w-6xl pb-6">
+      <div className="text-lg text-center text-zinc-500">
+        <a className=" text-lg text-zinc-900 font-bold" href="mailto:hey@docsai.app"> hey@docsai.app</a>
       </div>
-      <div className="mt-4 flex gap-2 mx-auto justify-center items-center">
+      <div className="mt-2 flex gap-2 mx-auto justify-center items-center">
         <Link href="/terms" className="text-zinc-500 hover:underline underline-offset-2">
           Terms
         </Link>
@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
           Docs
         </Link>
       </div>
-      <p className="mt-4 text-center text-zinc-500">Made by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
+      <p className="mt-2 text-center text-zinc-500">Made by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
     </footer>
   );
 };

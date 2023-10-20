@@ -3,7 +3,7 @@ import { useState } from "react"
 import PrimaryButton from "~/components/form/button"
 import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
-
+import Footer from "./Footer";
 const Pricing: React.FC<{
   org?: Org,
   prices?: {
@@ -35,14 +35,12 @@ const Pricing: React.FC<{
   return (
     <div className="mt-5" >
       <div className="sm:flex sm:flex-col sm:align-center">
-        <h1 className="text-2xl font-semibold text-center sm:text-2xl">
-          Our Plans
+        <h1 className="text-3xl sm:text-6xl font-semibold  text-center">
+          Pricing
         </h1>
-        <h2 className="mx-auto max-w-2xl text-center text-lg text-zinc-600">
-          If these plans doesn&apos;t suit you, Contact <a className="text-zinc-800 font-semibold" href="mailto:hey@docsai.app">hey@docsai.app</a>.
-        </h2>
-        <div className="relative self-center p-0.5 flex flex-col mt-4 ">
-          <div className="border flex  border-zinc-800 rounded-lg  ">
+        {/* <p className="text-base text-zinc-700 text-center my-2"> No hidden fees, no surprises</p> */}
+        <div className="relative self-center p-0.5 flex flex-col mt-4  ">
+          <div className="border flex  border-zinc-800 rounded-lg shadow-lg ">
           <button
             onClick={() => setBillingInterval('month')}
             className={`${billingInterval === 'month'
@@ -50,7 +48,7 @@ const Pricing: React.FC<{
               : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-700'
               } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:z-10 sm:w-auto sm:px-8`}
           >
-            Monthly
+              <span className="hover:scale-105">  Monthly </span>
           </button>
           <button
             onClick={() => setBillingInterval('year')}
@@ -65,13 +63,54 @@ const Pricing: React.FC<{
         </div>
         <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans. </p>
 
-        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
-          <div className="bg-white rounded-md border">
+        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+          <div
+
+            className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 hover:scale-105">
             <div className="p-6">
-              <h2 className="text-2xl leading-6 font-semibold">
+              <h2 className="text-3xl leading-6 font-semibold">
+                Free
+              </h2>
+              <p className="mt-2 text-zinc-500">You are just trying out</p>
+              <hr className="my-2"></hr>
+              <div className="mt-5 h-60">
+                <div className="flex items-start gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <p>1 Project</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <p>2 MB storage</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <p >30 Messages/Month</p>
+                </div>
+              </div>
+              <p className="mt-8">
+                <span className="text-5xl font-extrabold white">
+                  $0
+                </span>
+                <span className="text-base font-medium">
+                  /{billingInterval}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div className="bg-white rounded-md border-2 hover:border-gray-400 hover:shadow-gray-400 hover:shadow-2xl duration-500 hover:scale-105">
+            <div className="p-6">
+              <h2 className="text-3xl leading-6 font-semibold">
                 Basic
               </h2>
               <p className="mt-2 text-zinc-500">You have a small website</p>
+              <hr className="my-2"></hr>
+
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
                   <IconTick />
@@ -107,12 +146,14 @@ const Pricing: React.FC<{
               </PrimaryButton>
             </div>
           </div>
-          <div className=" rounded-md border-4 border-black ">
+          <div className=" rounded-md border-2 border-gray-600  hover:border-gray-600  hover:shadow-slate-600 hover:shadow-2xl duration-500 hover:scale-105">
             <div className="p-6">
-              <h2 className="text-2xl leading-6 font-semibold">
+              <h2 className="text-3xl leading-6 font-semibold">
                 Professional
               </h2>
-              <p className="mt-2 text-zinc-500">Best suited for startups</p>
+              <p className="mt-2 text-zinc-500">You have startups</p>
+              <hr className="my-2"></hr>
+
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
                   <IconTick />
@@ -157,12 +198,14 @@ const Pricing: React.FC<{
             </div>
 
           </div>
-          <div className="bg-white rounded-md border">
+          <div className="bg-white rounded-md border-2 hover:border-gray-800 hover:shadow-gray-800  hover:shadow-2xl duration-500 hover:scale-105">
             <div className="p-6">
-              <h2 className="text-2xl leading-6 font-semibold align-middle">
+              <h2 className="text-3xl leading-6 font-semibold align-middle">
                 Enterprise
               </h2>
-              <p className="mt-2 text-zinc-500">Best suited for big companies</p>
+              <p className="mt-2 text-zinc-500">You have big companies</p>
+              <hr className="my-2"></hr>
+
               <div className="mt-5 h-60">
                 <div className="flex items-start gap-2">
                   <IconTick />
@@ -207,9 +250,8 @@ const Pricing: React.FC<{
             </div>
           </div>
         </div>
-        <h1 className="text-center text-lg my-4"> Try out our <b> free plan </b> with 1 project, 2 MB storage, and 30 messages/month.</h1>
-        <hr></hr>
       </div>
+      <Footer />
     </div>
   )
 }
