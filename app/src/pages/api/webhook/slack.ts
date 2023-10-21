@@ -39,6 +39,7 @@ const getInstallation = async (teamId: string) => {
 }
 
 const handleEvent = async (event: any) => {
+  console.log("slack ~ event", event)
 	if (event.type === 'app_mention') {
 		const installation = await getInstallation(event.team)
 		if (installation) {
