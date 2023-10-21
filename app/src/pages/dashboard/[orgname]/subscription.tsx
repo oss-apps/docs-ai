@@ -80,7 +80,7 @@ const Subscription: NextPage<{ orgJson: string, subscriptionJson: string, prices
                   </div>
                 </div>
                 <hr className="my-3 sm:my-6"></hr>
-                <Pricing org={org.org} prices={planToPrices} />
+                <Pricing org={org.org} prices={planToPrices} manage={onManageClick} />
               </>
 
             ) : (

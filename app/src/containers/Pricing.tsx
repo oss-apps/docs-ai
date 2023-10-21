@@ -11,7 +11,8 @@ const Pricing: React.FC<{
     year: Record<string, string>;
   },
   loggedIn?: boolean;
-}> = ({ org, prices, loggedIn }) => {
+  manage?: () => Promise<void>
+}> = ({ org, prices, loggedIn, manage }) => {
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
 
   const [selectedPlan, setSelectedPlan] = useState<Plan>(Plan.PROFESSIONAL)
@@ -19,6 +20,11 @@ const Pricing: React.FC<{
   const createCheckoutSession = api.org.createCheckoutSession.useMutation()
 
   const onSubscribeClick = async (price: string, _plan: Plan) => {
+    if (manage) {
+      console.log("🔥 ~ onSubscribeClick ~ if:")
+      await manage()
+      return
+    }
     if (org && price) {
       setSelectedPlan(_plan)
       const session = await createCheckoutSession.mutateAsync({ orgId: org.id, price })
@@ -63,7 +69,7 @@ const Pricing: React.FC<{
         </div>
         <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans. </p>
 
-        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
           <div
 
             className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 hover:scale-105">

@@ -27,10 +27,9 @@ const PricingPage: NextPage<{ props: any }> = ({ props }) => {
         <script src='https://cdn.paritydeals.com/banner.js' async></script>
       </Head>
       <HomeNav />
-      <main className="mx-auto  max-w-6xl pb-32 px-4 lg:px-0">
+      <main className="mx-auto  max-w-6xl  px-4 lg:px-0">
         <Pricing />
       </main>
-      <Footer />
     </>
   );
 };
