@@ -47,7 +47,7 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
         <div className="flex justify-center flex-col">
           {Object.values(providers).map((provider) => provider.type !== 'email' ? (
             <div key={provider.name} className="mx-auto">
-              <button onClick={() => signIn(provider.id)} className="mx-auto w-[300px] border border-zinc-700 p-2 px-4 rounded-md hover:bg-zinc-100 flex items-center justify-center">
+              <button onClick={() => signIn(provider.id)} className="mx-auto w-[300px] border p-2 px-4 rounded-md hover:bg-zinc-100 flex items-center justify-center">
                 <Image alt="Google logo" loading="lazy" height="15" width="15" id="provider-logo-dark" src="https://authjs.dev/img/providers/google.svg" />
                 <p className="ml-4">
                   Continue with {provider.name}
@@ -55,7 +55,7 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
               </button>
             </div>
           ) : null)}
-          <div className="border-t border-zinc-200 w-[300px] mx-auto mt-7 pb-4">
+          <div className=" border-t border-zinc-200 w-[300px] mx-auto mt-7 pb-4">
             <form onSubmit={handleSubmit(onSubmit)}>
               <Label className="mt-6">Email</Label>
               <Input
@@ -63,7 +63,7 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
                 placeholder="name@domain.com"
                 {...register('email', { required: 'Email is required' })}
               />
-              <PrimaryButton disabled={signInLaoding} loading={signInLaoding} type="submit" className="mx-auto mt-2 w-[300px]">Create</PrimaryButton>
+              <PrimaryButton disabled={signInLaoding} loading={signInLaoding} type="submit" className="mx-auto mt-4 w-[300px]">Create</PrimaryButton>
             </form>
           </div>
         </div>

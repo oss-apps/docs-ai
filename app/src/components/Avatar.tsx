@@ -1,6 +1,9 @@
 import Image from "next/image"
+import { useMemo, useState } from "react"
 import hash from "string-hash"
 import color from "tinycolor2"
+import { z } from "zod";
+
 
 const HashAvatar: React.FC<{ uid: string, size: number, square?: boolean }> = ({ uid, size, square }) => {
   const n = hash(uid)
@@ -9,7 +12,7 @@ const HashAvatar: React.FC<{ uid: string, size: number, square?: boolean }> = ({
   const c2 = c1.triad()[1].toHexString()
 
   return (
-    <svg width={size} height={size} className={square ? "rounded-md" : "rounded-full"} viewBox="0 0 80 80">
+    <svg width={size} height={size} className={square ? "rounded-md shadow-md" : "rounded-full shadow-md"} viewBox="0 0 80 80">
       <defs>
         <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id={uid}>
           <stop stopColor={c1_} offset="0%"></stop>
@@ -23,14 +26,41 @@ const HashAvatar: React.FC<{ uid: string, size: number, square?: boolean }> = ({
   )
 }
 
-const Avatar: React.FC<{ src?: string | null, uid: string, size?: number, square?: boolean }> = ({ src, uid, size = 32, square }) => {
+const Avatar: React.FC<{ src?: string | null, uid: string, size?: number, square?: boolean, srcIsUid?: boolean }> = ({ src, uid, size = 32, square, srcIsUid }) => {
+
+  const urlSchema = z.string().url().nullable()
+  const [error, setError] = useState(false)
+
+  useMemo(() => {
+    try {
+      urlSchema.parse(src)
+    }
+    catch (err) {
+      console.log("🔥 ~ err:", err)
+      srcIsUid = true
+      setError(true)
+    }
+
+  }, [])
+
+  if (srcIsUid && src) {
+    uid = src
+  }
+
+  // return <></>
+
+  if (error) {
+    return (
+      <HashAvatar uid={uid} size={size || 32} square={!!square} />
+    )
+  }
 
   return (
     <div>
-      {src ? (
-        <Image className="rounded-full" alt="profile-pic" src={src} width={size} height={size} />
+      {(src && !error) ? (
+        <Image className="rounded-full shadow-md" alt="profile-pic" src={src} width={size} height={size} onError={() => setError(true)} />
       ) : (
-        <HashAvatar uid={uid} size={size || 32} square={!!square} />
+          <HashAvatar uid={uid} size={size || 32} square={!!square} />
       )}
     </div>
   )

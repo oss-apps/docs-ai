@@ -13,8 +13,8 @@ import { getHistoryForConvo } from "./docGPT";
 
 type convoFilter = {
   filter?: {
-    from?: string | null;
-    to?: string | null;
+    from?: Date | null;
+    to?: Date | null;
     rating?: string | null;
     feedback?: 'POSITIVE' | 'NEGATIVE' | 'ALL' | 'NO FILTER' | string
   };
@@ -22,7 +22,7 @@ type convoFilter = {
   projectId?: string;
 }
 
-const zConvoFilter = z.object({ from: z.string().optional().nullable(), to: z.string().optional().nullable(), rating: z.string().nullable().default('ALL'), feedback: z.string().default('NO FILTER') }).optional()
+const zConvoFilter = z.object({ from: z.date().optional().nullable(), to: z.date().optional().nullable(), rating: z.string().nullable().default('ALL'), feedback: z.string().default('NO FILTER') }).optional()
 
 
 export const conversationRouter = createTRPCRouter({
@@ -195,8 +195,8 @@ const getConvoFilter = (filterObj: convoFilter) => {
     ...(filterObj.projectId ? { projectId: filterObj.projectId } : {}),
     ...(filterObj?.filter?.from && filterObj?.filter?.to ? {
       createdAt: {
-        lte: (new Date(filterObj.filter.to)).toISOString(),
-        gte: (new Date(filterObj.filter.from)).toISOString()
+        lte: filterObj.filter.to.toISOString(),
+        gte: filterObj.filter.from.toISOString()
       }
     } : {}),
     ...((filterObj?.filter?.rating && filterObj.filter.rating != 'ALL') ? { rating: filterObj.filter.rating as ConvoRating } : {})

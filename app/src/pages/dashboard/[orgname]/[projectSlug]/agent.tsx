@@ -7,9 +7,8 @@ import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { ChatBox } from "~/containers/Chat/Chat";
-import PrimaryButton, { SecondaryButton } from "~/components/form/button";
+import PrimaryButton, { Button } from "~/components/form/button";
 import { type Dispatch, Fragment, type SetStateAction, useEffect, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
 import { MarkDown } from "~/components/MarkDown";
 import { Input, Label } from "~/components/form/input";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import { toast } from "react-hot-toast";
 import { mergeObjects } from "~/utils/common";
 import { getContrastColor } from "~/utils/color";
 import { IconEmbed, IconShare, IconUpdate } from "~/components/icons/icons";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
 
 export const projectSchema = z.object({
   defaultQuestion: z.string().min(3),
@@ -45,7 +45,6 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   const org: Org = superjson.parse(orgJson)
 
   const [shareText, setShareText] = useState('Share')
-  const [isEmbedOpen, setIsEmbedOpen] = useState(false)
   const [projectState, setProject] = useState(project)
 
   const onShareClick = async () => {
@@ -58,13 +57,8 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
 
   async function closeModal() {
     await navigator.clipboard.writeText(installScript());
-    setIsEmbedOpen(false)
   }
 
-
-  function openModal() {
-    setIsEmbedOpen(true)
-  }
 
   const installScript = () => {
     return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" async></script>`
@@ -86,69 +80,40 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className="mx-auto">
               <ChatBox org={org} project={projectState} embed />
                 <div className="flex justify-center gap-4 mt-4 mb-6">
-                  <SecondaryButton onClick={openModal} className="justify-center gap-2 w-20">
-                    <IconEmbed className="h-4 w-4" />
-                  Embed
-                  </SecondaryButton>
-                <SecondaryButton onClick={onShareClick} className="justify-center gap-2 w-20">
-                  <IconShare className="h-4 w-4" /> {shareText}
-                </SecondaryButton>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="hidden sm:flex justify-center gap-2">
+                        <IconEmbed className="h-5 w-5" />
+                        <span> Embed </span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Embed in your website </DialogTitle>
+                        <DialogDescription>
+                          Add the following script to your website
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="mt-2">
+                        <MarkDown markdown={`\`\`\`\n${installScript()}\n`} />
+                      </div>
+                      <DialogFooter className="gap-2">
+                        <DialogClose asChild>
+                          <Button variant="default" type="button" onClick={closeModal} className="justify-center">
+                            Copy
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Button variant="outline" onClick={onShareClick} className="justify-center gap-2">
+                    <IconShare className="h-4 w-4" /> {shareText}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
           </section>
         </div>
-        <Transition appear show={isEmbedOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={closeModal}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-black bg-opacity-25" />
-            </Transition.Child>
-
-            <div className="fixed inset-0 overflow-y-auto">
-              <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 scale-95"
-                  enterTo="opacity-100 scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 scale-100"
-                  leaveTo="opacity-0 scale-95"
-                >
-                  <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg font-medium leading-6 text-gray-900"
-                    >
-                      Add the following script to your website
-                    </Dialog.Title>
-                    <div className="mt-2">
-                      <MarkDown markdown={`\`\`\`\n${installScript()}\n`} />
-                    </div>
-
-                    <div className="mt-4 mx-auto">
-                      <PrimaryButton
-                        type="button"
-                        onClick={closeModal}
-                        className="mx-auto"
-                      >
-                        Copy
-                      </PrimaryButton>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
-              </div>
-            </div>
-          </Dialog>
-        </Transition>
       </main>
     </>
   );
@@ -256,7 +221,7 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
 
         <div className="mt-20">
           <PrimaryButton type="submit" className="mx-auto flex justify-center gap-2" disabled={updateProject.isLoading} loading={updateProject.isLoading}>
-            <IconUpdate className="w-5 h-5" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" /> Update
+            <IconUpdate className="w-5 h-5" primaryClassName="fill-slate-400" secondaryClassName="fill-slate-50" /> Save
           </PrimaryButton>
         </div>
       </form>

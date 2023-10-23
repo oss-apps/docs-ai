@@ -10,6 +10,7 @@ import { PlainChat } from "~/containers/Chat/Chat";
 import { Sentiment } from "./chats";
 import PrimaryButton from "~/components/form/button";
 import Head from "next/head";
+import { parse, toDate } from "date-fns";
 
 const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
 
@@ -17,7 +18,17 @@ const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string 
   const project: Project = superjson.parse(projectJson)
   const query = useSearchParams()
 
-  const [from, to, rating, feedback] = [query.get('from'), query.get('to'), query.get('rating'), query.get('feedback')]
+  const [rating, feedback] = [query.get('rating'), query.get('feedback')]
+  let from: string | Date | null = query.get('from')
+  let to: string | Date | null = query.get('to')
+  console.log("🔥 ~ from:", from)
+  console.log("🔥 ~ to:", to)
+
+  from = from ? toDate(parseInt(from)) : null
+  to = to ? toDate(parseInt(to)) : null
+
+
+  console.log("🔥 ~ [from, to, rating, feedback]:", [rating, feedback], from, to)
 
   const { data: convos, isLoading, refetch } = api.conversation.downloadConversations.useQuery({
     orgId: org.id,

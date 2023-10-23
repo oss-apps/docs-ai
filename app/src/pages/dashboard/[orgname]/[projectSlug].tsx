@@ -8,9 +8,9 @@ import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import { isAbovePro } from "~/utils/license";
-import PrimaryButton from "~/components/form/button";
+import { Button } from "~/components/form/button";
 import Link from "next/link";
-import { IconChat, IconChatHistory } from "~/components/icons/icons";
+import { IconChatHistory } from "~/components/icons/icons";
 
 
 const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -99,16 +99,16 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
                 </div>
               </div>
 
-              <div className="my-6">
+              <div className="my-6 text-center">
                   {project.documentTokens ? (
                     <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`}>
-                      <PrimaryButton className="mx-auto justify-center gap-2">
+                    <Button className="mx-auto justify-center gap-2">
                         <IconChatHistory className="w-5 h-5" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" />
-                        Talk to your Docs</PrimaryButton>
+                      Talk to your docs</Button>
                     </Link>
                   ) : (
                     <Link className="mx-auto" href={`/dashboard/${org.name}/${project.slug}/new_document`}>
-                      <PrimaryButton className="mx-auto">Add document</PrimaryButton>
+                      <Button className="mx-auto">Add document</Button>
                     </Link>
                   )}
                 </div>

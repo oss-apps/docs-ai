@@ -28,6 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   return res.status(200).send(result)
   }
   catch (err: any) {
+    console.log("api ~ err:", err)
     return res.status(400).send({
       message: "Something happened! Please check your data validity or contact help"
     })

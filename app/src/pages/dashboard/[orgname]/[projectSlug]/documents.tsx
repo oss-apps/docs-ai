@@ -70,8 +70,8 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                         Talk to your Docs</SecondaryButton>
                     </Link>
                   ) : null}
-                <Link href={`/dashboard/${org.name}/${project.slug}/new_document`}>
-                    <PrimaryButton>+
+                  <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} >
+                    <PrimaryButton>
                       Add <span className="hidden sm:block"> &nbsp; document </span>
                     </PrimaryButton>
                 </Link>
