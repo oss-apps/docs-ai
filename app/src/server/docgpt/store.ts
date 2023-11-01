@@ -22,6 +22,7 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
   const documents = docs.map(d => new Document({
     pageContent: d.pageContent, metadata: { ...d.metadata, projectId, documentId, type: docType }
   }))
+  console.log("🔥 ~ documents ~ documents:", documents)
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 2000,
@@ -29,6 +30,7 @@ export const loadDocumentsToDb = async (projectId: string, documentId: string, d
   })
 
   const splitDocuments = await splitter.splitDocuments(documents)
+  console.log("🔥 ~ loadDocumentsToDb ~ splitDocuments:", splitDocuments)
   await PineconeStore.fromDocuments(splitDocuments, new OpenAIEmbeddings(), { pineconeIndex, namespace: projectId })
 }
 

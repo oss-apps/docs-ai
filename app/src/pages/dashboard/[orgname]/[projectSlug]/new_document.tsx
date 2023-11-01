@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { FileDocument } from "~/containers/NewDocument/FileDocument";
+import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
+import { env } from "~/env.mjs";
 
 
 function getDocType(type: number) {
@@ -20,13 +22,15 @@ function getDocType(type: number) {
 }
 
 
-const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, notion: string }> = ({ user, orgJson, projectJson, notion }) => {
   const router = useRouter()
   const { docType } = router.query as { docType: DocumentType, orgname: string, projectSlug: string }
 
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
+  const notionUrl = `${env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL}&state=${org.id},${project.id}`
+  console.log("🔥 ~ docType:", (notion))
 
 
   return (
@@ -49,10 +53,10 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
               ) : (
 
                   <div className="flex justify-center sm:justify-start gap-6 sm:gap-12  flex-wrap mt-10">
-                  <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
-                  <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
-                  <DocumentSource name="Files" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
-                  <DocumentSource name="Notion" />
+                    <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
+                    <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
+                    <DocumentSource name="Files" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
+                    <DocumentSource name="Notion" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.NOTION}`} />
                 </div>
               )}
             </div>
@@ -66,11 +70,20 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string }
 const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType }> = ({ org, project, docType }) => {
   if (docType === DocumentType.TEXT) {
     return <TextDocument org={org} project={project} />
-  } else if (docType === DocumentType.FILES) {
+  }
+  else if (docType === DocumentType.FILES) {
     return <FileDocument project={project} org={org} />
   }
+  else if (docType === DocumentType.NOTION) {
+    return <NotionDocument project={project} org={org} newDocument integrationDetails={[]} />
+  }
+  else if (docType === DocumentType.URL) {
+    return <URLDocument org={org} project={project} />
+  }
 
-  return <URLDocument org={org} project={project} />
+  return <>
+    No doc type added
+  </>
 }
 
 
@@ -128,12 +141,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       }
     }
   }
-
   const props = {
     props: {
       user: session.user,
       orgJson: superjson.stringify(org.org),
-      projectJson: superjson.stringify(org.org.projects[0])
+      projectJson: superjson.stringify(org.org.projects[0]),
     }
   }
   return props

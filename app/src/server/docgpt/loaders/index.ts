@@ -6,6 +6,7 @@ import { loadDocumentsToDb } from "../store"
 import { prisma } from "~/server/db"
 import * as storage from "~/server/storage"
 
+
 async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number) {
   await prisma.document.update({
     where: { id: documentId },
@@ -126,4 +127,9 @@ export async function indexFileDocuments(orgId: string, projectId: string, docum
 
   await Promise.all(result)
   await updateStatus(projectId, orgId, documentId, error, title, tokens)
+}
+
+export async function indexNotionDocuments(orgId: string, projectId: string, documentId: string) {
+  const notionDoc = await prisma.document.findFirst({ where: { id: documentId } })
+  return notionDoc
 }

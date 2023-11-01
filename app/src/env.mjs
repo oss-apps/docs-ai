@@ -36,6 +36,8 @@ const server = z.object({
   R2_ACCESS_KEY: z.string(),
   R2_SECRET_KEY: z.string(),
   R2_DOCS_BUCKET: z.string(),
+  NOTION_CLIENT_SECRET: z.string(),
+  NOTION_REDIRECT_URL: z.string()
 });
 
 /**
@@ -44,6 +46,8 @@ const server = z.object({
  */
 const client = z.object({
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
+  NEXT_PUBLIC_NOTION_CLIENT_ID: z.string(),
+  NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: z.string()
 });
 
 /**
@@ -53,10 +57,15 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  // Public Envs
+  NEXT_PUBLIC_NOTION_CLIENT_ID: process.env.NEXT_PUBLIC_NOTION_CLIENT_ID,
+  NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: process.env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL,
+  NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+
+  // Server Envs
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -75,6 +84,9 @@ const processEnv = {
   R2_ACCESS_KEY: process.env.R2_ACCESS_KEY,
   R2_SECRET_KEY: process.env.R2_SECRET_KEY,
   R2_DOCS_BUCKET: process.env.R2_DOCS_BUCKET,
+  NOTION_CLIENT_SECRET: process.env.NOTION_CLIENT_SECRET,
+  NOTION_REDIRECT_URL: process.env.NOTION_REDIRECT_URL
+
 };
 
 // Don't touch the part below

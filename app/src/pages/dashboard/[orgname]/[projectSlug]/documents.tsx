@@ -11,7 +11,7 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { IconChatHistory } from "~/components/icons/icons";
+import { IconAdd, IconChatHistory } from "~/components/icons/icons";
 
 const Status = ({ status }: { status: IndexStatus }) => {
   switch (status) {
@@ -72,7 +72,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                   ) : null}
                   <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} >
                     <PrimaryButton>
-                      Add <span className="hidden sm:block"> &nbsp; document </span>
+                      <IconAdd className="h-5 w-5 mr-2" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" /> Add <span className="hidden sm:block"> &nbsp; document </span>
                     </PrimaryButton>
                 </Link>
                 </div>
@@ -101,7 +101,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                             <Status status={document.indexStatus} />
                             {
                               document.indexStatus !== IndexStatus.SUCCESS && document.documentType !== "FILES" ? (
-                                <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
+                                <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}&type=${document.documentType}`}>
                                   <SmallButton>Complete setup</SmallButton>
                                 </Link>
                               ) : null

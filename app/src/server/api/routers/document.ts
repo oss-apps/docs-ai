@@ -14,6 +14,7 @@ import { type ParsedDocs, type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 import * as storage from '~/server/storage'
 import { DocumentType } from "@prisma/client";
+import { JsonObject } from "@prisma/client/runtime/library";
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
   const { isStopped } = await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths, pageLimit)
@@ -337,6 +338,17 @@ export const documentRouter = createTRPCRouter({
       return {
         status: 'success',
       };
+    }),
+
+  createNotionDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const details = input.details as JsonObject
+      const res = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+
+      return {
+        res
+      }
     }),
 
   deleteDocument: orgMemberProcedure
