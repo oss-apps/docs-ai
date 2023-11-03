@@ -23,16 +23,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
-        <meta property="og:title" content="DocsAI" />
-        <meta name="description" content="Create AI support agent with your documents." />
-        <meta property="og:image" content="https://docsai.app/images/app.png" />
+        <meta property="og:title" content="The AI Companion you always wanted" />
+        <meta name="description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
+        <meta property="og:image" content="https://docsai.app/images/og-app.jpg" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:width" content="1200" />
-        <meta property="twitter:title" content="DocsAI" />
+        <meta property="twitter:title" content="The AI Companion you always wanted" />
         <meta property="og:url" content="https://docsai.app"></meta>
-        <meta property="twitter:description" content="Create AI support agent with your documents." />
+        <meta property="twitter:description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content="https://docsai.app/images/app.png" />
+        <meta property="twitter:image" content="https://docsai.app/images/og-app.jpg" />
         <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
         {env.NEXT_PUBLIC_NODE_ENV === "production" && 

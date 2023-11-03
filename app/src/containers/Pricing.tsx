@@ -1,6 +1,6 @@
 import { type Org, Plan } from "@prisma/client"
 import { useState } from "react"
-import PrimaryButton from "~/components/form/button"
+import PrimaryButton, { SecondaryButton } from "~/components/form/button"
 import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
 import Footer from "./Footer";
@@ -72,7 +72,7 @@ const Pricing: React.FC<{
         <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
           <div
 
-            className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 hover:scale-105">
+            className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Free
@@ -109,7 +109,7 @@ const Pricing: React.FC<{
               </p>
             </div>
           </div>
-          <div className="bg-white rounded-md border-2 hover:border-gray-400 hover:shadow-gray-400 hover:shadow-2xl duration-500 hover:scale-105">
+          <div className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Basic
@@ -143,16 +143,16 @@ const Pricing: React.FC<{
                   /{billingInterval}
                 </span>
               </p>
-              <PrimaryButton
+              <SecondaryButton
                 onClick={() => onSubscribeClick(prices?.[billingInterval]['BASIC'] || '', Plan.BASIC)}
                 loading={selectedPlan === Plan.BASIC && createCheckoutSession.isLoading}
                 disabled={selectedPlan === Plan.BASIC && createCheckoutSession.isLoading}
-                className="mt-5 mx-auto w-full">
+                className="mt-5 mx-auto w-full font-semibold justify-center">
                 Subscribe
-              </PrimaryButton>
+              </SecondaryButton>
             </div>
           </div>
-          <div className=" rounded-md border-2 border-gray-600  hover:border-gray-600  hover:shadow-slate-600 hover:shadow-2xl duration-500 hover:scale-105">
+          <div className=" rounded-md border-2 border-gray-600  hover:border-gray-600  hover:shadow-slate-400 hover:shadow-2xl duration-500">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Professional
@@ -204,7 +204,7 @@ const Pricing: React.FC<{
             </div>
 
           </div>
-          <div className="bg-white rounded-md border-2 hover:border-gray-800 hover:shadow-gray-800  hover:shadow-2xl duration-500 hover:scale-105">
+          <div className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200  hover:shadow-2xl duration-500">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold align-middle">
                 Enterprise
@@ -246,13 +246,13 @@ const Pricing: React.FC<{
                   /{billingInterval}
                 </span>
               </p>
-              <PrimaryButton
+              <SecondaryButton
                 onClick={() => onSubscribeClick(prices?.[billingInterval]['ENTERPRISE'] || '', Plan.ENTERPRISE)}
-                className="mt-5 w-full"
+                className="mt-5 mx-auto w-full font-semibold justify-center"
                 loading={selectedPlan === Plan.ENTERPRISE && createCheckoutSession.isLoading}
                 disabled={selectedPlan === Plan.ENTERPRISE && createCheckoutSession.isLoading}>
                 Subscribe
-              </PrimaryButton>
+              </SecondaryButton>
             </div>
           </div>
         </div>

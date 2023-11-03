@@ -22,7 +22,7 @@ export default PrimaryButton
 export const SecondaryButton: React.FC<PrimaryButtonProps> = ({ children, className, ...rest }) => {
 
   return (
-    <button className={classNames('px-1.5 sm:min-w-[120px]  sm:px-4 py-2 border  rounded-md  hover:bg-zinc-100 flex items-center   duration-200 ', className)} {...rest}>
+    <button className={classNames('px-1.5 sm:min-w-[120px]  sm:px-4 py-2 border border-slate-500  rounded-md  hover:bg-zinc-100 flex items-center   duration-200 ', className)} {...rest}>
       {children}
     </button>
   )

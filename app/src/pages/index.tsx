@@ -3,11 +3,11 @@ import Head from "next/head";
 import Link from "next/link";
 
 import Image from "next/image";
-import PrimaryButton from "~/components/form/button";
+import PrimaryButton, { SecondaryButton } from "~/components/form/button";
 import { AuthButton } from "~/containers/Nav/AuthButton";
 import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
-import { IconChat, IconCode, IconCollection, IconLockOpen, IconPieChart, IconSearch, IconSettings, IconSlack, IconWebsite, IconWidget } from "~/components/icons/icons";
+import { IconChat, IconCode, IconCollection, IconHistory, IconLockOpen, IconPieChart, IconSettings, IconWidget } from "~/components/icons/icons";
 
 const Home: NextPage = () => {
 
@@ -19,225 +19,20 @@ const Home: NextPage = () => {
       </Head>
       <div className="background h-[70vh]">
         <HomeNav />
+
         <main className="mx-auto max-w-6xl mb-8 px-4 lg:px-0">
-          <div className="container flex flex-col items-center justify-center gap-12 px-4  mt-20 mb-8">
-            <h1 className=" text-gray-800 text-4xl lg:text-6xl font-semibold  max-w-3xl justify-center text-center">
-              Create <span className="heading-text">AI support agents</span> with your documents.
-            </h1>
-          </div>
-          <AuthButton />
+
+          <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
-            <div className="conic rounded-lg">
-              <Image src="/images/app.webp" alt="App" width={1000} height={800} className="rounded-lg border border-blue-100 relative shadow-2xl"></Image>
+            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <Image src="/images/app.webp" alt="App" width={1200} height={800} className="rounded-lg relative border"></Image>
             </div>
           </section>
         </main>
-
-        <section className=" bg-black mb-16  flex justify-center text-slate-200">
-          <div className="max-w-6xl my-36">
-            <p className="my-12 mx-auto w-full text-center text-4xl font-semibold" >Build your agent with 3 simple steps</p>
-            <section className="grid grid-cols-1 lg:grid-cols-3 gap-20 mb-16 px-4">
-              <div className="">
-                <div className="text-lg font-semibold border border-slate-100 rounded-full w-10 h-10 flex justify-center items-center p-1 text-slate-100">1</div>
-                <p className=" font-semibold flex items-center mt-2 text-xl">
-                  Train data
-                </p>
-                <p className="mt-2 text-slate-300">Add your Websites / PDFs / Docx / Text you want to train.</p>
-              </div>
-              <div className="">
-                <div className="text-lg font-semibold border border-slate-100 rounded-full w-10 h-10 flex justify-center items-center p-1 text-slate-100">2</div>
-                <p className=" font-semibold flex items-center mt-2 text-xl">
-                  Test your agent
-                </p>
-                <p className="mt-2 text-slate-300">Ask various questions to your bot to see the performance</p>
-              </div>
-              <div className="">
-                <div className="text-lg font-semibold border border-slate-100 rounded-full w-10 h-10 flex justify-center items-center p-1 text-slate-100">3</div>
-                <p className=" font-semibold flex items-center mt-2 text-xl">
-                  Embed to your website
-                </p>
-                <p className="mt-2 text-slate-300">Embed the chatbot to your site in one line of code</p>
-              </div>
-            </section>
-          </div>
-
-        </section>
-        <section className="mx-auto max-w-6xl px-4 lg:px-0">
-          <h3 className="mt-16 text-gray-800 text-center text-3xl font-semibold">Features</h3>
-          <section className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-20 pb-10 px-4">
-            <div className="simple-card ">
-              <IconCollection />
-              <p className=" font-semibold flex items-center mt-2">
-                Multiple Sources
-              </p>
-              <p className="mt-2 text-gray-700">Add as many websites, text, pdf, docx you want for same bot. More source types are coming to DocsAI.</p>
-            </div>
-            <div className="simple-card ">
-              <IconWebsite />
-              <p className=" font-semibold flex items-center mt-2">
-                Embed in any site
-              </p>
-              <p className="mt-2 text-gray-700">Embed chat widget to any website you want. You can also share a link that others can use.</p>
-            </div>
-
-            <div className="simple-card">
-              <IconSettings />
-              <p className=" font-semibold flex items-center mt-2">
-                Suggest Answers
-              </p>
-              <p className="mt-2 text-gray-700">Did not like the answer? You can suggest better answers and bot will correct itself.</p>
-            </div>
-            <div className="simple-card ">
-              <IconWidget />
-              <p className=" font-semibold flex items-center mt-2">
-                Integrations
-              </p>
-              <p className="mt-2 text-gray-700">DocsAI integrates with Slack. Integration with Crisp, Discord & Other datasources like DB are coming soon.</p>
-            </div>
-            <div className="simple-card ">
-              <IconCode />
-              <p className=" font-semibold flex items-center mt-2">
-                API
-              </p>
-              <p className="mt-2 text-gray-700">Need custom integration? Well you can use our APIs to interact with the bot directly.</p>
-            </div>
-            <div className="simple-card ">
-              <IconLockOpen />
-              <p className=" font-semibold flex items-center mt-2">
-                Open source
-              </p>
-              <p className="mt-2 text-gray-700">
-                I support open source, but it&apos;s harder to maintain than a company, so I&apos;ll only do it if there&apos;s enough need.
-                <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-blue-600" rel="noreferrer"> Star on github</a>
-              </p>
-            </div>
-            <div className="simple-card ">
-              <IconChat />
-              <p className=" font-semibold flex items-center mt-2">
-                Export conversations
-              </p>
-              <p className="mt-2 text-gray-700">
-                Analyze your chat data to identify trends and improve customer satisfaction                </p>
-            </div>
-            <div className="simple-card ">
-              <IconSearch />
-              <p className=" font-semibold flex items-center mt-2">
-                Unlimited search <span className="pro-chip"> Pro </span>
-              </p>
-              <p className="mt-2 text-gray-700">Chat credits are over? Don&apos;t worry! App will still search through documents and give you relevant files.</p>
-            </div>
-            <div className="simple-card ">
-              <IconPieChart />
-              <p className=" font-semibold flex items-center mt-2">
-                Get summary and insights  <span className="pro-chip"> Pro </span>
-              </p>
-              <p className="mt-2 text-gray-700">Get summary of each conversation and mood of the users.</p>
-            </div>
-
-          </section>
-
-          <h3 className="mt-16 text-gray-800 text-center text-3xl font-semibold">Customize your bot</h3>
-          <section className="my-8 rounded-lg  flex justify-center">
-            <div className="flex justify-center flex-col rounded-lg ">
-              <Image src="/images/customize.webp" alt="customize" width={1000} height={800} className="rounded-lg border border-blue-100 relative shadow-2xl"></Image>
-              <small className="text-center text-zinc-600 mt-4">
-                <a href="/features/project" target="_blank"> Discover the key features of your chatbot </a>
-              </small>
-            </div>
-          </section>
-
-        </section>
-        <section className=" bg-gradient-to-r from-sky-50 to-indigo-50">
-          <div className="max-w-6xl mx-auto mt-32 px-4 lg:px-0 py-16">
-            <h1 className="text-center text-3xl font-semibold mb-8 text-gray-800 "> Customer Support Agents</h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-3  gap-2 md:gap-8">
-              <div className="flex flex-col gap-y-4 md:gap-y-10 md:mt-12 text-base md:text-lg align-bottom">
-                <div className="border shadow-sm items-center p-2  md:p-4 rounded-lg bg-white">
-                  💡  Provides comprehensive answers to user&apos;s questions.
-                </div>
-                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
-                  💯 Collect valuable feedback from your users
-                </div>
-                <div className="border shadow-sm items-center p-2 px-4 rounded-lg  bg-white">
-                  📨 Allow users to easily contact you via email from your chatbot
-                </div>
-              </div>
-
-              <div className="my-4 sm:my-0 flex justify-center flex-col rounded-lg ">
-                <Image src="/images/customer-agent.png" alt="App" width={375} height={800} className="rounded-lg  shadow-sms  mx-auto"></Image>
-                <small className="text-center text-zinc-600">
-                  <a href="/features/project" target="_blank"> Discover the key features of your chatbot </a>
-                </small>
-              </div>
-
-              <div className="flex  sm:self-end flex-col gap-y-4 md:gap-y-10 md:mb-12 text-base md:text-lg">
-                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
-                  📝 Provides you with a high-level overview of each conversation
-                </div>
-                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
-                  💭 Detect user&apos;s sentiment and mood of each conversation
-                </div>
-                <div className="border shadow-sm items-center p-2 px-4 rounded-lg bg-white">
-                  🤝 Read through chats and provide suggestion
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-6xl sm:px-4 lg:px-0 sm:mt-24 ">
-          <div className="grid sm:grid-cols-3 justify-between  py-10 px-2 flex-wrap sm:p-6 sm:rounded-lg sm:border-2 bg-black text-white">
-            <div className="col-span-2">
-              <div className="flex justify-center flex-col">
-                <h2 className="text-3xl text-gray-200 font-semibold flex sm:mb-6 mb-4 gap-2 items-center">
-                  <IconSlack className="w-7 h-7" /> Slack Bot - Use Cases
-                </h2>
-
-                <div className="flex flex-col gap-y-2 sm:gap-y-5">
-                  <div className=" ">
-                    <h3 className="text-xl text-gray-100 font-semibold mb-1"> New employee onboarding </h3>
-                    <p className="text-slate-300"> Slack bot could be used to answer new employees&apos; questions about company policies, procedures, and benefits.</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl  text-gray-100 font-semibold mb-1"> Technical support</h3>
-                    <p className="text-slate-300">Slack bots can provide technical support to customers or employees, freeing up human technicians for more complex issues.</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl  text-gray-100 font-semibold mb-1">Product documentation</h3>
-                    <p className="text-slate-300">Slack bots can answer product documentation questions, improving the customer experience and reducing support tickets.</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl  text-gray-100 font-semibold mb-1">Customer service</h3>
-                    <p className="text-slate-300">Slack bots can answer customer questions about products, services improving satisfaction and reducing customer support workload.</p>
-                  </div>
-
-                  <div className="text-xl  flex justify-center mt-4 text-gray-200 font-semibold mb-1">
-                    <Link href="/dashboard">
-                      <PrimaryButton className="border border-gray-50">
-                        Create your agent
-                      </PrimaryButton>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <div className="mt-10 lg:mt-0 flex col-span-3 sm:col-span-1">
-              <Image src="/images/slack.png" alt="App" width={350} height={800} className="rounded-lg border shadow-xl relative  mx-auto"></Image>
-            </div>
-          </div>
-
-          <div className="mt-10">
-            <p className="text-center mt-4 text-lg max-w-lg mx-auto text-gray-600">
-              These are just examples and you can get creative on how to use DocsAI!
-              The possibilities for AI chatbots are endless.
-
-            </p>
-          </div>
-        </section>
+        <RightImage />
+        <LeftImage />
+        <MoreFeatures />
+        <hr></hr>
         <Footer />
 
       </div >
@@ -245,5 +40,277 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+function Landing() {
+
+  return (
+    <div className="bg-white">
+      <div className="relative isolate px-6  lg:px-8">
+        <div
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          aria-hidden="true"
+        >
+          <div
+            className="relative right-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-slate-900 to-slate-600 opacity-30 sm:right-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+          />
+        </div>
+        <div className="mx-auto max-w-2xl pt-16 sm:pt-24 lg:pt-32">
+          <div className="hidden  sm:flex sm:justify-center">
+            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+              Discover the key features of DocsAI &nbsp;
+              <a href="/features/overview" className="font-semibold text-black" target='_blank'>
+                <span className="absolute inset-0" aria-hidden="true" />
+
+              </a>
+            </div>
+          </div>
+          <div className="text-center mt-4">
+            <h1 className="  tracking-tight text-gray-900 sm:text-6xl text-4xl lg:text-6xl font-bold  justify-center text-center">
+              The  AI Companion  you  always wanted
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Train your documents, chat with your documents, and create chatbots that solves queries for you and your users.
+
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <AuthButton />
+              <SecondaryButton className="w-[150px] justify-center">
+                <Link href="/pricing" className="font-semibold ">
+                  View Pricing <span aria-hidden="true">→</span>
+                </Link>
+              </SecondaryButton>
+            </div>
+          </div>
+        </div>
+        <div
+          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+          aria-hidden="true"
+        >
+          <div
+            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-slate-500 to-slate-600 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const features = [
+  {
+    name: 'Multiple Sources',
+    description:
+      'Add as many websites, text, pdf, docx you want. More source types are coming to DocsAI.',
+    icon: <IconCollection />,
+  },
+  {
+    name: 'Integrations',
+    description: 'DocsAI integrates with Slack. Integration with Crisp, Discord & Other datasources like DB are coming soon.',
+    icon: <IconWidget />,
+  },
+  // {
+  //   name: 'Embed in any site',
+  //   description: 'Embed chat widget to any website you want. You can also share a link that others can use.',
+  //   icon: <IconWebsite />,
+  // },
+]
+
+function RightImage() {
+  return (
+    <div className="overflow-hidden bg-white py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+          <div className="lg:pr-8 lg:pt-4">
+            <div className="lg:max-w-lg">
+              <h2 className="text-base font-semibold leading-7 text-slate-600">Move faster with DocsAI</h2>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Modernize your workflow</p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Organize your documents and train your companion on DocsAI. Now you can easily find anything you search for in your documents.
+              </p>
+              <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                {features.map((feature) => (
+                  <div key={feature.name} className="relative ">
+                    <dt className="gap-2 flex font-semibold text-gray-900">
+                      <span>  {feature.icon}  </span>
+                      {feature.name}
+                    </dt>{' '}
+                    <dd className="inline">{feature.description}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <AuthButton />
+                <SecondaryButton className="w-[150px] justify-center">
+                  <Link href="/pricing" className="font-semibold ">
+                    View Pricing <span aria-hidden="true">→</span>
+                  </Link>
+                </SecondaryButton>
+              </div>
+            </div>
+          </div>
+          <Image
+            src="/images/feature-1.webp"
+            alt="Product screenshot"
+            className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+            width={2432}
+            height={1442}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+
+const features2 = [
+  {
+    name: 'Suggest Answers',
+    description:
+      'Do not like the answer? You can suggest better answers and companion will correct itself.',
+    icon: <IconSettings />,
+  },
+  {
+    name: 'Custom API',
+    description: 'Need custom integration? Well you can use our APIs to interact with the bot directly.',
+    icon: <IconCode />,
+  },
+  // {
+  //   name: 'Embed in any site',
+  //   description: 'Embed chat widget to any website you want. You can also share a link that others can use.',
+  //   icon: <IconWebsite />,
+  // },
+]
+
+function LeftImage() {
+  return (
+    <div className="overflow-hidden bg-white py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+          <div className="lg:ml-auto lg:pl-4 lg:pt-4">
+            <div className="lg:max-w-lg">
+              <h2 className="text-base font-semibold leading-7 text-slate-600">Match your brand</h2>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Customize your companion</p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                You can customize the way your AI companion looks,  matching your brand colors and initial setups.
+              </p>
+              <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                {features2.map((feature) => (
+                  <div key={feature.name} className="relative">
+                    <dt className="flex gap-2 font-semibold text-gray-900">
+                      <span>  {feature.icon}  </span>
+                      {feature.name}
+                    </dt>{' '}
+                    <dd className="inline">{feature.description}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <AuthButton />
+                <SecondaryButton className="w-[150px] justify-center">
+                  <Link href="/pricing" className="font-semibold ">
+                    View Pricing <span aria-hidden="true">→</span>
+                  </Link>
+                </SecondaryButton>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-start justify-end lg:order-first " >
+            <Image
+              src="/images/feature-2.webp"
+              alt="Product screenshot"
+              className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
+              width={2432}
+              height={1442}
+            />
+
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+const features3 = [
+  {
+    name: 'Doubling down as chat agent',
+    description:
+      'Embed chat widget to any website you want. You can also share a link that others can use.',
+    icon: <IconChat className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+  {
+
+    name: 'Get summary, insights & leads',
+    description: 'Get summary of each conversation, mood of the users and identify users to generate leads.',
+    icon: <IconPieChart className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+  {
+    name: 'Export chats & Unlimited conversations',
+    description: ' Analyze your chat data to identify trends and improve customer satisfaction',
+    icon: <IconHistory className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+  {
+    name: 'Open source',
+    description: <p>It&apos;s harder to maintain than a company, So 100 ⭐️ and we open source it.
+      <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-black font-bold underline" rel="noreferrer"> Star on Github</a></p>,
+    icon: <IconLockOpen className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+]
+
+function MoreFeatures() {
+  return (
+    <div className="bg-white py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl lg:text-center">
+          <h2 className="text-base font-semibold leading-7 text-slate-600">More Features</h2>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Chat with your docs, your way.
+          </p>
+        </div>
+        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+            {features3.map((feature) => (
+              <div key={feature.name} className="relative pl-10 sm:pl-16">
+                <dt className="text-lg font-semibold leading-7 text-gray-900">
+                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg">
+                    {/* <feature.icon className="h-6 w-6 text-white" aria-hidden="true" /> */}
+                    {feature.icon}
+                  </div>
+                  {feature.name}
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">{feature.description}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div className="mt-6 sm:mt-16  flex flex-wrap items-center justify-center gap-4">
+          <PrimaryButton className="w-[150px]">
+            <Link href='docs/getting-started'>
+              Learn more
+            </Link>
+          </PrimaryButton>
+          <SecondaryButton className="w-[150px] justify-center">
+            <Link href="/pricing" className="font-semibold ">
+              View Pricing <span aria-hidden="true">→</span>
+            </Link>
+          </SecondaryButton>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 export default Home;

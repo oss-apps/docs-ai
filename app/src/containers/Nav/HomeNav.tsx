@@ -3,7 +3,7 @@ import Link from "next/link"
 
 const HomeNav: React.FC = () => {
   return (
-    <nav className="flex p-5 px-10 items-center justify-between bg-transparent">
+    <nav className="flex sticky z-10 p-5 px-10 items-center justify-between bg-transparent">
       <Link href="/">
         <div className="flex items-center">
           <Image src="/images/logo.png" width={35} height={35} alt="logo" className="rounded-lg"></Image>

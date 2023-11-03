@@ -9,13 +9,13 @@ export const AuthButton: React.FC = () => {
     <div className="flex flex-col items-center justify-center gap-4">
 
       {!sessionData ?
-        <PrimaryButton
+        <PrimaryButton className="w-[150px]"
           onClick={sessionData ? () => void signOut() : () => void signIn()}
         >
-          {sessionData ? "Sign out" : "Sign in"}
+          {sessionData ? "Sign out" : "Get started"}
         </PrimaryButton> :
         <Link href="/dashboard">
-          <PrimaryButton>Dashboard</PrimaryButton>
+          <PrimaryButton className="w-[150px]">Dashboard</PrimaryButton>
         </Link>
       }
     </div>
