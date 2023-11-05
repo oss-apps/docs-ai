@@ -2,7 +2,7 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import { prisma } from "~/server/db";
 
 import { env } from "~/env.mjs";
-import { type NotionDetails } from "~/types/notionTypes";
+import { type NotionDetails } from "~/utils/notion";
 import { Document } from "@prisma/client";
 
 const NotionCallback: NextPage = () => {

@@ -15,6 +15,10 @@ import { getLimits } from "~/utils/license";
 import * as storage from '~/server/storage'
 import { DocumentType } from "@prisma/client";
 import { JsonObject } from "@prisma/client/runtime/library";
+import { Client } from "@notionhq/client";
+
+import { getNotionParents, type NotionDetails, type NotionList, type NotionPage } from "~/utils/notion";
+
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
   const { isStopped } = await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths, pageLimit)
@@ -409,4 +413,42 @@ export const documentRouter = createTRPCRouter({
         parsedDocuments
       };
     }),
+
+  getOneDocument: orgMemberProcedure
+    .input(z.object({ documentId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const document = await ctx.prisma.document.findFirst({
+        where: {
+          id: input.documentId
+        }
+      })
+      if (!document) {
+        throw new Error('Document not found , go back!')
+      }
+      if (document.documentType !== 'NOTION') {
+        return { document }
+      }
+      else if (document.documentType === 'NOTION') {
+        const notion = new Client({
+          auth: (document.details as NotionDetails).access_token,
+          notionVersion: "2022-02-22"
+        })
+
+        let cursor: string | undefined;
+        const lists = []
+        while (true) {
+          const list = await notion.search({ filter: { value: "page", property: "object" }, start_cursor: cursor })
+          lists.push(...list.results)
+          if (list.has_more) {
+            cursor = list.next_cursor as string
+            continue;
+          }
+          else {
+            break;
+          }
+        }
+        const notionLists = getNotionParents(lists)
+        return { document, integrationDetails: notionLists }
+      }
+    })
 });

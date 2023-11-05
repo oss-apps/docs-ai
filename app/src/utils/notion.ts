@@ -1,3 +1,26 @@
+export const getNotionParents = (args: any[]) => {
+  const lists = args as NotionPage[]
+  const result: NotionList[] = []
+  for (let i = 0; i < lists.length; i++) {
+    const each = lists[i]
+
+    // Edge cases
+    if (!each) continue
+    if (each.parent.type != 'workspace') continue
+
+    const title = each.properties?.title?.title[0]?.plain_text ?? 'Untitled Document'
+    const details = {
+      id: each.id,
+      title,
+      icon: each.icon,
+      url: each.url
+      // content: each.properties.title.title[0].text
+    }
+    result.push(details)
+  }
+  return result
+}
+
 export type NotionDetails = {
   access_token: string;
   token_type: string;

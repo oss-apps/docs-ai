@@ -12,10 +12,8 @@ import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { type ParsedUrls } from "~/types";
 import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
-import { Client } from "@notionhq/client";
-import { type NotionDetails, type NotionList, type NotionPage } from "~/types/notionTypes";
 
-const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string, integrationDetailsJson: string }> = ({ user, orgJson, projectJson, documentJson, integrationDetailsJson }) => {
+const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string }> = ({ user, orgJson, projectJson, documentJson }) => {
   const router = useRouter()
   const { docType } = router.query as { docType: string, orgname: string, projectSlug: string }
 
@@ -33,7 +31,6 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
   // type ConditionalType = boolean extends true ? string : number;
   // let variable: ConditionalType = true;
 
-  const integrationDetails: NotionList[] = superjson.parse(integrationDetailsJson)
 
 
   return (
@@ -48,7 +45,7 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
             <div className="max-w-2xl mx-auto p-2">
                 <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
               <div className="mt-4">
-                <CreateDocumentForm org={org} project={project} docType={document.documentType} document={document} integrationDetails={integrationDetails} />
+                <CreateDocumentForm org={org} project={project} docType={document.documentType} document={document} />
               </div>
             </div>
           </div>
@@ -58,8 +55,8 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
   );
 };
 
-const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { documentData: ParsedUrls, totalSize: number }, integrationDetails: NotionList[] }> =
-  ({ org, project, docType, document, integrationDetails }) => {
+const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType, document: Document & { documentData: ParsedUrls, totalSize: number } }> =
+  ({ org, project, docType, document }) => {
     if (docType === DocumentType.TEXT) {
       return <TextDocument org={org} project={project} document={document} />
     }
@@ -67,7 +64,7 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
       return <URLDocument org={org} project={project} document={document} />
     }
     else if (docType === DocumentType.NOTION) {
-      return <NotionDocument org={org} project={project} document={document} integrationDetails={integrationDetails} />
+      return <NotionDocument org={org} project={project} document={document} />
     }
     return <></>
   }
@@ -142,29 +139,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const document = org.org.projects[0].documents[0]
-  const lists = []
 
-  if (document.documentType === 'NOTION') {
-    const notion = new Client({
-      auth: (document.details as NotionDetails).access_token,
-      notionVersion: "2022-02-22"
-    })
-
-    let cursor: string | undefined;
-    while (true) {
-      const list = await notion.search({ filter: { value: "page", property: "object" }, start_cursor: cursor })
-      lists.push(...list.results)
-      if (list.has_more) {
-        cursor = list.next_cursor as string
-        continue;
-      }
-      else {
-        break;
-      }
-    }
-  }
-
-  const notionLists = getNotionParents(lists)
 
   const props = {
     props: {
@@ -172,35 +147,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       orgJson: superjson.stringify(org.org),
       projectJson: superjson.stringify(org.org.projects[0]),
       documentJson: superjson.stringify({ ...document, totalSize }),
-      integrationDetailsJson: superjson.stringify(notionLists)
     }
   }
   return props
 }
 
 
-const getNotionParents = (args: any[]) => {
-  const lists = args as NotionPage[]
-  const result: NotionList[] = []
-  for (let i = 0; i < lists.length; i++) {
-    const each = lists[i]
 
-    // Edge cases
-    if (!each) continue
-    if (each.parent.type != 'workspace') continue
-
-    const title = each.properties?.title?.title[0]?.plain_text ?? 'Untitled Document'
-    const details = {
-      id: each.id,
-      title,
-      icon: each.icon,
-      url: each.url
-      // content: each.properties.title.title[0].text
-    }
-    result.push(details)
-  }
-  return result
-}
 
 export default EditDocument;
 
