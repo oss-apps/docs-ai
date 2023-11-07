@@ -171,6 +171,7 @@ enum IndexStatus {
     INDEXING
     SUCCESS
     FAILED
+    SIZE_LIMIT_EXCEED
 }
 
 model Document {

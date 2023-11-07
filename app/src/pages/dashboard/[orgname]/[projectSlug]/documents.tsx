@@ -27,6 +27,8 @@ const Status = ({ status }: { status: IndexStatus }) => {
       return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Fetching failed</div>
     case IndexStatus.FAILED:
       return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Failed</div>
+    case IndexStatus.SIZE_LIMIT_EXCEED:
+      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Size Limit Reached</div>
   }
 }
 

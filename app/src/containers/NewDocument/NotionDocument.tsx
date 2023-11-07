@@ -1,19 +1,18 @@
 import { type Org, type Project, type Document } from "@prisma/client"
-import { z } from "zod";
 import Avatar from "~/components/Avatar";
-import PrimaryButton, { Button, SecondaryButton, SmallSecondaryButton } from "~/components/form/button";
+import PrimaryButton, { Button, SmallSecondaryButton } from "~/components/form/button";
 import { IconNotion, IconAdd } from "~/components/icons/icons";
 import { env } from "~/env.mjs";
-import { CoverOrIcon, type NotionDetails, type NotionList } from "~/utils/notion";
+import { type CoverOrIcon, type NotionDetails } from "~/utils/notion";
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { Progress } from "~/components/ui/Progress"
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/Alert"
+import Link from "next/link";
+import { BookOpenCheck, FileWarning } from "lucide-react";
+import { useRouter } from "next/router";
+import { getLimits } from "~/utils/license";
 
-
-const documentSchema = z.object({
-  src: z.string().url(),
-  skipPaths: z.string().optional(),
-})
 
 
 export const NotionDocument: React.FC<{ org: Org, project: Project, newDocument?: boolean, document?: Document }> = ({ project, org, newDocument = false, document, }) => {
@@ -60,25 +59,35 @@ const NewNotionDocument: React.FC<{ org: Org, project: Project }> = ({ project, 
 }
 
 const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Document }> = ({ project, org, document, }) => {
+  const router = useRouter()
   const notionDetails = document?.details as NotionDetails
   const [skippedUrls, setSkippedUrls] = useState<Record<string, boolean>>(notionDetails?.skippedUrls ?? {})
+  const [indexStatus, setIndexStatus] = useState(document.indexStatus)
+
   const url = `${env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL}&state=${org.id},${project.id}`
 
   const indexNotionDocs = api.document.createNotionDocument.useMutation()
   const { data: notionListsDetails, isLoading } = api.document.getOneDocument.useQuery({ documentId: document?.id })
+  const limits = getLimits(org.plan)
 
   const onSkipToggle = (url: string) => {
     const isSkipped = skippedUrls[url]
-    console.log("🔥 ~ onSkipToggle ~ isSkipped:", isSkipped)
     setSkippedUrls({ ...skippedUrls, [url]: !isSkipped })
     // setTotalSize(totalSize + (isSkipped ? size : -size))
   }
 
   const onIndexNotionDocs = async () => {
-    const args = { projectId: project.id, orgId: org.id, documentId: document.id, details: { ...notionDetails, skippedUrls } }
-    const saved = await indexNotionDocs.mutateAsync(args)
-    console.log("🔥 ~ onIndexNotionDocs ~ args:", args)
-    console.log("🔥 ~ onIndexNotionDocs ~ onIndexNotionDocs:", saved)
+    setIndexStatus('INDEXING')
+    try {
+
+      const args = { projectId: project.id, orgId: org.id, documentId: document.id, details: { ...notionDetails, skippedUrls } }
+      await indexNotionDocs.mutateAsync(args)
+      await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
+    }
+    catch (err) {
+      await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
+    }
+
   }
 
   return (
@@ -127,10 +136,36 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
                 </div>
               </div>
             ))}
+
           </div>
-          <PrimaryButton className="mx-auto mt-4 gap-1" onClick={onIndexNotionDocs}>
+          <div className="flex flex-wrap justify-start sm:justify-between my-1 sm:p-2">
+            <div>
+              <span className="text-zinc-500">Total </span>
+              <span >{document.tokens / 1000} KB</span>
+            </div>
+            <div className="flex justify-center">
+              <span className=" text-zinc-500">Quota Remaninig &nbsp;  </span>
+              <span className="">{(limits.documentSize - document.tokens) / 1000} KB</span>
+            </div>
+          </div>
+          <PrimaryButton className="mx-auto mt-4 gap-1" onClick={onIndexNotionDocs} disabled={indexStatus === 'INDEXING' || isLoading} loading={indexStatus === 'INDEXING' || isLoading}>
             <IconAdd className="w-5 h-5" /> Create
           </PrimaryButton>
+          {indexStatus === 'INDEXING' &&
+            <Alert className="mt-4" variant='default'>
+              <BookOpenCheck className="h-4 w-4 " />
+              <AlertTitle>Indexing notion pages! </AlertTitle>
+              <AlertDescription>
+                You can safely move away from this page or just hang in there.</AlertDescription>
+            </Alert>
+          }
+          {indexStatus === 'SIZE_LIMIT_EXCEED' &&
+            <Alert className="mt-4" variant='default'>
+              <FileWarning className="h-4 w-4 " />
+              <AlertTitle>Size limit exceeded! </AlertTitle>
+              <AlertDescription> Upgrade to higher plans to use more storage, <Link href={`/dashboard/${org.name}/subscription`} className="font-semibold underline">  Manage Subscription here </Link>  </AlertDescription>
+            </Alert>
+          }
         </div>
       }
 

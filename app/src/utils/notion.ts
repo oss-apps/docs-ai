@@ -1,24 +1,58 @@
-export const getNotionParents = (args: any[]) => {
+import { Client } from "@notionhq/client"
+import { type Document } from "@prisma/client"
+
+export const getNotionParents = (args: any[], notionDetails: NotionDetails, skip = false) => {
   const lists = args as NotionPage[]
+  const isSkipEnabled = skip && Boolean(notionDetails.skippedUrls)
+
   const result: NotionList[] = []
   for (let i = 0; i < lists.length; i++) {
     const each = lists[i]
 
+
     // Edge cases
     if (!each) continue
     if (each.parent.type != 'workspace') continue
-
+    if (isSkipEnabled && notionDetails.skippedUrls[each.id]) {
+      console.log("🔥 ~ skipped pages:", each.id)
+      continue
+    }
     const title = each.properties?.title?.title[0]?.plain_text ?? 'Untitled Document'
     const details = {
       id: each.id,
       title,
       icon: each.icon,
-      url: each.url
-      // content: each.properties.title.title[0].text
+      url: each.url,
+      object: each.object
     }
     result.push(details)
   }
   return result
+}
+
+
+export const getNotionPages = async (document: Document, skip = false) => {
+  const notion = new Client({
+    auth: (document.details as NotionDetails).access_token,
+    notionVersion: "2022-02-22"
+  })
+
+  let cursor: string | undefined;
+  const lists = []
+  while (true) {
+    const list = await notion.search({ filter: { value: "page", property: "object" }, start_cursor: cursor })
+    lists.push(...list.results)
+    if (list.has_more) {
+      cursor = list.next_cursor as string
+      continue;
+    }
+    else {
+      break;
+    }
+  }
+
+  const notionLists = getNotionParents(lists, document.details as NotionDetails, skip)
+  return notionLists
 }
 
 export type NotionDetails = {
@@ -53,6 +87,7 @@ export type NotionPage = {
   properties: { title: Title };
   url: string;
   public_url: string;
+  object: 'page' | 'database'
 }
 type CreatedByOrLastEditedBy = {
   object: string;
@@ -96,4 +131,4 @@ type TitleEntity = {
   href?: null;
 }
 
-export type NotionList = { id: string, title: string, url: string, icon: CoverOrIcon }
+export type NotionList = { id: string, title: string, url: string, icon: CoverOrIcon, object: "page" | "database" }

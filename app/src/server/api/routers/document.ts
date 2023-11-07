@@ -10,14 +10,13 @@ import {
 import { prisma } from "~/server/db";
 import * as docgpt from '~/server/docgpt/index'
 import { deleteDocumentVector } from "~/server/docgpt/store";
-import { type ParsedDocs, type ParsedUrls } from "~/types";
+import { type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 import * as storage from '~/server/storage'
 import { DocumentType } from "@prisma/client";
 import { JsonObject } from "@prisma/client/runtime/library";
-import { Client } from "@notionhq/client";
 
-import { getNotionParents, type NotionDetails, type NotionList, type NotionPage } from "~/utils/notion";
+import { getNotionPages } from "~/utils/notion";
 
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
@@ -348,11 +347,9 @@ export const documentRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const details = input.details as JsonObject
-      const res = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
-
-      return {
-        res
-      }
+      await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+      const val = await docgpt.indexNotionDocuments(input.orgId, input.projectId, input.documentId)
+      return val
     }),
 
   deleteDocument: orgMemberProcedure
@@ -429,25 +426,7 @@ export const documentRouter = createTRPCRouter({
         return { document }
       }
       else if (document.documentType === 'NOTION') {
-        const notion = new Client({
-          auth: (document.details as NotionDetails).access_token,
-          notionVersion: "2022-02-22"
-        })
-
-        let cursor: string | undefined;
-        const lists = []
-        while (true) {
-          const list = await notion.search({ filter: { value: "page", property: "object" }, start_cursor: cursor })
-          lists.push(...list.results)
-          if (list.has_more) {
-            cursor = list.next_cursor as string
-            continue;
-          }
-          else {
-            break;
-          }
-        }
-        const notionLists = getNotionParents(lists)
+        const notionLists = await getNotionPages(document)
         return { document, integrationDetails: notionLists }
       }
     })
