@@ -75,7 +75,7 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
     return <FileDocument project={project} org={org} />
   }
   else if (docType === DocumentType.NOTION) {
-    return <NotionDocument project={project} org={org} newDocument integrationDetails={[]} />
+    return <NotionDocument project={project} org={org} newDocument />
   }
   else if (docType === DocumentType.URL) {
     return <URLDocument org={org} project={project} />

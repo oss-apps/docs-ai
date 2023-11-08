@@ -4,9 +4,8 @@ import PrimaryButton, { Button, SmallSecondaryButton } from "~/components/form/b
 import { IconNotion, IconAdd } from "~/components/icons/icons";
 import { env } from "~/env.mjs";
 import { type CoverOrIcon, type NotionDetails } from "~/utils/notion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "~/utils/api";
-import { Progress } from "~/components/ui/Progress"
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/Alert"
 import Link from "next/link";
 import { BookOpenCheck, FileWarning } from "lucide-react";
@@ -28,30 +27,15 @@ export const NotionDocument: React.FC<{ org: Org, project: Project, newDocument?
 
 
 const NewNotionDocument: React.FC<{ org: Org, project: Project }> = ({ project, org }) => {
-  const [timer, setTimer] = useState(5);
   const url = `${env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL}&state=${org.id},${project.id}`
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timer > 0) {
-        setTimer(timer - 1);
-      }
-    }, 500);
-    return () => {
-      clearInterval(interval)
-
-    };
-  });
   return (
     <>
       <div className="flex flex-col ">
-        <h1 className="text-xl font-semibold  text-center mb-2" >We&lsquo;re taking you to Notion to select the pages you want to train.</h1>
-        <Progress value={100 - timer * 20} />
+        <h1 className="text-xl font-semibold  text-center mb-2" >Select the pages you want to train.</h1>
         <div className="text-center mt-4">
           <Button variant='outline' size="sm">
             <a href={url} className="flex gap-2"><IconNotion /> Connect Notion</a>
           </Button>
-          <p className="text-slate-500 text-sm mt-2">If you&lsquo;re not redirected, click the button above</p>
         </div>
       </div>
     </>
@@ -105,7 +89,7 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
           <div className="flex justify-between mb-2">
             <p className="text-zinc-600 text-lg ">Pages</p>
             <a href={`${url},${document.id}`} >
-              <SmallSecondaryButton className="gap-1">
+              <SmallSecondaryButton className="gap-1" disabled={indexStatus === 'INDEXING'}>
                 <IconNotion className="h-4 w-4" /> Update Access
               </SmallSecondaryButton>
             </a>
@@ -140,11 +124,11 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
           </div>
           <div className="flex flex-wrap justify-start sm:justify-between my-1 sm:p-2">
             <div>
-              <span className="text-zinc-500">Total </span>
+              <span className="text-zinc-500">Total used </span>
               <span >{document.tokens / 1000} KB</span>
             </div>
             <div className="flex justify-center">
-              <span className=" text-zinc-500">Quota Remaninig &nbsp;  </span>
+              <span className=" text-zinc-500">Quota remaninig &nbsp;  </span>
               <span className="">{(limits.documentSize - document.tokens) / 1000} KB</span>
             </div>
           </div>

@@ -3,26 +3,31 @@ import { prisma } from "~/server/db";
 
 import { env } from "~/env.mjs";
 import { type NotionDetails } from "~/utils/notion";
-import { Document } from "@prisma/client";
+import { type Document } from "@prisma/client";
+import { SecondaryButton } from "~/components/form/button";
+import Link from "next/link";
 
-const NotionCallback: NextPage = () => {
+const NotionCallback: NextPage = (props: any) => {
+  console.log("🔥 ~ props:", props)
 
   return (
-    <div>
-      Something went wrong!
+    <div className="flex justify-center items-center flex-col  gap-2">
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
+      <h1 className="my-2 text-center text-xl"> {props?.error} </h1>
+      <Link href='/'>
+        <SecondaryButton> Go to Home </SecondaryButton></Link>
     </div>
   );
 };
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log("🔥 ~ getServerSideProps ~ context.query:", context.query)
   const { code, state } = context.query as { code: string, state: string }
 
   if (!code || !state) {
     return {
       props: {
-        error: context.query
+        ...context.query 
       }
     }
   }
@@ -102,10 +107,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         }
       })
     }
-    console.log("🔥 ~ getServerSideProps ~ return:", isUpdated)
 
     if (!notionDoc) {
-      return { props: {} }
+      return {
+        props: {
+          error: "Something happened, please try again later!"
+        }
+      }
     }
 
     return {
@@ -115,7 +123,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
   catch (err) {
-    console.log("🔥 ~ getServerSideProps ~ err:", err)
+    console.error("🔥 ~ getServerSideProps ~ err:", err)
     return { props: { err } }
 
   }
