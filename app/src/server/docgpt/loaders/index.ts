@@ -1,17 +1,19 @@
 import { Document } from "langchain/document"
 import { WebBaseLoader } from "./base"
-import { GitbookLoader } from "./gitbook"
-import { IndexStatus, DocumentType, Project, Org } from "@prisma/client"
+import { IndexStatus, DocumentType } from "@prisma/client"
 import { loadDocumentsToDb } from "../store"
 import { prisma } from "~/server/db"
 import * as storage from "~/server/storage"
+import { notionLoader } from "./notionToText"
+import { getLimits } from "~/utils/license"
 
-async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number) {
+
+async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number, indexStatus?: IndexStatus) {
   await prisma.document.update({
     where: { id: documentId },
     data: {
       title,
-      indexStatus: error ? IndexStatus.FAILED : IndexStatus.SUCCESS,
+      indexStatus: indexStatus ?? (error ? IndexStatus.FAILED : IndexStatus.SUCCESS),
       tokens,
     },
   })
@@ -126,4 +128,41 @@ export async function indexFileDocuments(orgId: string, projectId: string, docum
 
   await Promise.all(result)
   await updateStatus(projectId, orgId, documentId, error, title, tokens)
+}
+
+export async function indexNotionDocuments(orgId: string, projectId: string, documentId: string) {
+  console.log("🔥 ~ indexNotionDocuments ~ inside:")
+  const notionDoc = await prisma.document.findFirst({ where: { id: documentId } })
+  const org = await prisma.org.findFirst({ where: { id: orgId } })
+  if (!org || !notionDoc || !notionDoc.details) {
+    return notionDoc
+  }
+  let docs: Document[] = []
+  try {
+    docs = await notionLoader(notionDoc)
+  }
+  catch (err) {
+    console.error("🔥 ~ indexNotionDocuments ~ err:", err)
+    await updateStatus(projectId, orgId, documentId, true, notionDoc.src, 0, "FAILED")
+    throw new Error("INTERNAL_SERVER_ERROR")
+  }
+
+  const tokens = docs.reduce((acc, curr) => {
+    acc += curr.metadata.size
+    return acc
+  }, 0)
+
+  if (Number(org.documentTokens) + tokens > getLimits(org.plan).documentSize) {
+    console.log("🔥 ~ indexNotionDocuments ~ tokens:", documentId, tokens)
+    await updateStatus(projectId, orgId, documentId, true, notionDoc.src, 0, "SIZE_LIMIT_EXCEED")
+    throw new Error('Document size limit exceeded')
+
+  }
+
+  await loadDocumentsToDb(projectId, documentId, DocumentType.NOTION, docs)
+  await updateStatus(projectId, orgId, documentId, false, notionDoc.src, tokens, "SUCCESS")
+
+  console.log("🔥 ~ indexNotionDocuments ~ finished:", documentId)
+
+  return notionDoc
 }

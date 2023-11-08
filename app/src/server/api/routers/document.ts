@@ -10,10 +10,14 @@ import {
 import { prisma } from "~/server/db";
 import * as docgpt from '~/server/docgpt/index'
 import { deleteDocumentVector } from "~/server/docgpt/store";
-import { type ParsedDocs, type ParsedUrls } from "~/types";
+import { type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 import * as storage from '~/server/storage'
 import { DocumentType } from "@prisma/client";
+import { JsonObject } from "@prisma/client/runtime/library";
+
+import { getNotionPages } from "~/utils/notion";
+
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
   const { isStopped } = await docgpt.loadUrlDocument(src, type, orgId, projectId, documentId, loadAllPath, skipPaths, pageLimit)
@@ -339,6 +343,15 @@ export const documentRouter = createTRPCRouter({
       };
     }),
 
+  createNotionDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const details = input.details as JsonObject
+      await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+      const val = await docgpt.indexNotionDocuments(input.orgId, input.projectId, input.documentId)
+      return val
+    }),
+
   deleteDocument: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), documentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
@@ -397,4 +410,24 @@ export const documentRouter = createTRPCRouter({
         parsedDocuments
       };
     }),
+
+  getOneDocument: orgMemberProcedure
+    .input(z.object({ documentId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const document = await ctx.prisma.document.findFirst({
+        where: {
+          id: input.documentId
+        }
+      })
+      if (!document) {
+        throw new Error('Document not found , go back!')
+      }
+      if (document.documentType !== 'NOTION') {
+        return { document }
+      }
+      else if (document.documentType === 'NOTION') {
+        const notionLists = await getNotionPages(document)
+        return { document, integrationDetails: notionLists }
+      }
+    })
 });

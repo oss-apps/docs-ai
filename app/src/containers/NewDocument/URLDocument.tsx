@@ -137,11 +137,11 @@ export const URLDocument: React.FC<{ org: Org, project: Project, urlType?: strin
         </form>
         {parsedUrls.length ? (
           <div className="mt-10">
-            <p className="text-zinc-500 text-lg">Fetched pages</p>
-            <div className="max-h-[35vh] border border-gray-400 rounded-md w-full overflow-auto">
+            <p className="text-zinc-600 text-lg">Fetched pages</p>
+            <div className="max-h-[35vh] border border-gray-300 rounded-md w-full overflow-auto">
               {parsedUrls.map((doc) => (
-                <div key={doc.id} className={`py-2 sm:p-2 border-b flex  justify-between last:border-none last:rounded-b-md first:rounded-t-md ${skippedUrls[doc.id] ? 'bg-red-50' : ''}`}>
-                  <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-500 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
+                <div key={doc.id} className={`py-2 sm:p-2 border-b flex  justify-between last:border-none last:rounded-b-md first:rounded-t-md  ${skippedUrls[doc.id] ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
+                  <a href={doc.uniqueId} target="_blank" rel="noreferrer" className={`text-zinc-700 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
                     {doc.uniqueId}
                   </a>
                   <div className="flex sm:justify-end sm:gap-4 items-center">

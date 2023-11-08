@@ -3,21 +3,19 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type OrgUser, type Org, type Project, DocumentType, type Document } from "@prisma/client";
+import { type Org, type Project, DocumentType, type Document } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { URLDocument } from "~/containers/NewDocument/URLDocument";
 import { useRouter } from 'next/router'
 import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
-import { api } from "~/utils/api";
-import { type ParsedDocs, type ParsedUrls } from "~/types";
-
+import { type ParsedUrls } from "~/types";
+import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
 
 const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string }> = ({ user, orgJson, projectJson, documentJson }) => {
   const router = useRouter()
   const { docType } = router.query as { docType: string, orgname: string, projectSlug: string }
-
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
@@ -29,6 +27,10 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
     }[];
     totalSize: number;
   } = superjson.parse(documentJson)
+
+  // type ConditionalType = boolean extends true ? string : number;
+  // let variable: ConditionalType = true;
+
 
 
   return (
@@ -58,8 +60,13 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
     if (docType === DocumentType.TEXT) {
       return <TextDocument org={org} project={project} document={document} />
     }
-
-    return <URLDocument org={org} project={project} document={document} />
+    else if (docType === DocumentType.URL) {
+      return <URLDocument org={org} project={project} document={document} />
+    }
+    else if (docType === DocumentType.NOTION) {
+      return <NotionDocument org={org} project={project} document={document} />
+    }
+    return <></>
   }
 
 
@@ -126,21 +133,27 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-
   let totalSize = 0
   for (const doc of org.org.projects[0].documents[0].documentData) {
     totalSize += doc.size
   }
+
+  const document = org.org.projects[0].documents[0]
+
 
   const props = {
     props: {
       user: session.user,
       orgJson: superjson.stringify(org.org),
       projectJson: superjson.stringify(org.org.projects[0]),
-      documentJson: superjson.stringify({ ...org.org.projects[0].documents[0], totalSize })
+      documentJson: superjson.stringify({ ...document, totalSize }),
     }
   }
   return props
 }
 
+
+
+
 export default EditDocument;
+

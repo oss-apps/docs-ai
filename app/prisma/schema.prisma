@@ -161,6 +161,7 @@ enum DocumentType {
     TEXT
     PDF
     FILES
+    NOTION
 }
 
 enum IndexStatus {
@@ -170,6 +171,7 @@ enum IndexStatus {
     INDEXING
     SUCCESS
     FAILED
+    SIZE_LIMIT_EXCEED
 }
 
 model Document {

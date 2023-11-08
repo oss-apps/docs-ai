@@ -58,7 +58,7 @@ const Avatar: React.FC<{ src?: string | null, uid: string, size?: number, square
   return (
     <div>
       {(src && !error) ? (
-        <Image className="rounded-full shadow-md" alt="profile-pic" src={src} width={size} height={size} onError={() => setError(true)} />
+        <Image className={`shadow-md ${square ? 'rounded-md' : 'rounded-full'}`} alt="profile-pic" src={src} width={size} height={size} onError={() => setError(true)} />
       ) : (
           <HashAvatar uid={uid} size={size || 32} square={!!square} />
       )}
