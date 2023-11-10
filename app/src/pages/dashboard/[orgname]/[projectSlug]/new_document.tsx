@@ -13,6 +13,9 @@ import NavBack from "~/components/NavBack";
 import { FileDocument } from "~/containers/NewDocument/FileDocument";
 import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
 import { env } from "~/env.mjs";
+import { Files, FileText, Globe } from "lucide-react";
+import { NotionLogoIcon } from "@radix-ui/react-icons";
+import { IconNotion } from "~/components/icons/icons";
 
 
 function getDocType(type: number) {
@@ -44,19 +47,17 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
           <div className="w-full m-2">
             <div className="max-w-4xl mx-auto mt-5">
               <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
-
-              <p className="mt-10 text-lg text-gray-800">{!docType ? 'Available sources' : null}</p>
               {docType ? (
                 <div className="max-w-2xl mx-auto">
                   <CreateDocumentForm org={org} project={project} docType={docType} />
                 </div>
               ) : (
 
-                  <div className="flex justify-center sm:justify-start gap-6 sm:gap-12  flex-wrap mt-10">
-                    <DocumentSource name="Web" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
-                    <DocumentSource name="Text" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
-                    <DocumentSource name="Files" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
-                    <DocumentSource name="Notion" url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.NOTION}`} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 gap-2  mt-10">
+                    <DocumentSource name="Web" type={DocumentType.URL} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
+                    <DocumentSource name="Files" type={DocumentType.FILES} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
+                    <DocumentSource name="Text" type={DocumentType.TEXT} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
+                    <DocumentSource name="Notion" type={DocumentType.NOTION} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.NOTION}`} />
                 </div>
               )}
             </div>
@@ -87,15 +88,45 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
 }
 
 
-const DocumentSource: React.FC<{ name: string, url?: string }> = ({ name, url }) => {
+const DocumentSource: React.FC<{ name: string, type: DocumentType, url?: string }> = ({ name, type, url }) => {
   const router = useRouter()
 
   return (
-    <button className="border rounded-md h-32 w-32 flex justify-center items-center flex-col" onClick={() => url ? router.push(url) : null}>
-      <div className="text-3xl font-light text-gray-800">{name}</div>
-      <p className="text-xs text-gray-600">{!url ? 'Coming soon' : ''}</p>
+    <button className="border rounded-lg py-2  hover:bg-slate-50" onClick={() => url ? router.push(url) : null}>
+      <div className="flex items-center gap-2 mx-3 my-2 font-medium   text-slate-800">
+        {IconTypes[type]} {IconNames[type]}
+      </div>
+      <p className="text-slate-500 text-start mx-3 my-1 text-sm"> {IconDescription[type]}</p>  
     </button>
   )
+}
+
+const IconTypes = {
+  [DocumentType.URL]: <Globe className="w-5 h-5" />,
+  [DocumentType.FILES]: <Files className="w-5 h-5" />,
+  [DocumentType.TEXT]: <FileText className="w-5 h-5" />,
+  [DocumentType.NOTION]: <IconNotion className="w-5 h-5" />,
+  [DocumentType.CHAT]: null,
+  [DocumentType.PDF]: null
+
+}
+
+const IconNames = {
+  [DocumentType.URL]: "Add a website",
+  [DocumentType.FILES]: "Upload Files",
+  [DocumentType.TEXT]: "Add Text",
+  [DocumentType.NOTION]: "Notion",
+  [DocumentType.CHAT]: null,
+  [DocumentType.PDF]: null
+}
+
+const IconDescription = {
+  [DocumentType.URL]: "Fetch sub pages and extract text content from them.",
+  [DocumentType.FILES]: "Files such as PDFs, Docx, Txt can be uploaded.",
+  [DocumentType.TEXT]: "Text can be used for info that may not be in other sources.",
+  [DocumentType.NOTION]: "Connect your notion workspace and add pages to DocsAI.",
+  [DocumentType.CHAT]: null,
+  [DocumentType.PDF]: null
 }
 
 
