@@ -25,14 +25,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <title>Docs AI - Dashboard</title>
         <meta property="og:title" content="The AI Companion you always wanted" />
         <meta name="description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
-        <meta property="og:image" content="https://docsai.app/images/og-app.jpg" />
+        <meta property="og:image" content="https://docsai.app/images/og-app.jpeg" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:width" content="1200" />
         <meta property="twitter:title" content="The AI Companion you always wanted" />
         <meta property="og:url" content="https://docsai.app"></meta>
         <meta property="twitter:description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content="https://docsai.app/images/og-app.jpg" />
+        <meta property="twitter:image" content="https://docsai.app/images/og-app.jpeg" />
         <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
         {env.NEXT_PUBLIC_NODE_ENV === "production" && 
@@ -41,7 +41,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         {!router.route.startsWith("/embed") && env.NEXT_PUBLIC_NODE_ENV === "production" ? (
           <script src="/embed.min.js" project-id="clfp5tn2a0007mc0ub8qch4x2" primary-color="#000" async></script>
         ) : !router.route.startsWith("/embed") && env.NEXT_PUBLIC_NODE_ENV !== "production" ? (
-            <script src="/embed.js" project-id="clnh7m5hp00091jwsbikdyufe" docs-url="http://localhost:3000" async></script>
+            <script src="/embed.js" project-id="clol3x1k500011jufu8a73eha" docs-url="http://localhost:3000" async></script>
         ) : null}
       </Head>
       <Toaster position="bottom-center" />

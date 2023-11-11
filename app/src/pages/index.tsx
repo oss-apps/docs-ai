@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <Image src="/images/app.webp" alt="App" width={1200} height={800} className="rounded-lg relative border"></Image>
+              <Image src="/images/app.webp" alt="App" quality={20} width={1200} height={800} className="rounded-lg relative border"></Image>
             </div>
           </section>
         </main>
@@ -70,7 +70,7 @@ function Landing() {
           </div>
           <div className="text-center mt-4">
             <h1 className="  tracking-tight text-gray-900 sm:text-6xl text-4xl lg:text-6xl font-bold  justify-center text-center">
-              The  AI Companion  you  always wanted
+              The AI Companion you always wanted.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Train your documents, chat with your documents, and create chatbots that solves queries for you and your users.
@@ -158,9 +158,10 @@ function RightImage() {
           <Image
             src="/images/feature-1.webp"
             alt="Product screenshot"
+            quality={20}
             className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
-            width={2432}
-            height={1442}
+            width={1200}
+            height={800}
           />
         </div>
       </div>
@@ -227,8 +228,9 @@ function LeftImage() {
               src="/images/feature-2.webp"
               alt="Product screenshot"
               className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
-              width={2432}
-              height={1442}
+              width={1200}
+              height={800}
+              quality={20}
             />
 
           </div>
