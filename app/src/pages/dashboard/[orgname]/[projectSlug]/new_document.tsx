@@ -39,26 +39,31 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
+        <title>Docs AI - Add Documents</title>
       </Head>
       <main className="h-full">
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
           <div className="w-full m-2">
+
             <div className="max-w-4xl mx-auto mt-5">
-              <NavBack href={!docType ? `/dashboard/${org.name}/${project.slug}/documents` : `/dashboard/${org.name}/${project.slug}/new_document`} />
               {docType ? (
                 <div className="max-w-2xl mx-auto">
+                  <NavBack href={`/dashboard/${org.name}/${project.slug}/new_document`} />
                   <CreateDocumentForm org={org} project={project} docType={docType} />
                 </div>
               ) : (
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 gap-2  mt-10">
+                  <>
+                    <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">Add Documents
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 gap-2  mt-6">
                     <DocumentSource name="Web" type={DocumentType.URL} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
                     <DocumentSource name="Files" type={DocumentType.FILES} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
                     <DocumentSource name="Text" type={DocumentType.TEXT} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
                     <DocumentSource name="Notion" type={DocumentType.NOTION} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.NOTION}`} />
                 </div>
+                  </>
+
               )}
             </div>
           </div>

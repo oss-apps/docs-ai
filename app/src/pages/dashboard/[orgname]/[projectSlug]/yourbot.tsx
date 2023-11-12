@@ -11,7 +11,7 @@ import PrimaryButton, { Button, SecondaryButton } from "~/components/form/button
 import { Fragment, useState } from "react";
 import { MarkDown } from "~/components/MarkDown";
 import Link from "next/link";
-import { IconCustomize, IconEmbed, IconShare } from "~/components/icons/icons";
+import { IconAdd, IconCustomize, IconEmbed, IconShare } from "~/components/icons/icons";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
 
 
@@ -41,7 +41,7 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   return (
     <>
       <Head>
-        <title>Docs AI - Bot</title>
+        <title>Docs AI - Talk to your docs</title>
       </Head>
       <main className="h-full">
         <div className="flex">
@@ -49,8 +49,14 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
           <div className="w-full ">
             <div className="mt-4 p-2 sm:p-5 flex justify-center  ">
               <div className="max-w-5xl w-full  flex justify-end gap-y-6 sm:gap-y-0 sm:flex-col flex-col-reverse">
-                <div className="flex justify-center gap-4 mb-2 pb-4 border-t-2 pt-4 sm:pt-0 sm:border-none sm:justify-end">
-
+                <div className="flex justify-center gap-4 mb-2 pb-4 border-t-2 pt-4 sm:pt-0 sm:border-none sm:justify-end flex-wrap sm:flex-nowrap">
+                  <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} className="sm:w-full" tabIndex={-1}>
+                    <Button className={`border-0 text-left shadow-none  flex  gap-2 items-center`}>
+                      <IconAdd className="h-5 w-5" />
+                      <span className="hidden sm:block">
+                        Add Documents </span>
+                    </Button>
+                  </Link>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" className="hidden sm:flex justify-center gap-2">

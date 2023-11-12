@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
-import { IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
+import { IconAdd, IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
@@ -25,63 +25,71 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
       </div>
 
         <div className="mt-10 flex flex-col gap-y-1">
-        <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full">
-            <SecondaryButton className={` border-0 w-full flex  gap-2 text-left shadow-none focus:bg-gray-100 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+          <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={` border-0 w-full flex  gap-2 text-left shadow-none  items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconDashboard className="h-5 w-5" />
               <span className="hidden sm:block">
               Dashboard
               </span>
           </SecondaryButton>
-        </Link>
+          </Link>
 
-        <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+          <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/new_document' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+              <IconAdd className="h-5 w-5" />
+              <span className="hidden sm:block">
+                Add Documents </span>
+            </SecondaryButton>
+          </Link>
+
+          <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none  focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/yourbot' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconBot className="h-5 w-5" />
               <span className="hidden sm:block">
                 Your Bot </span>
           </SecondaryButton>
-        </Link>
-        <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full">
-            <SecondaryButton className={` border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
-              <IconPaintBrush className="h-5 w-5" />
-              <span className="hidden sm:block">
-                Bot Appearance </span>
-          </SecondaryButton>
-        </Link>
-        {/* <Link href={`/dashboard/${org.name}/${project.slug}/QnA`} className="w-full">
-          <SecondaryButton className={`mt-2 text-left w-full shadow-none focus:bg-gray-100 ${router.pathname === '/dashboard/[orgname]/[projectSlug]/QnA' ? 'bg-gray-100' : 'bg-white'}`}>
-            QnA
-          </SecondaryButton>
-        </Link> */}
-          <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+          </Link>
+
+          <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconFolderOpen className="h-5 w-5" />
               <span className="hidden sm:block">
                 Documents </span>
           </SecondaryButton>
-        </Link>
-          <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full">
-            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+          </Link>
+
+          <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconHistory className="h-5 w-5" />
               <span className="hidden sm:block">
                 Chat History </span>
           </SecondaryButton>
-        </Link>
-          <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center   ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+          </Link>
+
+          <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={` border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+              <IconPaintBrush className="h-5 w-5" />
+              <span className="hidden sm:block">
+                Appearance </span>
+            </SecondaryButton>
+          </Link>
+
+          <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  flex  gap-2 items-center   ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconSettings className="h-5 w-5" />
               <span className="hidden sm:block">
                 Settings </span>
           </SecondaryButton>
-        </Link>
+          </Link>
 
-          <Link href={`/dashboard/${org.name}/subscription`} className="w-full">
-            <SecondaryButton className={`border-0  text-left w-full shadow-none focus:bg-gray-100 flex  gap-2 items-center  `}>
+          <Link href={`/dashboard/${org.name}/subscription`} className="w-full" tabIndex={-1}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  flex  gap-2 items-center  `}>
               <IconSubscription className="h-5 w-5" />
               <span className="hidden sm:block">
                 Subscription </span>
             </SecondaryButton>
           </Link>
+
       </div>
     </nav >
 
