@@ -37,7 +37,9 @@ const server = z.object({
   R2_SECRET_KEY: z.string(),
   R2_DOCS_BUCKET: z.string(),
   NOTION_CLIENT_SECRET: z.string(),
-  NOTION_REDIRECT_URL: z.string()
+  NOTION_REDIRECT_URL: z.string(),
+  CONFLUENCE_SECRET: z.string(),
+  CONFLUENCE_REDIRECT_URL: z.string()
 });
 
 /**
@@ -48,7 +50,9 @@ const client = z.object({
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
   NEXT_PUBLIC_NOTION_CLIENT_ID: z.string(),
   NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: z.string(),
-  NEXT_PUBLIC_DOMAIN: z.string()
+  NEXT_PUBLIC_DOMAIN: z.string(),
+  NEXT_PUBLIC_CONFLUENCE_CLIENT_ID: z.string(),
+  NEXT_PUBLIC_CONFLUENCE_AUTHORIZATION_URL: z.string()
 });
 
 /**
@@ -63,6 +67,8 @@ const processEnv = {
   NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: process.env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL,
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
+  NEXT_PUBLIC_CONFLUENCE_CLIENT_ID: process.env.NEXT_PUBLIC_CONFLUENCE_CLIENT_ID,
+  NEXT_PUBLIC_CONFLUENCE_AUTHORIZATION_URL: process.env.NEXT_PUBLIC_CONFLUENCE_AUTHORIZATION_URL,
 
   // Server Envs
   DATABASE_URL: process.env.DATABASE_URL,
@@ -87,8 +93,9 @@ const processEnv = {
   R2_SECRET_KEY: process.env.R2_SECRET_KEY,
   R2_DOCS_BUCKET: process.env.R2_DOCS_BUCKET,
   NOTION_CLIENT_SECRET: process.env.NOTION_CLIENT_SECRET,
-  NOTION_REDIRECT_URL: process.env.NOTION_REDIRECT_URL
-
+  NOTION_REDIRECT_URL: process.env.NOTION_REDIRECT_URL,
+  CONFLUENCE_SECRET: process.env.CONFLUENCE_SECRET,
+  CONFLUENCE_REDIRECT_URL: process.env.CONFLUENCE_REDIRECT_URL
 };
 
 // Don't touch the part below

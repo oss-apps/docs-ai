@@ -12,17 +12,10 @@ import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { FileDocument } from "~/containers/NewDocument/FileDocument";
 import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
-import { env } from "~/env.mjs";
 import { Files, FileText, Globe } from "lucide-react";
-import { NotionLogoIcon } from "@radix-ui/react-icons";
-import { IconNotion } from "~/components/icons/icons";
+import { IconConfluence, IconNotion } from "~/components/icons/icons";
+import { ConfluenceDocument } from "~/containers/NewDocument/ConfluenceDocument";
 
-
-function getDocType(type: number) {
-  if (type === 1) return DocumentType.TEXT
-
-  return DocumentType.URL
-}
 
 
 const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, notion: string }> = ({ user, orgJson, projectJson, notion }) => {
@@ -32,8 +25,6 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
-  const notionUrl = `${env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL}&state=${org.id},${project.id}`
-  console.log("🔥 ~ docType:", (notion))
 
 
   return (
@@ -61,6 +52,8 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
                     <DocumentSource name="Files" type={DocumentType.FILES} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
                     <DocumentSource name="Text" type={DocumentType.TEXT} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
                     <DocumentSource name="Notion" type={DocumentType.NOTION} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.NOTION}`} />
+                    <DocumentSource name="Confluence" type={DocumentType.CONFLUENCE} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.CONFLUENCE}`} />
+
                 </div>
                   </>
 
@@ -85,6 +78,9 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
   }
   else if (docType === DocumentType.URL) {
     return <URLDocument org={org} project={project} />
+  }
+  else if (docType === DocumentType.CONFLUENCE) {
+    return <ConfluenceDocument org={org} project={project} />
   }
 
   return <>
@@ -111,9 +107,9 @@ const IconTypes = {
   [DocumentType.FILES]: <Files className="w-5 h-5" />,
   [DocumentType.TEXT]: <FileText className="w-5 h-5" />,
   [DocumentType.NOTION]: <IconNotion className="w-5 h-5" />,
+  [DocumentType.CONFLUENCE]: <IconConfluence />,
   [DocumentType.CHAT]: null,
-  [DocumentType.PDF]: null
-
+  [DocumentType.PDF]: null,
 }
 
 const IconNames = {
@@ -121,6 +117,7 @@ const IconNames = {
   [DocumentType.FILES]: "Upload Files",
   [DocumentType.TEXT]: "Add Text",
   [DocumentType.NOTION]: "Notion",
+  [DocumentType.CONFLUENCE]: "Confluence",
   [DocumentType.CHAT]: null,
   [DocumentType.PDF]: null
 }
@@ -130,8 +127,10 @@ const IconDescription = {
   [DocumentType.FILES]: "Files such as PDFs, Docx, Txt can be uploaded.",
   [DocumentType.TEXT]: "Text can be used for info that may not be in other sources.",
   [DocumentType.NOTION]: "Connect your notion workspace and add pages to DocsAI.",
+  [DocumentType.CONFLUENCE]: "Link your Confluence pages to keep the knowledge flowing.",
   [DocumentType.CHAT]: null,
-  [DocumentType.PDF]: null
+  [DocumentType.PDF]: null,
+
 }
 
 

@@ -162,6 +162,7 @@ enum DocumentType {
     PDF
     FILES
     NOTION
+    CONFLUENCE
 }
 
 enum IndexStatus {
