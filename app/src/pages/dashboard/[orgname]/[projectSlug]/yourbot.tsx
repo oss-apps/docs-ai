@@ -50,13 +50,6 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
             <div className="mt-4 p-2 sm:p-5 flex justify-center  ">
               <div className="max-w-5xl w-full  flex justify-end gap-y-6 sm:gap-y-0 sm:flex-col flex-col-reverse">
                 <div className="flex justify-center gap-4 mb-2 pb-4 border-t-2 pt-4 sm:pt-0 sm:border-none sm:justify-end flex-wrap sm:flex-nowrap">
-                  <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} className="sm:w-full" tabIndex={-1}>
-                    <Button className={`border-0 text-left shadow-none  flex  gap-2 items-center`}>
-                      <IconAdd className="h-5 w-5" />
-                      <span className="hidden sm:block">
-                        Add Documents </span>
-                    </Button>
-                  </Link>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" className="hidden sm:flex justify-center gap-2">

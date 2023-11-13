@@ -44,9 +44,9 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
       <main className="h-full">
         <div className="h-full flex">
           <AppNav user={user} org={org} project={project} />
-          <div className="w-full m-2">
+          <div className="w-full p-2 sm:p-5">
 
-            <div className="max-w-4xl mx-auto mt-5">
+            <div className="m-2 max-w-5xl  mx-auto mt-5">
               {docType ? (
                 <div className="max-w-2xl mx-auto">
                   <NavBack href={`/dashboard/${org.name}/${project.slug}/new_document`} />
@@ -54,9 +54,9 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
                 </div>
               ) : (
                   <>
-                    <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">Add Documents
+                    <div className="flex items-center text-gray-800 text-lg gap-2 pb-2">Add Documents
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 gap-2  mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 gap-2  mt-4">
                     <DocumentSource name="Web" type={DocumentType.URL} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.URL}`} />
                     <DocumentSource name="Files" type={DocumentType.FILES} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.FILES}`} />
                     <DocumentSource name="Text" type={DocumentType.TEXT} url={`/dashboard/${org.name}/${project.slug}/new_document?docType=${DocumentType.TEXT}`} />
