@@ -23,7 +23,7 @@ import { NoChat } from "./download_chat";
 
 import { Button } from "~/components/form/button"
 import { Calendar } from "~/components/ui/Calender"
-import { format, getTime } from "date-fns"
+import { format, formatDistanceToNow, getTime } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/Select"
@@ -363,8 +363,8 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                           <p className="max-w-full text-left text-base">
                             {conversation.firstMsg.slice(0, 60) + (conversation.firstMsg.length > 50 ? '...' : '')}
                           </p>
-                          <div className="text-sm flex justify-between items-baseline text-gray-600 mt-2 ">
-                            {conversation.createdAt.toLocaleString()}
+                          <div className="text-sm flex justify-between items-baseline text-gray-600 mt-2 " title={conversation.createdAt.toLocaleString()}>
+                            {formatDistanceToNow(conversation.createdAt, { addSuffix: true })}
                             <span className={`px-2  font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck /> </span>
                           </div>
                         </div>
