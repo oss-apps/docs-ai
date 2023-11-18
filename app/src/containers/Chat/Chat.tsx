@@ -15,6 +15,13 @@ import { getContrastColor } from "~/utils/color";
 import { IconEmail, IconFastForward, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 import { Input } from "~/components/form/input";
+import { Paintbrush } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/Tooltip"
 
 
 const qnaSchema = z.object({
@@ -139,6 +146,9 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (Boolean(answer || latestQuestion)) {
+      return
+    }
     const { question } = data as z.input<typeof qnaSchema>
 
     await getAnswer(question)
@@ -267,7 +277,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
                 {project.botName}
               </p>
               <div className="flex gap-3">
-                <button onClick={onResetChat} className="flex justify-center">
+                <button onClick={onResetChat} className="flex justify-center" type="reset" accessKey="r">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
@@ -337,6 +347,20 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
         }
         <form onSubmit={handleSubmit(onSubmit)} className="mt-2 lg:mt-4">
           <div className="flex w-full lg:border lg:border-gray-300 rounded-md p-0.5 lg:p-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button type="reset" className={`"px-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500" + ${embed ? 'hidden' : ''}`} disabled={Boolean(answer || latestQuestion)}
+                    onClick={onResetChat} accessKey="r">
+                    <Paintbrush className="w-6 h-6 stroke-[var(--chat-secondary-color)]" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  (<kbd className="border px-1 rounded-md">Control</kbd> + <kbd className="border px-1 rounded-md">Option</kbd>) / <kbd className="border px-1 rounded-md">Alt</kbd>  + <kbd className="border px-1 rounded-md">R</kbd>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             <input
               className="w-full lg:p-2 outline-none max-h-12 resize-none px-2"
               placeholder="Ask anything"
