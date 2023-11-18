@@ -49,6 +49,7 @@
     "cors": "^2.8.5",
     "crisp-sdk-web": "^1.0.18",
     "date-fns": "^2.30.0",
+    "html-to-text": "^9.0.5",
     "init": "^0.1.2",
     "inter-ui": "^3.19.3",
     "langchain": "^0.0.47",
