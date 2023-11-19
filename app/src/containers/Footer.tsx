@@ -23,7 +23,6 @@ const Footer: React.FC = () => {
           Docs
         </Link>
       </div>
-      <p className="mt-2 text-center text-zinc-500">Made by <a className="text-zinc-900 hover:underline underline-offset-2" href="https://twitter.com/KM_Koushik_" target="_blank" rel="noreferrer">Koushik</a></p>
     </footer>
   );
 };

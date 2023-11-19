@@ -1,0 +1,87 @@
+{
+  "short_name": "Docs AI",
+  "name": "Docs AI | Chat with your docs",
+  "description": "Train your documents, chat with your documents, and create chatbots that solves queries for you and your users",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "background_color": "#FFF",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#000",
+  "screenshots": [
+    {
+      "src": "/images/screenshot-1.webp",
+      "type": "image/webp",
+      "sizes": "2046x1554",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/images/screenshot-2.webp",
+      "type": "image/webp",
+      "sizes": "1160x1560",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/images/logo-72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/images/logo-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/images/logo-256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/images/logo-72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    }
+  ],
+  "shortcuts": [
+    {
+      "short_name": "Dashboard",
+      "name": "Docs AI | Dashboard",
+      "description": "Manage your projects and start docs-ing!",
+      "url": "/dashboard?source=pwa",
+      "icons": [
+        {
+          "src": "/images/logo.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        },
+        {
+          "src": "/images/logo-72.png",
+          "type": "image/png",
+          "sizes": "72x72"
+        },
+        {
+          "src": "/images/logo-144.png",
+          "type": "image/png",
+          "sizes": "144x144"
+        },
+        {
+          "src": "/images/logo-256.png",
+          "type": "image/png",
+          "sizes": "256x256"
+        },
+        {
+          "src": "/images/logo-72.png",
+          "type": "image/png",
+          "sizes": "72x72"
+        }
+      ]
+    }
+  ]
+}

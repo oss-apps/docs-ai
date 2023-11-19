@@ -11,7 +11,7 @@ const config: DocsThemeConfig = {
     </div>
   ),
 
-  logoLink: '/docs/getting-started',
+  logoLink: '/',
   project: {
     link: 'https://github.com/docs-ai/docs-ai',
   },

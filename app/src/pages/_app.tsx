@@ -35,6 +35,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <meta property="twitter:image" content="https://docsai.app/images/og-app.jpeg" />
         <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+
         {env.NEXT_PUBLIC_NODE_ENV === "production" && 
           <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="494f02eb-86bc-460d-ac63-db4d351eea9c" async></script>
         }

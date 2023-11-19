@@ -25,7 +25,7 @@ const Home: NextPage = () => {
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <Image src="/images/app.webp" alt="App" quality={20} width={1200} height={800} className="rounded-lg relative border"></Image>
+              <Image src="/images/app.webp" alt="App" quality={20} width={1200} height={800} className="rounded-lg relative border" priority></Image>
             </div>
           </section>
         </main>
@@ -64,7 +64,6 @@ function Landing() {
               Discover the key features of DocsAI &nbsp;
               <a href="/features/overview" className="font-semibold text-black" target='_blank'>
                 <span className="absolute inset-0" aria-hidden="true" />
-
               </a>
             </div>
           </div>
@@ -169,8 +168,6 @@ function RightImage() {
   )
 }
 
-
-
 const features2 = [
   {
     name: 'Suggest Answers',
@@ -240,7 +237,6 @@ function LeftImage() {
   )
 }
 
-
 const features3 = [
   {
     name: 'Doubling down as chat agent',
@@ -276,10 +272,10 @@ function MoreFeatures() {
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-slate-600">More Features</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="text-base font-semibold leading-7 text-slate-600">More Features</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Chat with your docs, your way.
-          </p>
+          </h1>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
