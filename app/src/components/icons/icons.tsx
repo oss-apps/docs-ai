@@ -389,3 +389,22 @@ export const IconNotion: React.FC<{ className?: string }> = ({ className }) => {
   )
 }
 
+export const IconTablet: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-5 h-5'}>
+      <path className={primaryClassName ?? 'fill-zinc-400'} d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2z" />
+      <path className={secondaryClassName ?? 'fill-zinc-900'} d="M12 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+    </svg>
+  )
+}
+
+export const IconCustomPrompt: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+  return (
+    <>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-5 h-5'}>
+        <path className={primaryClassName ?? 'fill-zinc-400'} d="M14 12h5l3 3-3 3h-5v4h-4v-4H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6v-1h4v1z" />
+        <path className={secondaryClassName ?? 'fill-zinc-900'} d="M10 4a2 2 0 1 1 4 0h6a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5L2 7l3-3h5z" /></svg>
+    </>
+  )
+}

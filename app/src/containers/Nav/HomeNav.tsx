@@ -11,19 +11,19 @@ const HomeNav: React.FC = () => {
         </div>
       </Link>
       <div className="flex items-center gap-5">
-        <Link href="/" className="text-zinc-600 hidden sm:block">
-          Home
-        </Link>
-
-        <Link href="/terms" className="text-zinc-600 hidden lg:block">
-          Terms
-        </Link>
-        <Link href="/privacy" className="text-zinc-600 hidden lg:block">
-          Privacy
-        </Link>
         <Link href="/pricing" className="text-zinc-600">
           Pricing
         </Link>
+        <Link href="/docs/faq" className="text-zinc-600 hidden sm:block">
+          FAQs
+        </Link>
+        <Link href="/terms" className="text-zinc-600 hidden md:block">
+          Terms
+        </Link>
+        <Link href="/privacy" className="text-zinc-600 hidden md:block">
+          Privacy
+        </Link>
+
         <Link href="/docs/getting-started" className="text-zinc-600 hidden sm:flex gap-1  items-center" target="_blank">
           Docs
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">

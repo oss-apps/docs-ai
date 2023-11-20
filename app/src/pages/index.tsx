@@ -7,7 +7,7 @@ import PrimaryButton, { SecondaryButton } from "~/components/form/button";
 import { AuthButton } from "~/containers/Nav/AuthButton";
 import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
-import { IconChat, IconCode, IconCollection, IconHistory, IconLockOpen, IconPieChart, IconSettings, IconWidget } from "~/components/icons/icons";
+import { IconChat, IconCode, IconCollection, IconCustomPrompt, IconHistory, IconLink, IconLockOpen, IconPieChart, IconSettings, IconTablet, IconWidget } from "~/components/icons/icons";
 
 const Home: NextPage = () => {
 
@@ -61,15 +61,14 @@ function Landing() {
         <div className="mx-auto max-w-2xl pt-16 sm:pt-24 lg:pt-32">
           <div className="hidden  sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Discover the key features of DocsAI &nbsp;
-              <a href="/features/overview" className="font-semibold text-black" target='_blank'>
-                <span className="absolute inset-0" aria-hidden="true" />
+              <a href="/features/overview" target='_blank'>
+                Discover the key features of DocsAI &nbsp;
               </a>
             </div>
           </div>
           <div className="text-center mt-4">
             <h1 className="  tracking-tight text-gray-900 sm:text-6xl text-4xl lg:text-6xl font-bold  justify-center text-center">
-              The AI Companion you always wanted.
+              The AI Docs Companion you always wanted.
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Train your documents, chat with your documents, and create chatbots that solves queries for you and your users.
@@ -253,18 +252,36 @@ const features3 = [
     ,
   },
   {
+    name: 'Mobile & Tablet Friendly',
+    description: <p>Experience our website like an app: Install our PWA for faster access.
+      <a href="/features/installDocsai" className="text-black font-bold" rel="noreferrer">
+        Download DocsAI <IconLink className="inline w-4 mb-1 " />
+      </a>
+    </p>,
+    icon: <IconTablet className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+  {
     name: 'Export chats & Unlimited conversations',
-    description: ' Analyze your chat data to identify trends and improve customer satisfaction',
+    description: ' Analyze your chat data to identify trends and improve customer satisfaction.',
     icon: <IconHistory className="w-6 h-6  sm:w-10 sm:h-10" />
+    ,
+  },
+  {
+    name: 'Custom Prompts & Multi Language',
+    description: 'Break down language barriers and enhance document processing with Docs AI.',
+    icon: <IconCustomPrompt className="w-6 h-6  sm:w-10 sm:h-10" />
     ,
   },
   {
     name: 'Open source',
     description: <p>It&apos;s harder to maintain than a company, So 100 ⭐️ and we open source it.
-      <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-black font-bold underline" rel="noreferrer"> Star on Github</a></p>,
+      <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-black font-bold  ml-1" rel="noreferrer"> Star on Github <IconLink className="inline w-4 mb-1" /></a></p>,
     icon: <IconLockOpen className="w-6 h-6  sm:w-10 sm:h-10" />
     ,
   },
+
+
 ]
 
 function MoreFeatures() {
