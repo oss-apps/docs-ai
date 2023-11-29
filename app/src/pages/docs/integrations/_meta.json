@@ -1,5 +1,6 @@
 {
   "integration-web": "Embed in website",
+  "integration-iframe": "Embed as iframe",
   "integration-api": "API Reference",
   "integration-slack": "Slack Integration"
 }

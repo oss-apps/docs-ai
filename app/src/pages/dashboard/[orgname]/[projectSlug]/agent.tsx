@@ -18,8 +18,9 @@ import { z } from "zod";
 import { toast } from "react-hot-toast";
 import { mergeObjects } from "~/utils/common";
 import { getContrastColor } from "~/utils/color";
-import { IconEmbed, IconShare, IconUpdate } from "~/components/icons/icons";
+import { IconEmbed, IconLink, IconShare, IconUpdate } from "~/components/icons/icons";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
+import Link from "next/link";
 
 export const projectSchema = z.object({
   defaultQuestion: z.string().min(3),
@@ -89,7 +90,7 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Embed in your website </DialogTitle>
+                        <DialogTitle>Embed as chat bot </DialogTitle>
                         <DialogDescription>
                           Add the following script to your website
                         </DialogDescription>
@@ -97,6 +98,8 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
                       <div className="mt-2">
                         <MarkDown markdown={`\`\`\`\n${installScript()}\n`} />
                       </div>
+                      <DialogTitle>Embed as iFrame </DialogTitle>
+                      <DialogDescription>If you prefer a standalone chatbot embedded as an iframe instead of having a chat bot icon. <Link target="_blank" className="text-black font-bold  inline-flex gap-1" href='/docs/integrations/integration-iframe'> Learn more <IconLink /> </Link>  </DialogDescription>
                       <DialogFooter className="gap-2">
                         <DialogClose asChild>
                           <Button variant="default" type="button" onClick={closeModal} className="justify-center">

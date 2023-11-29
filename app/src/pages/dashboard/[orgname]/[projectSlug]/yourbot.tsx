@@ -7,11 +7,11 @@ import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { ChatBox } from "~/containers/Chat/Chat";
-import PrimaryButton, { Button, SecondaryButton } from "~/components/form/button";
+import { Button } from "~/components/form/button";
 import { Fragment, useState } from "react";
 import { MarkDown } from "~/components/MarkDown";
 import Link from "next/link";
-import { IconAdd, IconCustomize, IconEmbed, IconShare } from "~/components/icons/icons";
+import { IconCustomize, IconEmbed, IconLink, IconShare } from "~/components/icons/icons";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
 
 
@@ -59,7 +59,7 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Embed in your website </DialogTitle>
+                        <DialogTitle>Embed as chat bot </DialogTitle>
                         <DialogDescription>
                           Add the following script to your website
                         </DialogDescription>
@@ -67,6 +67,9 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
                       <div className="mt-2">
                         <MarkDown markdown={`\`\`\`\n${installScript()}\n`} />
                       </div>
+                      <DialogTitle>Embed as iFrame </DialogTitle>
+                      <DialogDescription>If you prefer a standalone chatbot embedded as an iframe instead of having a chat bot icon. <Link target="_blank" className="text-black font-bold  inline-flex gap-1" href='/docs/integrations/integration-iframe'> Learn more <IconLink /> </Link>  </DialogDescription>
+
                       <DialogFooter className="gap-2">
                         <DialogClose asChild>
                           <Button variant="default" type="button" onClick={closeModal} className="justify-center">

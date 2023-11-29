@@ -1,0 +1,55 @@
+import { Callout } from 'nextra/components'
+
+# Embed as iframe
+
+If you prefer a standalone chatbot embedded as an iframe instead of having
+a chat bot icon,  use the following code snippets.
+
+<Callout type="info">
+  You can get the **`project-id`** from settings page.
+</Callout>
+
+
+## Chatbot View
+As long as your iframe **`width`** less than **`1024px`** you will get a chat bot view.
+
+- Paste the script in your html.
+- Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+
+```html copy {4} /embed/
+<div style="display: flex; justify-content: center;">
+  <iframe src="https://docsai.app/embed/chat/<your_project_id>" 
+    style="border: none; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; border-radius: 12px;"
+    width="450"
+    height="700" >
+  </iframe>
+</div>
+```
+
+<Callout type="warning">
+If you don't want the accent color remove the **`embed`** from **`src`** attribute
+</Callout>
+
+![iframe-with-without-accent-colors](/docs/iframe-1.webp)
+
+
+## Conversation View
+If your iframe **`width`** greater than **`1023px`** you will get a conversation view.
+
+- Paste the script in your html.
+- Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
+
+```html copy {4} 
+<div style="display: flex; justify-content: center;">
+  <iframe src="https://docsai.app/chat/<your_project_id>" 
+    style="border: none; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; border-radius: 12px;"
+    width="1024"
+    height="700" >
+  </iframe>
+</div>
+
+```
+
+![iframe-with-without-accent-colors-conversation-view](/docs/iframe-2.gif)
+
+
