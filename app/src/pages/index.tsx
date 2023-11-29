@@ -31,6 +31,7 @@ const Home: NextPage = () => {
         </main>
         <RightImage />
         <LeftImage />
+        {/* <Stats /> */}
         <MoreFeatures />
         <hr></hr>
         <Footer />
@@ -326,6 +327,49 @@ function MoreFeatures() {
     </div>
   )
 }
+
+
+
+const stats = [
+  { id: 1, name: 'All time Signups', stat: '1,296', icon: <IconChat className="w-6 h-6 sm:w-10 sm:h-10" />, btext: "Get Started", blink: "" },
+  { id: 2, name: 'Total documents added', stat: '923', icon: <IconChat className="w-6 h-6 sm:w-10 sm:h-10" />, btext: "Pricing", blink: "" },
+  { id: 3, name: 'Total conversations', stat: '2,518', icon: <IconChat className="w-6 h-6 sm:w-10 sm:h-10" />, btext: "Learn about DocsAI", blink: "" },
+]
+
+
+
+function Stats() {
+  return (
+    <div className="max-w-6xl mx-auto">
+      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((item) => (
+          <div
+            key={item.id}
+            className="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow-md border sm:px-6 sm:pt-6"
+          >
+            <dt>
+              <div className="absolute rounded-md  p-2">
+                {item.icon}
+              </div>
+              <p className="ml-16 truncate text-base font-medium text-gray-500">{item.name}</p>
+            </dt>
+            <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
+              <p className="text-3xl font-semibold text-slate-900">{item.stat}</p>
+              <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-slate-600 hover:text-slate-500">
+                    {item.btext}
+                  </a>
+                </div>
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
 
 
 export default Home;

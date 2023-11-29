@@ -12,13 +12,14 @@ import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Footer from "~/containers/Footer";
+import { IconEmailDC } from "~/components/icons/icons";
 
 const signInSchema = z.object({
   email: z.string(),
 })
 
 const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> }> = ({ providers }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(signInSchema) });
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm({ resolver: zodResolver(signInSchema) });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { email } = data as z.input<typeof signInSchema>
@@ -40,16 +41,13 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
       </Head>
       <HomeNav />
       <main className="mx-auto  max-w-xl pb-32 px-4 lg:px-0 mt-20 h-[60vh]">
-        <div className="border p-4 border-zinc-400 rounded-md">
-          <p className="text-center text-xl font-semibold">Verification Email sent</p>
-          <div className="text-center flex justify-center mt-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-            </svg>
+        <div className="border shadow-md p-4 border-zinc-400 rounded-lg">
+          <p className="text-center text-2xl font-semibold">Verification email sent</p>
+          <div className="text-center flex justify-center my-4">
+            <IconEmailDC className="w-16 h-16" />
           </div>
 
-
-          <p className="text-center mt-10">Please click the link sent to your email</p>
+          <p className="text-center text-slate-600">Just one more step to go! Click the verification link in your email.</p>
         </div>
       </main>
       <Footer />

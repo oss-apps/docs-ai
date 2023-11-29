@@ -13,7 +13,7 @@ const Dashboard: NextPage<{ userJson: string }> = ({ userJson }) => {
   return (
     <div className="h-full">
       <Nav />
-      <main className="p-5">
+      <main className="p-3 sm:p-0">
         <div className="max-w-6xl mx-auto mt-10">
           {!user.approved ? (
             <div className="flex items-center">

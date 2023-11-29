@@ -48,14 +48,14 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                     {org.org.projects.map((project) => (
                       <Link href={`/dashboard/${org.org.name}/${project.slug}`} key={project.id}>
-                        <div key={project.id} className=" bg-gray-100 rounded-lg shadow-sm p-4 px-8 h-36 hover:bg-gray-200">
+                        <div key={project.id} className=" bg-slate-100/50 rounded-lg shadow-sm p-4 px-8 h-36 hover:bg-slate-100">
                           <div className="flex items-center">
-                            <span className="text-xl">
+                            <span className="text-xl font-medium">
                               {project.name}
                             </span>
                           </div>
-                          <p className="mt-1 text-gray-500">
-                            {project.description}
+                          <p className="mt-1   text-slate-600  ">
+                            {project.description?.slice(0, 90)}
                           </p>
                         </div>
                       </Link>

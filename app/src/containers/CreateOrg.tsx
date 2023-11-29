@@ -8,6 +8,8 @@ import { useRouter } from "next/router";
 import Snackbar from "~/components/SnackBar";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { IconAdd, IconFastForward } from "~/components/icons/icons";
+import { ChevronRight } from "lucide-react";
 
 
 const orgSchema = z.object({
@@ -27,7 +29,7 @@ export const CreateOrg: React.FC = () => {
 
     try {
       const result = await createOrg.mutateAsync({ name })
-      await router.push(`/dashboard/${result.org.name}`)
+      await router.push(`/dashboard/${result.org.name}/new?noBack=true`)
     } catch (e) {
       console.log(e)
     }
@@ -35,15 +37,20 @@ export const CreateOrg: React.FC = () => {
 
   return (
     <div>
-      <p className="mb-10 text-center text-xl">Create organaisation</p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Label>Organisation name</Label>
+      <h1 className="text-center sm:text-left font-medium text-3xl text-slate-900">Create organaization</h1>
+      <p className="text-slate-600 my-2">
+        With Organization, you can effortlessly create, manage projects, and collaborate with team members.
+      </p>
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
         <Input
           error={errors.name?.message?.toString()}
-          placeholder="Org name"
+          placeholder="Ex: Team Nexus, Project X"
+          autoFocus={true}
           {...register('name', { required: 'Org name is required' })}
         />
-        <PrimaryButton loading={createOrg.isLoading} disabled={createOrg.isLoading} className="mx-auto mt-6">Create</PrimaryButton>
+
+        <PrimaryButton loading={createOrg.isLoading} disabled={createOrg.isLoading} className="mx-auto mt-6">
+          Next <ChevronRight className="w-5 h-5 " /></PrimaryButton>
       </form>
     </div>
   )
