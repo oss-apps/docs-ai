@@ -117,7 +117,7 @@ const IconNames = {
   [DocumentType.FILES]: "Upload Files",
   [DocumentType.TEXT]: "Add Text",
   [DocumentType.NOTION]: "Notion",
-  [DocumentType.CONFLUENCE]: "Confluence",
+  [DocumentType.CONFLUENCE]: <span>Confluence <span className="px-1 border border-slate-500 ml-1 text-slate-900 rounded-md text-xs font-normal"> beta</span> </span>,
   [DocumentType.CHAT]: null,
   [DocumentType.PDF]: null
 }
@@ -127,7 +127,7 @@ const IconDescription = {
   [DocumentType.FILES]: "Files such as PDFs, Docx, Txt can be uploaded.",
   [DocumentType.TEXT]: "Text can be used for info that may not be in other sources.",
   [DocumentType.NOTION]: "Connect your notion workspace and add pages to DocsAI.",
-  [DocumentType.CONFLUENCE]: "Link your Confluence pages to keep the knowledge flowing.",
+  [DocumentType.CONFLUENCE]: "Link your Confluence spaces to keep the knowledge flowing.",
   [DocumentType.CHAT]: null,
   [DocumentType.PDF]: null,
 

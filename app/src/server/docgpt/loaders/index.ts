@@ -6,6 +6,7 @@ import { prisma } from "~/server/db"
 import * as storage from "~/server/storage"
 import { notionLoader } from "./notionToText"
 import { getLimits } from "~/utils/license"
+import conflLoader from "./confluenceToText"
 
 
 async function updateStatus(projectId: string, orgId: string, documentId: string, error: boolean, title: string, tokens: number, indexStatus?: IndexStatus) {
@@ -165,4 +166,48 @@ export async function indexNotionDocuments(orgId: string, projectId: string, doc
   console.log("🔥 ~ indexNotionDocuments ~ finished:", documentId)
 
   return notionDoc
+}
+
+export async function indexConflDocument(orgId: string, projectId: string, documentId: string) {
+  console.log("🫤 ~ confl ~ indexConflDocument ~ inside:")
+  const doc = await prisma.document.findFirst({ where: { id: documentId } })
+  const org = await prisma.org.findFirst({ where: { id: orgId } })
+  if (!org || !doc || !doc.details) {
+    return doc
+  }
+  let docs: Document[] | undefined = []
+  try {
+    docs = await conflLoader(doc)
+    if (docs) {
+      await loadDocumentsToDb(projectId, documentId, DocumentType.CONFLUENCE, docs)
+    }
+    else {
+      throw new Error("🫤 ~ confl ~ No docs is present")
+    }
+  }
+  catch (err) {
+    console.error("🫤 ~ confl ~ indexConflDocument ~ err:", err)
+    await updateStatus(projectId, orgId, documentId, true, doc?.title || doc.src, 0, "FAILED")
+    throw new Error(`INTERNAL_SERVER_ERROR`)
+  }
+
+  const tokens = docs.reduce((acc, curr) => {
+    acc += curr.metadata.size;
+    return acc;
+  }, 0)
+
+
+  if (Number(org.documentTokens) + tokens > getLimits(org.plan).documentSize) {
+    console.log("🫤 ~ confl ~ indexConflDocument ~ tokens:", documentId, tokens)
+    await updateStatus(projectId, orgId, documentId, true, doc?.title || doc.src, 0, "SIZE_LIMIT_EXCEED")
+    throw new Error('Document size limit exceeded')
+
+  }
+
+  await loadDocumentsToDb(projectId, documentId, DocumentType.NOTION, docs)
+  await updateStatus(projectId, orgId, documentId, false, doc?.title || doc.src, tokens, "SUCCESS")
+
+  console.log("🫤 ~ confl ~ indexConflDocument ~ finished:", documentId)
+
+
 }

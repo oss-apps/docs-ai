@@ -2,8 +2,6 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import { prisma } from "~/server/db";
 
 import { env } from "~/env.mjs";
-import { type NotionDetails } from "~/utils/notion";
-import { type Document } from "@prisma/client";
 import { SecondaryButton } from "~/components/form/button";
 import Link from "next/link";
 
@@ -64,6 +62,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   )
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const details = await detailsRes.json()
   console.log("🔥 ~ getServerSideProps ~ detailsRes:", details)
 

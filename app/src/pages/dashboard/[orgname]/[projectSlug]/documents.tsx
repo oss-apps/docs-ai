@@ -11,7 +11,7 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { IconAdd, IconChatHistory, IconNotion } from "~/components/icons/icons";
+import { IconAdd, IconChatHistory, IconConfluence, IconNotion } from "~/components/icons/icons";
 import { Clock, Files, FileText, Globe } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns'
 
@@ -39,6 +39,7 @@ const IconTypes = {
   [DocumentType.FILES]: <span title="Files"> <Files className="w-4 h-4" /> </span>,
   [DocumentType.TEXT]: <span title="Plain Text"> <FileText className="w-4 h-4" /> </span>,
   [DocumentType.NOTION]: <span title="Notion"> <IconNotion className="w-4 h-4" /> </span>,
+  [DocumentType.CONFLUENCE]: <span title="Notion"> <IconConfluence className="w-4 h-4" /> </span>,
   [DocumentType.CHAT]: null,
   [DocumentType.PDF]: null
 

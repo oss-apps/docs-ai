@@ -12,6 +12,7 @@ import { TextDocument } from "~/containers/NewDocument/TextDocument";
 import NavBack from "~/components/NavBack";
 import { type ParsedUrls } from "~/types";
 import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
+import { ConfluenceDocument } from "~/containers/NewDocument/ConfluenceDocument";
 
 const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string }> = ({ user, orgJson, projectJson, documentJson }) => {
   const router = useRouter()
@@ -65,6 +66,9 @@ const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: Docume
     }
     else if (docType === DocumentType.NOTION) {
       return <NotionDocument org={org} project={project} document={document} />
+    }
+    else if (docType === DocumentType.CONFLUENCE) {
+      return <ConfluenceDocument org={org} project={project} document={document} />
     }
     return <></>
   }

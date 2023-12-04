@@ -3,12 +3,12 @@ import Avatar from "~/components/Avatar";
 import PrimaryButton, { Button, SmallSecondaryButton } from "~/components/form/button";
 import { IconNotion, IconAdd } from "~/components/icons/icons";
 import { env } from "~/env.mjs";
-import { type CoverOrIcon, type NotionDetails } from "~/utils/notion";
+import type { NotionList, CoverOrIcon, NotionDetails } from "~/utils/notion";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/Alert"
 import Link from "next/link";
-import { BookOpenCheck, FileWarning } from "lucide-react";
+import { BookOpenCheck, FileWarning, LassoSelect } from "lucide-react";
 import { useRouter } from "next/router";
 import { getLimits } from "~/utils/license";
 
@@ -53,6 +53,7 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
   const indexNotionDocs = api.document.createNotionDocument.useMutation()
   const { data: notionListsDetails, isLoading } = api.document.getOneDocument.useQuery({ documentId: document?.id })
   const limits = getLimits(org.plan)
+  const notionPages = notionListsDetails?.integrationDetails as NotionList[]
 
   const onSkipToggle = (url: string) => {
     const isSkipped = skippedUrls[url]
@@ -96,7 +97,7 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
           </div>
           <div className="max-h-[50vh] border border-gray-300 rounded-md w-full overflow-auto">
 
-            {notionListsDetails?.integrationDetails?.map((doc) => (
+            {notionPages?.map((doc) => (
               <div key={doc.id} className={`py-2 sm:p-2 border-b flex  justify-between last:border-none last:rounded-b-md first:rounded-t-md  ${skippedUrls[doc.id] ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
                 <a href={doc.url} target="_blank" rel="noreferrer" className={`text-zinc-700 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
                   <IconOrImage icon={doc.icon} /> {doc.title}
@@ -135,6 +136,14 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
           <PrimaryButton className="mx-auto mt-4 gap-1" onClick={onIndexNotionDocs} disabled={indexStatus === 'INDEXING' || isLoading} loading={indexStatus === 'INDEXING' || isLoading}>
             <IconAdd className="w-5 h-5" /> Create
           </PrimaryButton>
+          {indexStatus === 'FETCH_DONE' &&
+            <Alert className="mt-4" variant='default'>
+              <LassoSelect className="h-4 w-4 " />
+              <AlertTitle>Remove uncertain pages for faster indexing! </AlertTitle>
+              <AlertDescription>
+                If you don&apos;t need certain pages , remove them and click create!</AlertDescription>
+            </Alert>
+          }
           {indexStatus === 'INDEXING' &&
             <Alert className="mt-4" variant='default'>
               <BookOpenCheck className="h-4 w-4 " />
