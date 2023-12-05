@@ -4,6 +4,8 @@ import { Loading } from "../loading/Loading";
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "~/lib/utils"
+import { toast } from "react-hot-toast";
+import { env } from "~/env.mjs";
 
 type PrimaryButtonProps = React.ComponentPropsWithoutRef<"button"> & { loading?: boolean }
 
@@ -51,6 +53,30 @@ export const SmallSecondaryButton: React.FC<PrimaryButtonProps> = ({ children, c
       {loading ? <Loading height={20} width={20} /> : children}
     </button>
   )
+}
+
+export const ShareButton: React.FC<{ id: string | undefined, title: string | undefined, icon: any, className?: string }> = ({ id, title, icon, className = "" }) => {
+  const handleCopy = async () => {
+    if (!id) return
+    const url = `${env.NEXT_PUBLIC_DOMAIN}/convo/${id}`
+    try {
+      await navigator.share({
+        title: title || "Sharing your conversation",
+        text: title,
+        url
+      })
+    }
+    catch (err) {
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success(`Link copied to clipboard`, { position: 'top-center' })
+      }).catch(console.error)
+    }
+  }
+
+  return (<>
+    <button onClick={handleCopy} className={className}>
+      {icon}</button>
+  </>)
 }
 
 

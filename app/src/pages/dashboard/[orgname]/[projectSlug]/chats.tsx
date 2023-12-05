@@ -8,7 +8,7 @@ import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
-import { SmallButton } from "~/components/form/button";
+import { ShareButton, SmallButton } from "~/components/form/button";
 import { PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
 import { Switch } from "@headlessui/react";
@@ -24,7 +24,7 @@ import { NoChat } from "./download_chat";
 import { Button } from "~/components/form/button"
 import { Calendar } from "~/components/ui/Calender"
 import { format, formatDistanceToNow, getTime } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon, Share } from "lucide-react"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/Select"
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/Popover"
@@ -357,15 +357,20 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                   </div>
 
                   {convoData.pages.map(p => p?.conversations.map((conversation) => (
-                    <button className="w-full select-text" key={conversation.id} onClick={() => setConvoId(conversation.id)}>
+                    <button className="w-full select-text " key={conversation.id} onClick={() => setConvoId(conversation.id)}>
                       <div className={"p-2 sm:p-4 border-b w-full hover:bg-gray-50 " + (convoId == conversation.id ? 'bg-gray-100' : '')}>
                         <div className="w-full" title={conversation.firstMsg}>
                           <p className="max-w-full text-left text-base">
                             {conversation.firstMsg.slice(0, 60) + (conversation.firstMsg.length > 50 ? '...' : '')}
                           </p>
-                          <div className="text-sm flex justify-between items-baseline text-gray-600 mt-2 " title={conversation.createdAt.toLocaleString()}>
-                            {formatDistanceToNow(conversation.createdAt, { addSuffix: true })}
-                            <span className={`px-2  font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck /> </span>
+                          <div className="text-sm flex justify-between text-gray-600 mt-2 " >
+                            <span title={conversation.createdAt.toLocaleString()}>  {formatDistanceToNow(conversation.createdAt, { addSuffix: true })} </span>
+                            <div className="flex gap-2">
+                              <span className={`font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck className="w-4 h-4" /> </span>
+                              <span title="Copy sharable link">
+                                <ShareButton id={conversation.id} title={conversation?.firstMsg} icon={<Share className="w-4 h-4 hover:text-black " />} />
+                              </span>
+                            </div>                              
                           </div>
                         </div>
                         {/* <span>   {conversation.id} </span> */}

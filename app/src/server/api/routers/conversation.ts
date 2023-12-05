@@ -106,6 +106,32 @@ export const conversationRouter = createTRPCRouter({
         conversation,
       };
     }),
+
+  getConversationById: publicProcedure
+    .input(z.object({ convoId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      if (input.convoId === 'new') {
+        return {
+          conversation: null,
+        }
+      }
+      const conversation = await ctx.prisma.conversation.findFirst({
+        where: {
+          id: input.convoId,
+        },
+        include: {
+          messages: {
+            orderBy: {
+              createdAt: 'asc',
+            }
+          },
+        }
+      })
+
+      return {
+        conversation,
+      };
+    }),
   summarizeConversation: publicProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), convoId: z.string() }))
     .mutation(async ({ input, ctx }) => {

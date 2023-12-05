@@ -47,7 +47,8 @@ const server = z.object({
 const client = z.object({
   NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
   NEXT_PUBLIC_NOTION_CLIENT_ID: z.string(),
-  NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: z.string()
+  NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: z.string(),
+  NEXT_PUBLIC_DOMAIN: z.string()
 });
 
 /**
@@ -61,6 +62,7 @@ const processEnv = {
   NEXT_PUBLIC_NOTION_CLIENT_ID: process.env.NEXT_PUBLIC_NOTION_CLIENT_ID,
   NEXT_PUBLIC_NOTION_AUTHORIZATION_URL: process.env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL,
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+  NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
 
   // Server Envs
   DATABASE_URL: process.env.DATABASE_URL,

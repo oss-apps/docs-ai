@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
 import { SecondaryButton } from "~/components/form/button"
-import { IconAdd, IconBot, IconDashboard, IconFolderOpen, IconHistory, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
+import { IconAdd, IconBot, IconDashboard, IconFolderOpen, IconHistory, IconLink, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
 
 /**
  * Mainly used for the top navigation bar in the project page
@@ -26,7 +26,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
         <div className="mt-10 flex flex-col gap-y-1">
           <Link href={`/dashboard/${org.name}/${project.slug}`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={` border-0 w-full flex  gap-2 text-left shadow-none  items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={` border-0 w-full flex  gap-2 text-left shadow-none   focus:bg-gray-100 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconDashboard className="h-5 w-5" />
               <span className="hidden lg:block">
               Dashboard
@@ -35,7 +35,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/new_document' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex focus:outline-1  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/new_document' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconAdd className="h-5 w-5" />
               <span className="hidden lg:block">
                 Add Documents </span>
@@ -51,7 +51,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/${project.slug}/documents`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/documents' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconFolderOpen className="h-5 w-5" />
               <span className="hidden lg:block">
                 Documents </span>
@@ -59,7 +59,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/${project.slug}/chats`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0 text-left w-full shadow-none focus:bg-gray-100   flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/chats' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconHistory className="h-5 w-5" />
               <span className="hidden lg:block">
                 Chat History </span>
@@ -67,7 +67,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/${project.slug}/agent`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={` border-0 text-left w-full shadow-none  flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={` border-0 text-left w-full shadow-none   focus:bg-gray-100 flex  gap-2 items-center  ${router.pathname === '/dashboard/[orgname]/[projectSlug]/agent' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconPaintBrush className="h-5 w-5" />
               <span className="hidden lg:block">
                 Appearance </span>
@@ -75,7 +75,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/${project.slug}/settings`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0  text-left w-full shadow-none  flex  gap-2 items-center   ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  focus:bg-gray-100 flex  gap-2 items-center   ${router.pathname === '/dashboard/[orgname]/[projectSlug]/settings' ? 'bg-gray-100 font-semibold' : 'bg-white'}`}>
               <IconSettings className="h-5 w-5" />
               <span className="hidden lg:block">
                 Settings </span>
@@ -83,10 +83,18 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </Link>
 
           <Link href={`/dashboard/${org.name}/subscription`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0  text-left w-full shadow-none  flex  gap-2 items-center  `}>
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  focus:bg-gray-100  flex  gap-2 items-center  `}>
               <IconSubscription className="h-5 w-5" />
               <span className="hidden lg:block">
                 Subscription </span>
+            </SecondaryButton>
+          </Link>
+
+          <Link href={`/docs/getting-started`} className="w-full" tabIndex={-1} target="_blank">
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  hover:bg-gray-100 flex  gap-2 items-center  `}>
+              <IconLink className="h-5 w-5" />
+              <span className="hidden lg:block">
+                View Docs </span>
             </SecondaryButton>
           </Link>
 
@@ -95,9 +103,9 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
       <div className="absolute text-center bottom-0 mb-6 hidden lg:block  w-56">
         <div className="flex flex-col text-sm">
-          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/featrue-requests">Got an Idea ?</a>
+          <a className="text-zinc-700 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/featrue-requests">Got an Idea ?</a>
           <hr className="w-12 text-center mx-auto"></hr>
-          <a className="text-zinc-600 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/bugs">Report a Bug </a>
+          <a className="text-zinc-700 p-0.5 rounded-lg" target="_blank" rel="noreferrer" href="https://docsai.canny.io/bugs">Report a Bug </a>
         </div>
       </div>
     </>

@@ -15,13 +15,14 @@ import { getContrastColor } from "~/utils/color";
 import { IconEmail, IconFastForward, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 import { Input } from "~/components/form/input";
-import { Paintbrush } from "lucide-react";
+import { Paintbrush, ShareIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/Tooltip"
+import { env } from "~/env.mjs";
 
 
 const qnaSchema = z.object({
@@ -209,6 +210,25 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
   }
 
+  const onShare = async () => {
+    if (!conversation) return
+    const url = `${env.NEXT_PUBLIC_DOMAIN}/convo/${conversation.id}`
+
+    try {
+      await navigator.share({
+        title: conversation?.firstMsg || "Sharing your conversation",
+        text: conversation?.firstMsg, url
+      })
+    }
+    catch (err) {
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success(`Link copied to clipboard`, { position: 'top-center' })
+      }).catch(console.error)
+
+
+    }
+  }
+
   const onUserIdSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { userId } = data as z.input<typeof userIdSchema>
 
@@ -297,7 +317,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
           {conversation?.messages.map((m, i) => (
             m.user == 'user' ?
               <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
-              : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback }} />
+              : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback, onShare }} />
           ))}
 
 
@@ -398,7 +418,7 @@ export const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundCo
 
 
 // This LeftChat applicable only for streaming / chat purposes . Not for static display. Use Plain Chat for that.
-export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ showSupportEmail = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, onShare: () => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ showSupportEmail = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
   const copySupportEmail = () => {
     if (!showSupportEmail) return
     navigator.clipboard.writeText(showSupportEmail).then(() => {
@@ -430,6 +450,9 @@ export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?:
           <button title="Thumbs down!" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" disabled={feedback.isLoading} onClick={() => feedback?.handleFeedback!(false, feedback.id, feedback.index)}>
               <IconThumb className="w-4 h-4 fill-transparent stroke-zinc-600 rotate-180 hover:fill-zinc-200" />
             </button>
+              <button title="Share" className="rounded-md border bg-zinc-100 py-1 px-2 hover:bg-zinc-200" onClick={feedback.onShare}>
+                <ShareIcon className="w-4 h-4 fill-transparent stroke-zinc-600  hover:fill-zinc-200" />
+              </button>  
             </div>
             {showSupportEmail && <div className="flex gap-2">
               <a title="Support" href={`mailto:${showSupportEmail}`} className="flex  items-center rounded-md border hover:cursor-pointer bg-zinc-100 px-1.5 hover:bg-zinc-200">
