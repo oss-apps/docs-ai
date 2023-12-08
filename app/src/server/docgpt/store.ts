@@ -46,5 +46,7 @@ export const getVectorDB = async (projectId: string) => {
 
 export const deleteDocumentVector = async (projectId: string, documentId: string) => {
   const index = await getVectorIndex()
-  await index._delete({ deleteRequest: { namespace: projectId, filter: { documentId } } })
+  if (index) {
+    await index._delete({ deleteRequest: { namespace: projectId, filter: { documentId } } })
+  }
 }

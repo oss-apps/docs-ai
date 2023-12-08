@@ -1,0 +1,89 @@
+# Adding Confluence to DocsAI <span className="px-1 text-xl border border-black rounded-lg text-black"> beta </span>
+
+import Image from "next/image";
+import { useState } from "react";
+import { ChevronRight } from "lucide-react";
+import PrimaryButton from "~/components/form/button";
+import { Callout } from 'nextra/components'
+
+
+
+export function ConflImages({ children }) {
+  const images = ["/docs/confl-1.webp", "/docs/confl-2.webp", "/docs/confl-3.webp"];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((currentIndex + 1) % images.length);
+  };
+
+  return (
+    <div>
+      <Image src={images[currentIndex]} width={1024} height={1024} alt="confluece getting access token" className="border my-6 rounded-md shadow-md"  quality={30}/>
+      <PrimaryButton  className="mx-auto mt-6" onClick={handleNext}>
+        {currentIndex == 2 ? 'Finish' : 'Next' } <ChevronRight className="w-5 h-5 " />
+      </PrimaryButton>
+    </div>
+  );
+}
+ 
+
+
+Select **Confluence** from the available sources and proceed. Confluence is in `beta` mode , you can select upto 3 spaces for a given user.
+
+## Connecting to Confluence
+
+### Getting the API token 
+You can generate an API token using [Manage Profiles & Security](https://id.atlassian.com/manage-profile/security/api-tokens).
+
+To generate an API token, follow these steps:
+
+1. **Access your account settings**: Navigate to the top bar and click on your profile photo. Select **Manage Account** from the dropdown menu.
+2. **Locate API token management**: Within the account management page, click on the **Security** tab. Under the **security settings**, 
+you'll find the option to **Create and manage API tokens**.
+
+3. **Initiate API token creation**: Click on the "Create API token" button to generate token.
+
+<ConflImages></ConflImages>
+
+
+### Getting the Domain
+The url before the `wiki` is your confluence domain name. In this case **`https://docsai-test.atlassian.net/`**. 
+<Callout type="warning"> 
+  Please note the trailing **`/`** at the end. 
+</Callout>
+  
+![notion](/docs/confl-4.webp)
+
+
+### Account Email
+The email associated with your confluence account. You can find your email after clicking the profile photo.
+
+
+## Selecting spaces
+
+You can search and select upto 3 spaces from your confluence. Training may take some time, depending on the amount of content you have provided. 
+Feel free to leave this page and check back in a few minutes.
+
+## Confluence FAQs
+
+**How to generate api token for confluence ?** 
+
+Please note that the Confluence guidance provided herein is subject to change in the future. 
+To ensure you have the most up-to-date information, we recommend regularly reviewing current profile settings.
+
+**Getting Something Happened , Unauthorized error in confluence.**
+
+This means your `api token` or `account email` is not correct. Verify those credentials.
+
+**Getting Something Happened , Not found in confluence.**
+
+This means your `domain` is not available. Verify this domain.
+
+## Data Collection and Usage
+
+DocsAI collects your email address and API token to access the content of your Confluence spaces. 
+We only read the content of the pages and do not modify or alter it in any way. 
+This data is used to provide you with the best possible experience using DocsAI.
+
+
+

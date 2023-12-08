@@ -14,9 +14,10 @@ import { type ParsedUrls } from "~/types";
 import { getLimits } from "~/utils/license";
 import * as storage from '~/server/storage'
 import { DocumentType } from "@prisma/client";
-import { JsonObject } from "@prisma/client/runtime/library";
+import { type JsonObject } from "@prisma/client/runtime/library";
 
 import { getNotionPages } from "~/utils/notion";
+import { type confluenceSchema, getConfluenceSpaces } from "~/utils/confluence";
 
 
 const loadUrlDocument = async (src: string, type: string, orgId: string, projectId: string, documentId: string, loadAllPath: boolean, skipPaths: string, pageLimit: number) => {
@@ -347,8 +348,55 @@ export const documentRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const details = input.details as JsonObject
-      await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+
+      const document = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+      if (document.tokens) {
+        try {
+          await deleteDocumentVector(input.projectId, input.documentId)
+          await resetTokens(document, input.orgId, input.projectId)
+        }
+        catch (err) {
+          console.error(`createNotionDocument`, err)
+          return await ctx.prisma.document.update({ data: { indexStatus: 'FAILED' }, where: { id: input.documentId } })
+        }
+      }
       const val = await docgpt.indexNotionDocuments(input.orgId, input.projectId, input.documentId)
+      return val
+    }),
+
+  createConfluenceDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any() }))
+    .mutation(async ({ input, ctx }) => {
+      const details = input.details as JsonObject
+      const doc = await ctx.prisma.document.create({
+        data: {
+          src: details.baseUrl as string,
+          documentType: "CONFLUENCE",
+          projectId: input.projectId,
+          title: details.baseUrl as string,
+          indexStatus: "FETCH_DONE",
+          details: { ...details, selectedSpace: [], skippedUrls: {} }
+        }
+      })
+      return doc
+    }),
+
+  indexConfluenceDocument: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string(), src: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const details = input.details as JsonObject
+      const document = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details, src: input.src }, where: { id: input.documentId } })
+      if (document.tokens) {
+        try {
+          await deleteDocumentVector(input.projectId, input.documentId)
+          await resetTokens(document, input.orgId, input.projectId)
+        }
+        catch (err) {
+          console.error(`indexConfluenceDocument`, err)
+          return await ctx.prisma.document.update({ data: { indexStatus: 'FAILED' }, where: { id: input.documentId } })
+        }
+      }
+      const val = await docgpt.indexConflDocument(input.orgId, input.projectId, input.documentId)
       return val
     }),
 
@@ -369,8 +417,14 @@ export const documentRouter = createTRPCRouter({
         await storage.deleteFileDocument(document.id)
       }
 
-      await resetTokens(document, input.orgId, input.projectId)
-      await deleteDocumentVector(input.projectId, input.documentId)
+      try {
+        await deleteDocumentVector(input.projectId, input.documentId)
+        await resetTokens(document, input.orgId, input.projectId)
+      }
+      catch (err) {
+        console.error(`deleteDocument`, err)
+        throw new Error(`Can't delete documents vector, contact hey@docsai.app with id ${input.documentId}`)
+      }
       await ctx.prisma.document.delete({ where: { id: input.documentId } })
     }),
 
@@ -422,12 +476,15 @@ export const documentRouter = createTRPCRouter({
       if (!document) {
         throw new Error('Document not found , go back!')
       }
-      if (document.documentType !== 'NOTION') {
-        return { document }
-      }
-      else if (document.documentType === 'NOTION') {
+
+      if (document.documentType === 'NOTION') {
         const notionLists = await getNotionPages(document)
         return { document, integrationDetails: notionLists }
       }
+      else if (document.documentType === 'CONFLUENCE') {
+        const spaceLists = await getConfluenceSpaces(document.details as confluenceSchema, true)
+        return { document, integrationDetails: spaceLists }
+      }
+      else return { document }
     })
 });

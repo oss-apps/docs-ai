@@ -31,11 +31,14 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   );
 });
 
-export function Label(props: JSX.IntrinsicElements["label"]) {
+export function Label(props: JSX.IntrinsicElements["label"] & { link?: string }) {
   return (
     <label {...props} className={`block text-zinc-600 ml-1 mb-1 ${props?.className || ''}`}>
       <span>  {props.children} </span>
-      {props.title ? <p className="font-light text-xs mb-0 text-zinc-500"> {props.title}</p> : null}
+      <p>
+        {props.title ? <span className="font-light text-xs mb-0 text-zinc-500"> {props.title}</span> : null}
+        {props.link ? <a className="font-light inline text-xs mb-0 text-zinc-500 underline" target='_blank' href={props.link} rel="noreferrer"> Learn more</a> : null}
+      </p>
     </label>
   );
 }

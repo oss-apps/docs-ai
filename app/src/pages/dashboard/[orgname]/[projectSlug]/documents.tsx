@@ -11,26 +11,26 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { IconAdd, IconChatHistory, IconNotion } from "~/components/icons/icons";
+import { IconAdd, IconChatHistory, IconConfluence, IconNotion } from "~/components/icons/icons";
 import { Clock, Files, FileText, Globe } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns'
 
 const Status = ({ status }: { status: IndexStatus }) => {
   switch (status) {
     case IndexStatus.SUCCESS:
-      return <div className="text-sm text-green-600 bg-green-200 p-0.5 rounded-md px-2 h-fit">Indexed</div>
+      return <span className="text-sm  text-green-600 bg-green-200 p-0.5 rounded-md px-2 h-fit">Indexed</span>
     case IndexStatus.INDEXING:
-      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Indexing</div>
+      return <span className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Indexing</span>
     case IndexStatus.FETCHING:
-      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching</div>
+      return <span className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching</span>
     case IndexStatus.FETCH_DONE:
-      return <div className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching done</div>
+      return <span className="text-sm text-orange-600 bg-orange-200 p-0.5 rounded-md px-2 h-fit">Fetching done</span>
     case IndexStatus.FETCHING_FAILED:
-      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Fetching failed</div>
+      return <span className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Fetching failed</span>
     case IndexStatus.FAILED:
-      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Failed</div>
+      return <span className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Failed</span>
     case IndexStatus.SIZE_LIMIT_EXCEED:
-      return <div className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Size Limit Reached</div>
+      return <span className="text-sm text-red-600 bg-red-200 p-0.5 rounded-md px-2 h-fit">Size Limit Reached</span>
   }
 }
 
@@ -39,6 +39,7 @@ const IconTypes = {
   [DocumentType.FILES]: <span title="Files"> <Files className="w-4 h-4" /> </span>,
   [DocumentType.TEXT]: <span title="Plain Text"> <FileText className="w-4 h-4" /> </span>,
   [DocumentType.NOTION]: <span title="Notion"> <IconNotion className="w-4 h-4" /> </span>,
+  [DocumentType.CONFLUENCE]: <span title="Notion"> <IconConfluence className="w-4 h-4" /> </span>,
   [DocumentType.CHAT]: null,
   [DocumentType.PDF]: null
 
@@ -114,7 +115,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                 </a> :
                                 document.src.slice(0, 75) + (document.src.length > 75 ? ' ...' : '')}
                             </div>
-                            <div className="flex justify-between mt-1 flex-wrap">
+                            <div className="flex justify-between mt-1 flex-wrap gap-y-2">
                               <Status status={document.indexStatus} />
                               <div className="flex items-center gap-4 ">
                                 {
@@ -148,7 +149,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                       <div className="border mt-4 hidden lg:block  rounded-md">
                         <ul>
                           {data?.documents.map((document) => (
-                            <li key={document.id} className="gap-4 lg:p-4  lg:grid  lg:grid-cols-6  border-b last:border-none">
+                            <li key={document.id} className="gap-2 lg:p-4  lg:grid  lg:grid-cols-6  border-b last:border-none">
                               <div className="col-span-2">
                                 <div className="font-semibold flex gap-2 items-center truncate" title={document.title || ""}>
                                   {IconTypes[document.documentType]}{document.title!.slice(0, 40) + (document.title!.length > 40 ? '...' : '')}</div>
@@ -160,25 +161,25 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                                     document.src.slice(0, 60) + (document.src.length > 60 ? '...' : '')}
                                 </div>
                               </div>
-                              <div className="flex  items-center gap-4 col-span-2">
+                              <div className="col-span-1">
                                 <Status status={document.indexStatus} />
-                                {
-                                  document.indexStatus !== IndexStatus.SUCCESS && document.documentType !== "FILES" ? (
+                              </div>
+                              <div className="col-span-1">
+                                {document.indexStatus !== IndexStatus.SUCCESS && document.documentType !== "FILES" ? (
                                     <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}&type=${document.documentType}`}>
-                                      <SmallButton>Complete setup</SmallButton>
+                                    <SmallButton>Finish</SmallButton>
                                     </Link>
                                   ) : null
 
                                 }
-
                               </div>
-                              <div className="flex gap-x-2 items-center justify-start  text-sm" title="Last updated at">
+                              <div className="flex col-span-1 gap-x-2 items-center justify-start  text-sm" title="Last updated at">
                                 <Clock className="w-4 h-4 text-gray-500" />
-                                <span className="text-gray-500"> {formatDistanceToNow(document.updatedAt, { addSuffix: true })} </span>
+                                <span className="text-sm text-gray-500"> {formatDistanceToNow(document.updatedAt, { addSuffix: true })} </span>
 
                               </div>
 
-                              <div className="flex items-center gap-2  ml-auto">
+                              <div className="flex col-span-1 items-center gap-2  ml-auto">
                                 {document.documentType !== "FILES" ? (
                                   <button>
                                     <Link href={`/dashboard/${org.name}/${project.slug}/edit_document?id=${document.id}`}>
@@ -248,11 +249,11 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                     </div>
 
                     <div className="mt-4 justify-end flex gap-4">
-                      <SecondaryButton className="justify-center border border-red-500 text-red-500" onClick={() => onDelete(docToDelete?.id || '')} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
-                        Yes, Delete
-                      </SecondaryButton>
-                      <PrimaryButton className="border border-gray-700" onClick={onClose}>
+                      <SecondaryButton className="justify-center" onClick={onClose}>
                         Cancel
+                      </SecondaryButton>
+                      <PrimaryButton className="justify-center border bg-red-500 hover:bg-red-500/90 text-white disabled:bg-red-500/90" onClick={() => onDelete(docToDelete?.id || '')} disabled={deleteDocument.isLoading} loading={deleteDocument.isLoading}>
+                        Delete Forever
                       </PrimaryButton>
                     </div>
                   </Dialog.Panel>
