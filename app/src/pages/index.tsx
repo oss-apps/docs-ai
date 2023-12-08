@@ -8,6 +8,13 @@ import { AuthButton } from "~/containers/Nav/AuthButton";
 import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
 import { IconChat, IconCode, IconCollection, IconCustomPrompt, IconHistory, IconLink, IconLockOpen, IconPieChart, IconSettings, IconTablet, IconWidget } from "~/components/icons/icons";
+import { motion } from 'framer-motion';
+
+const animations = {
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  transition: { duration: 0.6 }
+}
 
 const Home: NextPage = () => {
 
@@ -20,14 +27,15 @@ const Home: NextPage = () => {
       <div className="background h-[70vh]">
         <HomeNav />
 
-        <main className="mx-auto max-w-6xl mb-8 px-4 lg:px-0">
-
+        <main className="mx-auto max-w-6xl mb-8 px-4 lg:px-0" >
+          <motion.div {...animations}>
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
               <Image src="/images/app.webp" alt="App" quality={20} width={1200} height={800} className="rounded-lg relative border" priority></Image>
             </div>
           </section>
+          </motion.div>
         </main>
         <RightImage />
         <LeftImage />
@@ -122,6 +130,7 @@ const features = [
 
 function RightImage() {
   return (
+    <motion.div {...animations}>
     <div className="overflow-hidden bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -164,6 +173,7 @@ function RightImage() {
         </div>
       </div>
     </div>
+    </motion.div>
   )
 }
 
@@ -188,6 +198,7 @@ const features2 = [
 
 function LeftImage() {
   return (
+    <motion.div {...animations}>
     <div className="overflow-hidden bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
@@ -233,6 +244,7 @@ function LeftImage() {
         </div>
       </div>
     </div>
+    </motion.div>
   )
 }
 
@@ -286,6 +298,8 @@ const features3 = [
 
 function MoreFeatures() {
   return (
+    <motion.div {...animations}>
+
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
@@ -324,6 +338,7 @@ function MoreFeatures() {
         </div>
       </div>
     </div>
+    </motion.div>
   )
 }
 

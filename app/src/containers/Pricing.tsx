@@ -4,6 +4,8 @@ import PrimaryButton, { SecondaryButton } from "~/components/form/button"
 import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
 import Footer from "./Footer";
+import { motion } from 'framer-motion';
+
 const Pricing: React.FC<{
   org?: Org,
   prices?: {
@@ -70,9 +72,11 @@ const Pricing: React.FC<{
         <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans. </p>
 
         <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
-          <div
 
+
+          <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 0.5, repeatType: 'reverse' }} exit={{ scale: 1 }}
             className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
+
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Free
@@ -108,8 +112,10 @@ const Pricing: React.FC<{
                 </span>
               </p>
             </div>
-          </div>
-          <div className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
+          </motion.div >
+
+          <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 0.9, repeatType: 'reverse' }} exit={{ scale: 1 }}
+            className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Basic
@@ -151,8 +157,10 @@ const Pricing: React.FC<{
                 Subscribe
               </SecondaryButton>
             </div>
-          </div>
-          <div className=" rounded-md border-2 border-gray-600  hover:border-gray-600  hover:shadow-slate-400 hover:shadow-2xl duration-500">
+          </motion.div >
+
+          <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 1.2, repeatType: 'reverse' }} exit={{ scale: 1 }}
+            className=" rounded-md border-2 border-gray-600  hover:border-gray-600  hover:shadow-slate-400 hover:shadow-2xl duration-500">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold">
                 Professional
@@ -203,8 +211,10 @@ const Pricing: React.FC<{
               </PrimaryButton>
             </div>
 
-          </div>
-          <div className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200  hover:shadow-2xl duration-500">
+          </motion.div>
+
+          <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 1.5, repeatType: 'reverse' }} exit={{ scale: 1 }}
+            className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200  hover:shadow-2xl duration-500">
             <div className="p-6">
               <h2 className="text-3xl leading-6 font-semibold align-middle">
                 Enterprise
@@ -254,7 +264,7 @@ const Pricing: React.FC<{
                 Subscribe
               </SecondaryButton>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       <Footer />

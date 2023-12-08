@@ -21,11 +21,11 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, classNam
 export default PrimaryButton
 
 
-export const SecondaryButton: React.FC<PrimaryButtonProps> = ({ children, className, ...rest }) => {
+export const SecondaryButton: React.FC<PrimaryButtonProps> = ({ children, className, loading, ...rest }) => {
 
   return (
     <button className={classNames('px-1.5 lg:min-w-[120px]  lg:px-4 py-2 border border-slate-500  rounded-md  hover:bg-zinc-100 flex items-center   duration-200 ', className)} {...rest}>
-      {children}
+      {loading ? <Loading /> : children}
     </button>
   )
 }
