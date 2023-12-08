@@ -1,12 +1,26 @@
+import { Cards, Card } from 'nextra/components'
+import { Globe, FileText, Files } from "lucide-react"
+import { IconConfluence, IconNotion } from "~/components/icons/icons";
+
+
+
 # Adding Documents
 
-Currently Websites, Plain Text, notion and files can be uploaded to the DocsAI. You can re-sync and delete documents. Send us an email at hey@docsai.app or let us know in the [Feature Requests](https://docsai.canny.io/featrue-requests) if you want to request a specific document type.
+
+<Cards>
+  <Card  title="Website" icon={<Globe />}  href="/features/documents/website" />
+  <Card  title="Plain Text" icon={<FileText />} href="/features/documents/text" />
+  <Card  title="Files"  icon={<Files />} href="/features/documents/files" />
+  <Card  title="Notion" icon={<IconNotion />} href="/features/documents/notion" />
+  <Card  title="Confluence" icon={<IconConfluence />} href="/features/documents/confluence" />
+
+</Cards>
 
 ![documents](/docs/document.jpeg)
 
 Click the `+ Add document` on the top will take you to a list of supported sources from which you can train a single chatbot on multiple sources.
 
-![sources](/docs/sources.jpeg)
+![sources](/docs/sources.webp)
 
 ### FAQs
 
@@ -15,5 +29,5 @@ Click the `+ Add document` on the top will take you to a list of supported sourc
 There is no native support with google docs currently. You can export the document as `.docx` or `.pdf`
 from docs and add here as file.
 
-Let us know in the [Feature Requests](https://docsai.canny.io/featrue-requests) if you are looking for specific integration.
+You can re-sync and delete documents. Send us an email at hey@docsai.app or let us know in the [Feature Requests](https://docsai.canny.io/featrue-requests) if you want to request a specific document type.
 

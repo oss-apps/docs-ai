@@ -105,8 +105,7 @@ function Landing() {
 const features = [
   {
     name: 'Multiple Sources',
-    description:
-      'Add as many websites, text, pdf, docx you want. More source types are coming to DocsAI.',
+    description: 'DocsAI seamlessly integrates with a variety of sources, including websites, Text Files, PDFs, Docx , Notion and Confluence.',
     icon: <IconCollection />,
   },
   {
