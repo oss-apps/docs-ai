@@ -8,13 +8,14 @@ import { api } from "~/utils/api";
 import { confluenceSchema, ConfluenceSpace } from "~/utils/confluence";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
-import { IconAdd, IconLink, IconTick } from "~/components/icons/icons";
+import { IconAdd, IconConfluence, IconLink, IconTick } from "~/components/icons/icons";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/Alert";
 import { BookOpenCheck, FileWarning, Info, LassoSelect, Search } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
+import { getLimits } from "~/utils/license";
 
-const MAX_ALLOWED_SPACES = 2
+const MAX_ALLOWED_SPACES = 3
 
 const placeholders = {
   accessToken: "ATATT3xFfGF0BevFg14ufodEkhOZD14hqXV_Uw_SWwcdhr6nYaDiOWQR2rUgm0-d_Bev4oC-Em-80bwHYVYGIjDzjNo4rhRPAr2N2STUHK5SAZ_XsoOiARJH5VmbQNRPo5XFi8yPYUuq6yosaZdX3b-ydJVHvX6lRlbYBTqKytvFRD7iWFk=F17A2412",
@@ -132,6 +133,9 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
 
   const spacesRes = confluenceSpaceDetails?.integrationDetails as ConfluenceSpace
   const indexConfl = api.document.indexConfluenceDocument.useMutation()
+  const limits = getLimits(org.plan)
+  const remaininigSize = (limits.documentSize - Number(org.documentTokens)) / 1000
+
 
   const onSkipToggle = (url: string, name: string) => {
     const isSkipped = skippedUrls[url]
@@ -167,6 +171,7 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
     setIndexStatus('INDEXING')
     try {
       const src = "Contain spaces " + selectedSpace.join(", ")
+
       const args = { projectId: project.id, orgId: org.id, documentId: document.id, details: { ...conflDetails, skippedUrls, selectedSpace }, src }
       // here skippedUrls are used as selected spaces
 
@@ -184,7 +189,8 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
     <>
 
       <div className="flex gap-2 items-center mt-8">
-        <h3 className="text-xl font-bold flex items-center gap-2"> {conflDetails.baseUrl}
+        <h3 className="text-xl font-bold flex items-center gap-2">
+          <IconConfluence /> {conflDetails.baseUrl}
           <a href={conflDetails.baseUrl} target="_blank" rel="noreferrer"> <IconLink /> </a> </h3>
       </div>
       {
@@ -194,7 +200,7 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
           </div > :
           <div>
             <div className="flex items-end justify-between my-4">
-              <p className="text-zinc-600 text-lg ">Confluence Spaces ({spacesRes.results?.length})</p>
+              <p className="text-zinc-600 text-lg ">Spaces ({spacesRes.results?.length})</p>
               <form onSubmit={handleSubmit(filterSpaces)} className="flex items-center outline-none border rounded-lg ">
                 <Input
                   className="text-sm i min-w-[200px]  border-none focus:bg-transparent"
@@ -209,12 +215,20 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
               </form>
 
             </div>
+            <div className="text-sm my-2 flex gap-4 text-zinc-600 items-center flex-wrap">
+              <p> Selected Spaces</p>
+              <div className="flex gap-2 ">
+                {selectedSpace.map((name, i) => {
+                  return <span key={i} className="px-1 border rounded-md text-sm">{name}</span>
+                })}
+              </div>
+            </div>
             <div className="max-h-[45vh] border border-gray-300 rounded-md w-full overflow-auto">
               {filterSpaces()?.map((doc) => (
                 <div key={doc.id} className={`py-2 sm:p-2 border-b flex  justify-between last:border-none last:rounded-b-md first:rounded-t-md  
                   ${skippedUrls[doc.key] ? 'bg-green-50' : 'hover:bg-slate-50'}`}
                   onClick={() => onSkipToggle(doc.key, doc.name)}>
-                  <a href={conflDetails.baseUrl + 'wiki' + doc._links.webui} target="_blank" rel="noreferrer" className={`text-zinc-700 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
+                  <a href={conflDetails.baseUrl + 'wiki' + doc._links.webui} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className={`text-zinc-700 pl-1 hover:underline underline-offset-2 text-ellipsis overflow-hidden`}>
                     {doc.name} <span className="text-zinc-500">  ({doc.type}) </span>
                   </a>
                   <div className="flex sm:justify-end sm:gap-4 items-center">
@@ -235,14 +249,17 @@ const EditConfluenceDocument: React.FC<{ org: Org, project: Project, document: D
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex gap-4 text-zinc-600 items-center flex-wrap">
-              <p> Selected Spaces</p>
-              <div className="flex gap-2 ">
-                {selectedSpace.map((name, i) => {
-                  return <span key={i} className="px-1 border rounded-md text-sm">{name}</span>
-                })}
+            <div className="text-sm flex flex-wrap justify-start sm:justify-between my-1 sm:p-2">
+              <div>
+                <span className="text-zinc-500">Total used </span>
+                <span >{document.tokens / 1000} KB</span>
+              </div>
+              <div className="flex justify-center">
+                <span className=" text-zinc-500">Quota remaninig &nbsp;  </span>
+                <span className="">{remaininigSize} KB</span>
               </div>
             </div>
+
 
             <PrimaryButton className="mx-auto mt-4 gap-1" onClick={onIndexConfluence} disabled={indexStatus === 'INDEXING' || isLoading} loading={indexStatus === 'INDEXING' || isLoading}>
               <IconAdd className="w-5 h-5" /> Create

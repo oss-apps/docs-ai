@@ -27,7 +27,7 @@ const conflLoader = async (doc: Document) => {
 
         const loadedPages = await loader.load();
         loadedPages.map(each => {
-          const metadata = each.metadata as { object: string, notionId: string }
+          const metadata = each.metadata as { object: string }
           const pageSize = new Blob([each.pageContent]).size
           size += pageSize
           pages.push({
@@ -35,7 +35,7 @@ const conflLoader = async (doc: Document) => {
             metadata: {
               size: pageSize,
               object: metadata.object,
-              notionId: key
+              confluenceId: key
             }
           })
         })

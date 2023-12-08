@@ -30,13 +30,11 @@ const NewNotionDocument: React.FC<{ org: Org, project: Project }> = ({ project, 
   const url = `${env.NEXT_PUBLIC_NOTION_AUTHORIZATION_URL}&state=${org.id},${project.id}`
   return (
     <>
-      <div className="flex flex-col ">
-        <h1 className="text-xl font-semibold  text-center mb-2" >Select the pages you want to train.</h1>
-        <div className="text-center mt-4">
-          <Button variant='outline' size="sm">
-            <a href={url} className="flex gap-2"><IconNotion /> Connect Notion</a>
-          </Button>
-        </div>
+      <h1 className="text-xl font-semibold  my-4" >Only select the pages you want to train.</h1>
+      <div className=" mt-4">
+        <Button variant='outline'>
+          <a href={url} className="flex gap-2"><IconNotion /> Connect Notion</a>
+        </Button>
       </div>
     </>
   )
@@ -53,6 +51,7 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
   const indexNotionDocs = api.document.createNotionDocument.useMutation()
   const { data: notionListsDetails, isLoading } = api.document.getOneDocument.useQuery({ documentId: document?.id })
   const limits = getLimits(org.plan)
+  const remaininigSize = (limits.documentSize - Number(org.documentTokens)) / 1000
   const notionPages = notionListsDetails?.integrationDetails as NotionList[]
 
   const onSkipToggle = (url: string) => {
@@ -64,7 +63,6 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
   const onIndexNotionDocs = async () => {
     setIndexStatus('INDEXING')
     try {
-
       const args = { projectId: project.id, orgId: org.id, documentId: document.id, details: { ...notionDetails, skippedUrls } }
       await indexNotionDocs.mutateAsync(args)
       await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
@@ -123,14 +121,14 @@ const EditNotionDocument: React.FC<{ org: Org, project: Project, document: Docum
             ))}
 
           </div>
-          <div className="flex flex-wrap justify-start sm:justify-between my-1 sm:p-2">
+          <div className="flex text-base flex-wrap justify-start sm:justify-between my-1 sm:p-2">
             <div>
               <span className="text-zinc-500">Total used </span>
               <span >{document.tokens / 1000} KB</span>
             </div>
             <div className="flex justify-center">
               <span className=" text-zinc-500">Quota remaninig &nbsp;  </span>
-              <span className="">{(limits.documentSize - document.tokens) / 1000} KB</span>
+              <span className="">{remaininigSize} KB</span>
             </div>
           </div>
           <PrimaryButton className="mx-auto mt-4 gap-1" onClick={onIndexNotionDocs} disabled={indexStatus === 'INDEXING' || isLoading} loading={indexStatus === 'INDEXING' || isLoading}>

@@ -208,6 +208,6 @@ export async function indexConflDocument(orgId: string, projectId: string, docum
   await updateStatus(projectId, orgId, documentId, false, doc?.title || doc.src, tokens, "SUCCESS")
 
   console.log("🫤 ~ confl ~ indexConflDocument ~ finished:", documentId)
-
+  return doc
 
 }

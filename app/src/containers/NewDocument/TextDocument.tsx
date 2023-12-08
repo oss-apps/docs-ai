@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 
 const documentSchema = z.object({
-  title: z.string(),
+  title: z.string().min(3).max(100),
   content: z.string()
 })
 
@@ -41,15 +41,16 @@ export const TextDocument: React.FC<{ org: Org, project: Project, document?: Doc
     <form onSubmit={handleSubmit(onSubmit)}>
       <Label>Title</Label>
       <Input
-        error={errors.src?.message?.toString()}
+        error={errors.title?.message?.toString()}
         placeholder="How to add document in DocsAI?"
         {...register('title', { required: 'Title is required' })}
         defaultValue={document?.title || ''}
+
       />
 
       <Label>Content</Label>
       <TextArea
-        error={errors.src?.message?.toString()}
+        error={errors.content?.message?.toString()}
         rows={10}
         defaultValue={document?.src || ''}
         placeholder={"It's very simple to create a document in docs AI \n1. Create a project if not exist before\n2. Go to documents tab\n3. Click on new document button. \n4. Add a url or text you want to add"}

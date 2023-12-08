@@ -348,7 +348,18 @@ export const documentRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const details = input.details as JsonObject
-      await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+
+      const document = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details }, where: { id: input.documentId } })
+      if (document.tokens) {
+        try {
+          await deleteDocumentVector(input.projectId, input.documentId)
+          await resetTokens(document, input.orgId, input.projectId)
+        }
+        catch (err) {
+          console.error(`createNotionDocument`, err)
+          return await ctx.prisma.document.update({ data: { indexStatus: 'FAILED' }, where: { id: input.documentId } })
+        }
+      }
       const val = await docgpt.indexNotionDocuments(input.orgId, input.projectId, input.documentId)
       return val
     }),
@@ -374,7 +385,17 @@ export const documentRouter = createTRPCRouter({
     .input(z.object({ projectId: z.string(), orgId: z.string(), details: z.any(), documentId: z.string(), src: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const details = input.details as JsonObject
-      const doc = await ctx.prisma.document.update({ data: { indexStatus: 'FETCH_DONE', details, src: input.src }, where: { id: input.documentId } })
+      const document = await ctx.prisma.document.update({ data: { indexStatus: 'INDEXING', details, src: input.src }, where: { id: input.documentId } })
+      if (document.tokens) {
+        try {
+          await deleteDocumentVector(input.projectId, input.documentId)
+          await resetTokens(document, input.orgId, input.projectId)
+        }
+        catch (err) {
+          console.error(`indexConfluenceDocument`, err)
+          return await ctx.prisma.document.update({ data: { indexStatus: 'FAILED' }, where: { id: input.documentId } })
+        }
+      }
       const val = await docgpt.indexConflDocument(input.orgId, input.projectId, input.documentId)
       return val
     }),
@@ -396,12 +417,13 @@ export const documentRouter = createTRPCRouter({
         await storage.deleteFileDocument(document.id)
       }
 
-      await resetTokens(document, input.orgId, input.projectId)
       try {
         await deleteDocumentVector(input.projectId, input.documentId)
+        await resetTokens(document, input.orgId, input.projectId)
       }
       catch (err) {
-        console.error("🤯 ~ delete doc vector error", err)
+        console.error(`deleteDocument`, err)
+        throw new Error(`Can't delete documents vector, contact hey@docsai.app with id ${input.documentId}`)
       }
       await ctx.prisma.document.delete({ where: { id: input.documentId } })
     }),
