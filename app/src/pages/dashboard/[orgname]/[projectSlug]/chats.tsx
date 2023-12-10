@@ -8,12 +8,12 @@ import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
-import { ShareButton, SmallButton } from "~/components/form/button";
+import PrimaryButton, { SecondaryButton, ShareButton, SmallButton } from "~/components/form/button";
 import { PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
 import { Switch } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
-import { IconIdentification, IconUserCheck } from "~/components/icons/icons";
+import { IconChatHistory, IconIdentification, IconUserCheck } from "~/components/icons/icons";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -88,6 +88,8 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
 
   const summarizeConversation = api.conversation.summarizeConversation.useMutation()
   const clearChatHistory = api.conversation.clearChatHistory.useMutation()
+  const clearConversation = api.conversation.clearConversation.useMutation()
+
 
   const onGenerateClicked = async () => {
     if (currentChat && currentChat.conversation) {
@@ -116,6 +118,23 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   const onClearHistory = async () => {
     await clearChatHistory.mutateAsync({ projectId: project.id, orgId: org.id })
     await refetchHistory()
+  }
+
+  const onClearConversation = async (id: string | undefined) => {
+    if (!id) return
+    try {
+
+      await clearConversation.mutateAsync({ projectId: project.id, id })
+      const history = await refetchHistory()
+      const latestConvos = history.data?.pages[0]?.conversations
+      if (latestConvos?.length && latestConvos[0]) {
+        setConvoId(latestConvos[0].id)
+      }
+      await refetch()
+    }
+    catch (err) {
+      toast.error('problem deleting conversation ')
+    }
   }
 
   const onSubmit: SubmitHandler<FieldValues> = async () => {
@@ -199,6 +218,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     <p>
                       <b> Chats </b>
                     </p>
+
                     <div className="flex  gap-2">
                       <Dialog>
                         <DialogTrigger className="rounded-lg  hover:bg-zinc-100 px-2">
@@ -383,11 +403,36 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     </div>
                   ) : null}
                 </div>
-                {convoData?.pages[0]?.conversations.length ? <div className="w-full border sm:w-2/3 overflow-auto pb-16">
+                {convoData?.pages[0]?.conversations.length ?
+                  <div className="w-full border sm:w-2/3 overflow-auto pb-16">
                   <div className="flex justify-between items-center p-4">
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer
                     </Link>
+                      <Dialog>
+                        <DialogTrigger className=" rounded-md px-2  text-red-500 hover:bg-red-50"> Delete   </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Are you sure? </DialogTitle>
+                            <DialogDescription>
+                              You are trying to delete the conversation and this action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter className="gap-2">
+                            <DialogClose asChild>
+                              <Button variant='outline' >
+                                Cancel
+                              </Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                              <Button className="border" variant='destructive' onClick={() => onClearConversation(currentChat?.conversation?.id)} disabled={clearChatHistory.isLoading} >
+                                Delete forever
+                              </Button>
+                            </DialogClose>
+
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                   </div>
                   <div className="border-b pb-4 px-4">
                     {project.generateSummary ? (
@@ -499,7 +544,15 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                               <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
                           ))}</div>
                   }
-                </div> : <NoChat isConvoLoading={isLoading} message="No chats to Filter!" />}
+                  </div> : <div className="flex justify-center flex-col items-center mx-auto">
+                    <NoChat isConvoLoading={isLoading} message="No conversations yet, but you can change that." />
+                    <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="my-2">
+                      <PrimaryButton className="mx-auto  justify-center gap-2">
+                        <IconChatHistory className="w-5 h-5" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" />
+                        Start Conversation</PrimaryButton>
+                    </Link>
+                  </div>
+                }
               </div>
             ) : null
             }

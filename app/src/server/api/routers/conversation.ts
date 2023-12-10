@@ -150,6 +150,17 @@ export const conversationRouter = createTRPCRouter({
         }
       })
     }),
+
+  clearConversation: orgMemberProcedure
+    .input(z.object({ projectId: z.string(), id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.conversation.deleteMany({
+        where: {
+          projectId: input.projectId,
+          id: input.id
+        }
+      })
+    }),  
   downloadConversations: orgMemberProcedure
     .input(z.object({ projectId: z.string(), orgId: z.string(), filter: zConvoFilter }))
     .query(async ({ input, ctx }) => {

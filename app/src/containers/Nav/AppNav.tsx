@@ -1,4 +1,5 @@
 import { type Project, type Org } from "@prisma/client"
+import { Newspaper } from "lucide-react"
 import { type User } from "next-auth"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -89,12 +90,21 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
                 Subscription </span>
             </SecondaryButton>
           </Link>
+          <hr className="my-4"></hr>
 
           <Link href={`/docs/getting-started`} className="w-full" tabIndex={-1} target="_blank">
             <SecondaryButton className={`border-0  text-left w-full shadow-none  hover:bg-gray-100 flex  gap-2 items-center  `}>
-              <IconLink className="h-5 w-5" />
+              <IconLink className="h-5 w-5 text-zinc-500" />
               <span className="hidden lg:block">
-                View Docs </span>
+                View docs </span>
+            </SecondaryButton>
+          </Link>
+
+          <Link href={`/docs/release-notes`} className="w-full" tabIndex={-1} target="_blank">
+            <SecondaryButton className={`border-0  text-left w-full shadow-none  hover:bg-gray-100 flex  gap-2 items-center  `}>
+              <Newspaper className="h-5 w-5 text-zinc-500" />
+              <span className="hidden lg:block">
+                What's new? </span>
             </SecondaryButton>
           </Link>
 

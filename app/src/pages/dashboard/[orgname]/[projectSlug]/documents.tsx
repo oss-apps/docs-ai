@@ -14,6 +14,7 @@ import { Fragment, useState } from "react";
 import { IconAdd, IconChatHistory, IconConfluence, IconNotion } from "~/components/icons/icons";
 import { Clock, Files, FileText, Globe } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns'
+import Image from "next/image";
 
 const Status = ({ status }: { status: IndexStatus }) => {
   switch (status) {
@@ -85,18 +86,30 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                         Talk to your Docs</SecondaryButton>
                     </Link>
                   ) : null}
-                  <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} >
+                  {data?.documents?.length ?
+                    <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} >
                     <PrimaryButton>
                       <IconAdd className="h-5 w-5 mr-2" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" /> Add <span className="hidden sm:block"> &nbsp; document </span>
                     </PrimaryButton>
-                </Link>
+                    </Link> : null
+                  }
                 </div>
               </div>
               {isLoading ? <div>Loading...</div> :
                 data?.documents?.length === 0 ? (
-                  <div className="mt-4 border-t">
-                    <p className="text-center mt-10">No documents added yet!</p>
-                  </div>
+                  <>
+                    <div className="flex justify-center gap-2  border-t p-2 mt-4">
+                      <Image src="/illus/add-docs.svg" height={450} width={450} alt="empty chats" className="justify-center my-5" />
+                    </div>
+                    <p className="text-center text-gray-600"> This is where your documents will live. Add one now! </p>
+                    <div className="flex justify-center my-3">
+                      <Link href={`/dashboard/${org.name}/${project.slug}/new_document`} >
+                        <PrimaryButton>
+                          <IconAdd className="h-5 w-5 mr-2" primaryClassName="fill-slate-500" secondaryClassName="fill-slate-100" /> Add <span className="hidden sm:block"> &nbsp; document </span>
+                        </PrimaryButton>
+                      </Link>
+                    </div>
+                  </>
                 ) : (
                     <>
 
