@@ -104,7 +104,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
             <SecondaryButton className={`border-0  text-left w-full shadow-none  hover:bg-gray-100 flex  gap-2 items-center  `}>
               <Newspaper className="h-5 w-5 text-zinc-500" />
               <span className="hidden lg:block">
-                What's new? </span>
+                What&apos;s new? </span>
             </SecondaryButton>
           </Link>
 

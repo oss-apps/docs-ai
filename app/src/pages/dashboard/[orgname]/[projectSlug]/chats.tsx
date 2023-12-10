@@ -3,12 +3,12 @@ import { type User } from "next-auth";
 import Head from "next/head";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { Conversation, ConvoRating, MessageUser, type Messages, type Org, type Project } from "@prisma/client";
+import { type Conversation, ConvoRating, MessageUser, type Messages, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";
-import PrimaryButton, { SecondaryButton, ShareButton, SmallButton } from "~/components/form/button";
+import PrimaryButton, { ShareButton, SmallButton } from "~/components/form/button";
 import { PlainChat, RightChat } from "~/containers/Chat/Chat";
 import { getContrastColor } from "~/utils/color";
 import { Switch } from "@headlessui/react";
@@ -31,7 +31,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/Popover
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
 import { cn } from "~/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/Form";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table"
 import Avatar from "~/components/Avatar";
 
 
@@ -73,8 +73,8 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
   const [filterS, setFilters] = useState<Record<string, any>>({})
 
   const filterForm = useForm<z.input<typeof filterSchema>>({ resolver: zodResolver(filterSchema) });
-  const { register, handleSubmit, formState: { errors }, getValues, reset } = filterForm
-  const { data: convoData, isLoading: isConvoLoading, hasNextPage, fetchNextPage, refetch: refetchHistory } =
+  const { handleSubmit, formState: { errors }, getValues, reset } = filterForm
+  const { data: convoData, hasNextPage, fetchNextPage, refetch: refetchHistory } =
     api.conversation.getConversations.useInfiniteQuery({
       orgId: org.id, projectId: project.id, filter: filterS
     }, {

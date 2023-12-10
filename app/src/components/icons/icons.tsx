@@ -251,7 +251,7 @@ export const IconUpdate: React.FC<IconProps> = ({ className, primaryClassName, s
 }
 
 
-export const IconClear: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+export const IconClear: React.FC<IconProps> = ({ className, secondaryClassName }) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className ?? 'w-6 h-6'}>
       <path className={secondaryClassName ?? 'fill-zinc-900'} fillRule="evenodd" d="M15.78 14.36a1 1 0 0 1-1.42 1.42l-2.82-2.83-2.83 2.83a1 1 0 1 1-1.42-1.42l2.83-2.82L7.3 8.7a1 1 0 0 1 1.42-1.42l2.83 2.83 2.82-2.83a1 1 0 0 1 1.42 1.42l-2.83 2.83 2.83 2.82z" />
@@ -268,7 +268,7 @@ export const IconDownload: React.FC<IconProps> = ({ className, primaryClassName,
 }
 
 
-export const IconThumb: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+export const IconThumb: React.FC<IconProps> = ({ className }) => {
   return (
     <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"
       className={className ?? "w-6 h-6"} height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +285,7 @@ export const IconFeedback: React.FC<IconProps> = ({ className, primaryClassName,
   )
 }
 
-export const IconEmail: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+export const IconEmail: React.FC<IconProps> = ({ className }) => {
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className ?? 'w-6 h-6'}>
@@ -293,7 +293,7 @@ export const IconEmail: React.FC<IconProps> = ({ className, primaryClassName, se
       <polyline points="22,6 12,13 2,6"></polyline></svg>)
 }
 
-export const IconLink: React.FC<IconProps> = ({ className, primaryClassName, secondaryClassName }) => {
+export const IconLink: React.FC<IconProps> = ({ className }) => {
 
   return (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className ?? 'w-5 h-5'}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />

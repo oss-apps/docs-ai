@@ -5,7 +5,7 @@ import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
 import { type Document, DocumentType, IndexStatus, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
-import PrimaryButton, { Button, SecondaryButton, SmallButton, SmallSecondaryButton } from "~/components/form/button";
+import PrimaryButton, { SecondaryButton, SmallButton, SmallSecondaryButton } from "~/components/form/button";
 import AppNav from "~/containers/Nav/AppNav";
 import { api } from "~/utils/api";
 import Link from "next/link";

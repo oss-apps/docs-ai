@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, NextPage } from "next";
+import { type GetServerSidePropsContext, type NextPage } from "next";
 import { useSearchParams } from 'next/navigation'
 import { type User } from "next-auth";
 import { ConvoRating, type Org, type Project } from "@prisma/client";
@@ -10,10 +10,10 @@ import { PlainChat } from "~/containers/Chat/Chat";
 import { Sentiment } from "./chats";
 import PrimaryButton from "~/components/form/button";
 import Head from "next/head";
-import { parse, toDate } from "date-fns";
+import { toDate } from "date-fns";
 import Image from "next/image";
 
-const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
+const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ orgJson, projectJson }) => {
 
   const org: Org = superjson.parse(orgJson)
   const project: Project = superjson.parse(projectJson)
@@ -31,7 +31,7 @@ const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string 
 
   console.log("🔥 ~ [from, to, rating, feedback]:", [rating, feedback], from, to)
 
-  const { data: convos, isLoading, refetch } = api.conversation.downloadConversations.useQuery({
+  const { data: convos, isLoading } = api.conversation.downloadConversations.useQuery({
     orgId: org.id,
     projectId: project.id,
     filter: { from, to, rating, feedback: (feedback as string) }
