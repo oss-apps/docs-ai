@@ -387,9 +387,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                             <span title={conversation.createdAt.toLocaleString()}>  {formatDistanceToNow(conversation.createdAt, { addSuffix: true })} </span>
                             <div className="flex gap-2">
                               <span className={`font-semibold ${conversation?.userId ? 'block' : 'invisible'}`}>  <IconUserCheck className="w-4 h-4" /> </span>
-                              <span title="Copy sharable link">
-                                <ShareButton id={conversation.id} title={conversation?.firstMsg} icon={<Share className="w-4 h-4 hover:text-black " />} />
-                              </span>
+
                             </div>                              
                           </div>
                         </div>
@@ -409,6 +407,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer
                     </Link>
+                      <div className="flex items-center gap-x-2">
+                        <ShareButton id={currentChat?.conversation?.id} title={currentChat?.conversation?.firstMsg} icon={<span className="rounded-lg  hover:bg-zinc-100 text-zinc-600 px-2"> Share</span>} />
+
                       <Dialog>
                         <DialogTrigger className=" rounded-md px-2  text-red-500 hover:bg-red-50"> Delete   </DialogTrigger>
                         <DialogContent>
@@ -433,6 +434,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
+                      </div>
                   </div>
                   <div className="border-b pb-4 px-4">
                     {project.generateSummary ? (
