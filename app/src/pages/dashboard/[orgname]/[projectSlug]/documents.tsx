@@ -117,7 +117,7 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                         {data?.documents.map((document) => (
                           <div key={document.id} className="rounded-md border p-3 hover:shadow-sm">
                             <p className="font-medium text-base truncate  gap-x-2 items-center">
-                              {document.title}</p>
+                              {document.title || document.documentType}</p>
                             <div className="flex items-center gap-x-2 mt-1">
                               {IconTypes[document.documentType]}  <span className="text-sm text-gray-500" title="Last updated at"> {formatDistanceToNow(document.updatedAt, { addSuffix: true })}</span>
                             </div>
@@ -165,7 +165,10 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
                             <li key={document.id} className="gap-2 lg:p-4  lg:grid  lg:grid-cols-6  border-b last:border-none">
                               <div className="col-span-2">
                                 <div className="font-semibold flex gap-2 items-center truncate" title={document.title || ""}>
-                                  {IconTypes[document.documentType]}{document.title!.slice(0, 40) + (document.title!.length > 40 ? '...' : '')}</div>
+                                  {IconTypes[document.documentType]}
+                                  {document.title && document.title.slice(0, 40) + (document.title.length > 40 ? '...' : '')}
+                                  {!document.title && document.documentType}
+                                </div>
                                 <div className="text-sm text-gray-500 ">
                                   {document.documentType === DocumentType.URL ?
                                     <a href={document.src} className="hover:underline underline-offset-1" target="_blank" rel="noreferrer">
