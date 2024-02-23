@@ -36,7 +36,7 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
 
 
   const installScript = () => {
-    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" async></script>`
+    return `<script src="https://docsai.app/embed.min.js" project-id="${project.id}" version-number="2" async></script>`
   }
   return (
     <>

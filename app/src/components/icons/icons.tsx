@@ -1,4 +1,6 @@
+import { Globe } from "lucide-react"
 import React from "react"
+import { cn } from "~/lib/utils"
 
 type IconProps = {
   className?: string,
@@ -424,4 +426,38 @@ export const IconEmailDC: React.FC<IconProps> = ({ className, primaryClassName, 
         <path className={primaryClassName ?? 'fill-zinc-400'} d="M22 8.62V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.62l9.55 4.77a1 1 0 0 0 .9 0L22 8.62z" />
         <path className={secondaryClassName ?? 'fill-zinc-900'} d="M12 11.38l-10-5V6c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v.38l-10 5z" /></svg></>
   )
+}
+
+export type TSocialIcons = "facebook" | "linkedIn" | "instagram" | "x" | "whatsapp" | "discord" | "telegram" | "website" | "github"
+
+export const SocialIcons: React.FC<{ type: TSocialIcons, className?: string }> = ({ type, className = null }) => {
+  if (type == 'facebook') {
+    return <object type="image/svg+xml" data="/svgs/facebook.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'linkedIn') {
+    return <object type="image/svg+xml" data="/svgs/linkedin.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'instagram') {
+    return <object type="image/svg+xml" data="/svgs/instagram.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'x') {
+    return <object type="image/svg+xml" data="/svgs/x.svg" className={cn("w-5 h-5 inline-flex", className)}></object>
+  }
+  if (type == 'whatsapp') {
+    return <object type="image/svg+xml" data="/svgs/whatsapp.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'discord') {
+    return <object type="image/svg+xml" data="/svgs/discord.svg" className={cn("w-7 h-7 inline-flex", className)}></object>
+  }
+  if (type == 'telegram') {
+    return <object type="image/svg+xml" data="/svgs/telegram.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'github') {
+    return <object type="image/svg+xml" data="/svgs/github.svg" className={cn("w-6 h-6 inline-flex", className)}></object>
+  }
+  if (type == 'website') {
+    return <Globe className={cn("w-6 h-6 inline-flex", className)} />
+  }
+
+  return <></>
 }

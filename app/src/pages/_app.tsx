@@ -43,9 +43,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         }
 
         {showChatBotIcon && env.NEXT_PUBLIC_NODE_ENV === "production" ? (
-          <script src="/embed.min.js" project-id="clfp5tn2a0007mc0ub8qch4x2" primary-color="#000" async></script>
+          <script src="/embed.min.js" project-id="clfp5tn2a0007mc0ub8qch4x2" version-number="2" async></script>
         ) : showChatBotIcon && env.NEXT_PUBLIC_NODE_ENV !== "production" ? (
-            <script src="/embed.js" project-id="clol3x1k500011jufu8a73eha" docs-url="http://localhost:3000" async></script>
+            <script src="/embed.js" project-id="clsytvox500071jsq5xar24e1" version-number="2" docs-url="http://192.168.1.9:3000" async></script>
         ) : null}
       </Head>
       <Toaster position="bottom-center" />

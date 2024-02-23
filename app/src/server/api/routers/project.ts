@@ -82,7 +82,8 @@ export const projectRouter = createTRPCRouter({
       primaryColor: z.string().min(4),
       supportEmail: z.string().email().optional().nullable(),
       askUserId: z.string().optional().nullable(),
-
+      socialLinks: z.any().optional(),
+      dataHub: z.any().optional()
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -90,13 +91,17 @@ export const projectRouter = createTRPCRouter({
           where: {
             id: input.projectId
           },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data: {
             defaultQuestion: input.defaultQuestion,
             botName: input.botName,
             initialQuestion: input.initialQuestion,
             primaryColor: input.primaryColor,
             supportEmail: input.supportEmail,
-            askUserId: input.askUserId
+            askUserId: input.askUserId,
+            ...(input.socialLinks && { socialLinks: input.socialLinks as Prisma.InputJsonValue }),
+            ...(input.dataHub && { dataHub: input.dataHub as Prisma.InputJsonArray }),
+
           }
         })
         return {
@@ -110,7 +115,6 @@ export const projectRouter = createTRPCRouter({
         else throw e
       }
     }),
-
   createOrRecreateApiKey: orgMemberProcedure.
     input(z.object({ projectId: z.string(), orgId: z.string() }))
     .mutation(async ({ input, ctx }) => {

@@ -108,9 +108,14 @@ export const conversationRouter = createTRPCRouter({
     }),
 
   getConversationById: publicProcedure
-    .input(z.object({ convoId: z.string() }))
+    .input(z.object({ convoId: z.string().nullable() }))
     .query(async ({ input, ctx }) => {
       if (input.convoId === 'new') {
+        return {
+          conversation: null,
+        }
+      }
+      if (!input.convoId) {
         return {
           conversation: null,
         }

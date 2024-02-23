@@ -33,6 +33,7 @@ import { cn } from "~/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/Form";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table"
 import Avatar from "~/components/Avatar";
+import { type AdditionFields } from "~/types";
 
 
 export type downloadFilter = { from: string, to: string, rating: string }
@@ -46,7 +47,6 @@ const filterSchema = z.object({
 })
 const ConvoRatingOptions = [{ value: 'POSITIVE', label: 'Positive' }, { value: 'NEGATIVE', label: 'Negative' }, { value: 'NEUTRAL', label: 'Neutral' }]
 const FeedbackOptions = [{ value: 'POSITIVE', label: 'Positive' }, { value: 'NEGATIVE', label: 'Negative' }, { value: 'ALL', label: 'All Feedback' }]
-type AdditionFields = { name: string | undefined, avatarUrl: string | undefined, userEmail: string | undefined }
 
 export const Sentiment: React.FC<{ rating: ConvoRating }> = ({ rating }) => {
 

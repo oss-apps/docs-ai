@@ -142,7 +142,9 @@ model Project {
     slackInstalation SlackInstallation?
     projectToken     ProjectToken?
     supportEmail     String?
-    askUserId        String?            
+    askUserId        String?
+    socialLinks      Json?
+    dataHub          Json?             
 
     @@unique([orgId, slug])
 }
