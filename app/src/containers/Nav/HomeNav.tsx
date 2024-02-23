@@ -23,6 +23,9 @@ const HomeNav: React.FC = () => {
         <Link href="/privacy" className="text-zinc-600 hidden md:block">
           Privacy
         </Link>
+        <Link href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-zinc-600 hidden md:block">
+          Github
+        </Link>
 
         <Link href="/docs/getting-started" className="text-zinc-600 hidden sm:flex gap-1  items-center" target="_blank">
           Docs
