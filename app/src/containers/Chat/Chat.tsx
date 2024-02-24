@@ -15,7 +15,7 @@ import { getContrastColor } from "~/utils/color";
 import { IconEmail, IconFastForward, IconSend, IconThumb } from "~/components/icons/icons";
 import { toast } from "react-hot-toast";
 import { Input } from "~/components/form/input";
-import { Paintbrush, ShareIcon } from "lucide-react";
+import { PlusSquare, ShareIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -372,7 +372,7 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
                 <TooltipTrigger asChild>
                   <button type="reset" className={`"px-1 py-0.5 rounded-md disabled:text-gray-200 text-gray-500" + ${embed ? 'hidden' : ''}`} disabled={Boolean(answer || latestQuestion)}
                     onClick={onResetChat} accessKey="r">
-                    <Paintbrush className="w-6 h-6 stroke-[var(--chat-secondary-color)]" />
+                    <PlusSquare className="w-6 h-6 stroke-[var(--chat-secondary-color)]" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>

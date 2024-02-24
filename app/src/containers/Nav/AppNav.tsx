@@ -1,10 +1,10 @@
 import { type Project, type Org } from "@prisma/client"
-import { Newspaper } from "lucide-react"
+import { Newspaper, Sparkles } from "lucide-react"
 import { type User } from "next-auth"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Avatar from "~/components/Avatar"
-import { SecondaryButton } from "~/components/form/button"
+import { CustomButton, SecondaryButton } from "~/components/form/button"
 import { IconAdd, IconBot, IconDashboard, IconFolderOpen, IconHistory, IconLink, IconPaintBrush, IconSettings, IconSubscription } from "~/components/icons/icons"
 
 /**
@@ -83,13 +83,24 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
           </SecondaryButton>
           </Link>
 
-          <Link href={`/dashboard/${org.name}/subscription`} className="w-full" tabIndex={-1}>
-            <SecondaryButton className={`border-0  text-left w-full shadow-none  focus:bg-gray-100  flex  gap-2 items-center  `}>
-              <IconSubscription className="h-5 w-5" />
-              <span className="hidden lg:block">
-                Subscription </span>
-            </SecondaryButton>
-          </Link>
+          {
+            org.plan !== 'FREE' ?
+              <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-2" tabIndex={-1}>
+                <CustomButton className={`bg-slate-100 border text-slate-900 font-medium  text-sm w-full  text-left flex items-center gap-2`}>
+                  <Sparkles className="h-5 w-5" />
+                  <span className="hidden lg:block">
+                    View plan  </span>
+                </CustomButton>
+              </Link>
+              :
+              <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-2" tabIndex={-1}>
+                <CustomButton className={`bg-slate-900  text-sm w-full text-white text-left flex items-center gap-2`}>
+                  <Sparkles className="h-5 w-5" />
+                  <span className="hidden lg:block">
+                    Upgrade  </span>
+                </CustomButton>
+              </Link>
+          }
           <hr className="my-4"></hr>
 
           <Link href={`/docs/getting-started`} className="w-full" tabIndex={-1} target="_blank">

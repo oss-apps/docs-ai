@@ -24,7 +24,7 @@ export default PrimaryButton
 export const CustomButton: React.FC<PrimaryButtonProps> = ({ children, className, loading, ...rest }) => {
 
   return (
-    <button className={classNames('min-w-[120px]  flex justify-center px-4 py-2   rounded-lg items-center  duration-200 ', className)} {...rest}>
+    <button className={classNames('px-1.5 lg:min-w-[120px]  flex justify-center lg:px-4 py-2   rounded-lg items-center  duration-200 ', className)} {...rest}>
       {loading ? <Loading /> : children}
     </button>
   )
