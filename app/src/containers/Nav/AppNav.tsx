@@ -85,12 +85,12 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
 
           {
             org.plan !== 'FREE' ?
-              <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-2" tabIndex={-1}>
-                <CustomButton className={`bg-slate-100 border text-slate-900 font-medium  text-sm w-full  text-left flex items-center gap-2`}>
-                  <Sparkles className="h-5 w-5" />
+              <Link href={`/dashboard/${org.name}/subscription`} className="w-full " tabIndex={-1}>
+                <SecondaryButton className={`border-0   w-full  text-left flex items-center gap-2`}>
+                  <IconSubscription className="h-5 w-5" />
                   <span className="hidden lg:block">
-                    View plan  </span>
-                </CustomButton>
+                    Subscription  </span>
+                </SecondaryButton>
               </Link>
               :
               <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-2" tabIndex={-1}>
