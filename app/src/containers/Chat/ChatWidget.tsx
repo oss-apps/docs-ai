@@ -17,7 +17,7 @@ import { Input } from "~/components/form/input";
 import { PlusSquare, ShareIcon } from "lucide-react";
 import { env } from "~/env.mjs";
 import { type UserIdentification } from "./ChatV2";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { Skeleton } from "~/components/ui/Skeleton";
 
 
 const qnaSchema = z.object({
@@ -278,7 +278,7 @@ export const ChatWidget: React.FC<{ org: Org, project: Project, userDetails?: Us
           `
         }
       </style>
-      <ScrollArea className="h-full max-h-[700px] bg-gray-50/90 ">
+      <section className="h-full max-h-[700px] bg-gray-50/90 ">
         <div ref={chatBox} id="docs-ai-chat-box" className="pb-[130px] pt-2">
           <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
 
@@ -288,7 +288,22 @@ export const ChatWidget: React.FC<{ org: Org, project: Project, userDetails?: Us
               : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback, onShare }} />
           ))}
 
-          {isPrevConversationLoading ? "Loading" : null}
+          {(convoId && isPrevConversationLoading) ? <div className="px-4 ">
+            <div className="space-y-2 ">
+              <div className="flex justify-end">
+                <Skeleton className="h-14 w-[360px]   bg-[var(--chat-secondary-color)] rounded-xl rounded-br-none border" />
+              </div>
+              <Skeleton className="h-32 w-full rounded-xl rounded-bl-none border" />
+              <div className="flex gap-2 ">
+                <Skeleton className="h-7 w-7 " />
+                <Skeleton className="h-7 w-7 " />
+                <Skeleton className="h-7 w-7 " />
+                <Skeleton className="h-7 w-7 " />
+                <Skeleton className="h-7 w-7 " />
+
+              </div>
+            </div>
+          </div> : null}
 
           {(project?.askUserId && showAskUserId) ?
             <div className=" max-w-lg m-2  lg:mt-4 lg:mx-4  " >
@@ -319,7 +334,7 @@ export const ChatWidget: React.FC<{ org: Org, project: Project, userDetails?: Us
             <LeftChat key="thinking" isThinking={true} />
           ) : null}
         </div>
-        <div className="fixed bottom-[25px] w-full bg-gray-50/90">
+        <div className="fixed bottom-[24px] w-full bg-gray-50/90">
           {project.defaultQuestion &&
             <div className="pt-2  flex gap-3  px-2 flex-wrap shrink-0 lg:border-0  bg-gray-50/90 border-b-gray-200 pb-2">
               {project.defaultQuestion.split(',').map((q, i) => (
@@ -356,7 +371,7 @@ export const ChatWidget: React.FC<{ org: Org, project: Project, userDetails?: Us
           </form>
         </div>
 
-      </ScrollArea >
+      </section >
     </>
 
   )

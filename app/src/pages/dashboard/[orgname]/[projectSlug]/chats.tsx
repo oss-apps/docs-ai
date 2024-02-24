@@ -34,6 +34,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/Table"
 import Avatar from "~/components/Avatar";
 import { type AdditionFields } from "~/types";
+import { ScrollArea } from "~/components/ui/ScrollArea";
 
 
 export type downloadFilter = { from: string, to: string, rating: string }
@@ -213,7 +214,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
           <div className="w-full h-full">
             {convoData ? (
               <div className="px-0 h-full flex flex-wrap sm:flex-nowrap flex-row sm:flex-row ">
-                <div className="w-full sm:w-1/3 border overflow-auto ">
+                <ScrollArea className="w-full sm:w-1/3 border ">
                   <div className="text-gray-600 p-4 border-b flex justify-between">
                     <p>
                       <b> Chats </b>
@@ -400,9 +401,9 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                       <button onClick={() => fetchNextPage()} className="text-gray-700 hover:underline underline-offset-2">Load more</button>
                     </div>
                   ) : null}
-                </div>
+                </ScrollArea>
                 {convoData?.pages[0]?.conversations.length ?
-                  <div className="w-full border sm:w-2/3 overflow-auto pb-16">
+                  <ScrollArea className="w-full border sm:w-2/3   pb-16">
                   <div className="flex justify-between items-center p-4">
                     <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
                       Suggest Answer
@@ -546,7 +547,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                               <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
                           ))}</div>
                   }
-                  </div> : <div className="flex justify-center flex-col items-center mx-auto">
+                  </ScrollArea> : <div className="flex justify-center flex-col items-center mx-auto">
                     <NoChat isConvoLoading={isLoading} message="No conversations yet, but you can change that." />
                     <Link href={`/dashboard/${org.name}/${project.slug}/yourbot`} className="my-2">
                       <PrimaryButton className="mx-auto  justify-center gap-2">

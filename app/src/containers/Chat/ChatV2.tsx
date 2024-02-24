@@ -7,7 +7,7 @@ import { SocialIcons, type TSocialIcons } from "~/components/icons/icons";
 import { type AdditionFields } from "~/types";
 import { type Project, type Org } from "@prisma/client";
 import { type TDataHub } from "~/pages/dashboard/[orgname]/[projectSlug]/agent";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "~/components/ui/ScrollArea";
 
 
 type TColors = {

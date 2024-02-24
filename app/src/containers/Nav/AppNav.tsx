@@ -93,7 +93,7 @@ const AppNav: React.FC<{ user: User, org: Org, project: Project }> = ({ user, or
                 </SecondaryButton>
               </Link>
               :
-              <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-2" tabIndex={-1}>
+              <Link href={`/dashboard/${org.name}/subscription`} className="w-full mt-4" tabIndex={-1}>
                 <CustomButton className={`bg-slate-900  text-sm w-full text-white text-left flex items-center gap-2`}>
                   <Sparkles className="h-5 w-5" />
                   <span className="hidden lg:block">
