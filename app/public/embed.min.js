@@ -35,6 +35,7 @@ function getChatChatButton(primaryColor, textColor = '#fff') {
 function createChatIframe(projectId, options) {
   const chatIframe = document.createElement("iframe");
   chatIframe.id = "chat-iframe";
+  chatIframe.allow = "clipboard-write;web-share;"
   chatIframe.src = `${DOCS_AI_URL}/embed/chat/${projectId}?${objectToQueryString(options)}`;
   if (options?.versionNumber == "2") {
     chatIframe.src = `${DOCS_AI_URL}/embed/chat/v2/${projectId}?${objectToQueryString(options)}`;
