@@ -67,8 +67,12 @@ const NewDocument: NextPage<{ user: User, orgJson: string, projectJson: string, 
 };
 
 const CreateDocumentForm: React.FC<{ org: Org, project: Project, docType: DocumentType }> = ({ org, project, docType }) => {
+  console.log("🔥 ~ docType:", docType)
   if (docType === DocumentType.TEXT) {
     return <TextDocument org={org} project={project} />
+  }
+  else if (docType === DocumentType.CHAT) {
+    return <TextDocument project={project} org={org} />
   }
   else if (docType === DocumentType.FILES) {
     return <FileDocument project={project} org={org} />
