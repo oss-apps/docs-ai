@@ -383,7 +383,7 @@ const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolea
     if (!showSupportEmail) return
     navigator.clipboard.writeText(showSupportEmail).then(() => {
       toast.success(`${showSupportEmail} copied`, { position: 'top-center' })
-    }).catch(() => { toast.error('Something went wrong!', { position: 'top-center' }) })
+    }).catch((err) => { console.error(err); toast.error('Something went wrong!', { position: 'top-center' }) })
 
   }
   return (
