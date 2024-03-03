@@ -405,7 +405,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                 {convoData?.pages[0]?.conversations.length ?
                   <ScrollArea className="w-full border sm:w-2/3   pb-16">
                   <div className="flex justify-between items-center p-4">
-                    <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=3&convoId=${convoId || ''}`}>
+                      <Link className="text-blue-500 hover:bg-blue-50 px-2 rounded-lg" href={`/dashboard/${org.name}/${project.slug}/new_document?docType=CHAT&convoId=${currentChat?.conversation?.id || ''}`}>
                       Suggest Answer
                     </Link>
                       <div className="flex items-center gap-x-2">

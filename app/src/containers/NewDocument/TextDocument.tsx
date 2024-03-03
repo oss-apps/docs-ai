@@ -71,13 +71,16 @@ export const TextDocument: React.FC<{ org: Org, project: Project, document?: Doc
 export const ChatDocument: React.FC<{ org: Org, project: Project, convoId: string }> = ({ project, org, convoId }) => {
   const createTextDocument = api.document.createTextDocument.useMutation()
   const conversation = api.conversation.getConversation.useQuery({ convoId, orgId: org.id, projectId: project.id })
+  const router = useRouter()
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(documentSchema) });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { title, content } = data as z.input<typeof documentSchema>
 
-    createTextDocument.mutate({ title, projectId: project.id, orgId: org.id, content })
+    await createTextDocument.mutateAsync({ title, projectId: project.id, orgId: org.id, content })
+    await router.push(`/dashboard/${org.name}/${project.slug}/documents`)
+
   };
 
   if (conversation.isLoading) return <div>Loading...</div>
