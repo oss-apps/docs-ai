@@ -32,7 +32,7 @@ const Home: NextPage = () => {
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <Image src="/images/app.webp" alt="App" quality={20} width={1200} height={800} className="rounded-lg relative border" priority></Image>
+              <Image src="/images/app.webp" alt="App" quality={50} width={1200} height={800} className="rounded-lg relative border" priority></Image>
             </div>
           </section>
           </motion.div>
@@ -165,7 +165,7 @@ function RightImage() {
           <Image
             src="/images/feature-1.webp"
             alt="Product screenshot"
-            quality={20}
+            quality={50}
             className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
             width={1200}
             height={800}
@@ -237,7 +237,7 @@ function LeftImage() {
               className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
               width={1200}
               height={800}
-              quality={20}
+              quality={50}
             />
 
           </div>
