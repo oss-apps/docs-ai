@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Button } from "~/components/form/button";
 import Avatar from "~/components/Avatar";
 import { IconAdd } from "~/components/icons/icons";
+import CommonSEO from "~/components/seo/Common";
 
 
 const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson }) => {
@@ -25,6 +26,7 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
     <>
       <Head>
         <title>Docs AI - Dashboard</title>
+        <CommonSEO />
       </Head>
       <Nav org={org?.org} />
       <main className="h-full p-3 sm:p-5">

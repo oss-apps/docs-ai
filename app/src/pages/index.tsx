@@ -9,6 +9,7 @@ import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
 import { IconChat, IconCode, IconCollection, IconCustomPrompt, IconHistory, IconLink, IconLockOpen, IconPieChart, IconSettings, IconTablet, IconWidget } from "~/components/icons/icons";
 import { motion } from 'framer-motion';
+import CommonSEO from "~/components/seo/Common";
 
 const animations = {
   initial: { opacity: 0 },
@@ -22,6 +23,7 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>Docs AI</title>
+        <CommonSEO />
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <div className="background h-[70vh]">
@@ -32,7 +34,7 @@ const Home: NextPage = () => {
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-              <Image src="/images/app.webp" alt="App" quality={50} width={1200} height={800} className="rounded-lg relative border" priority></Image>
+                <Image src="/images/app.webp" alt="App" width={1200} height={800} className="rounded-lg relative border" priority></Image>
             </div>
           </section>
           </motion.div>
@@ -164,8 +166,7 @@ function RightImage() {
           </div>
           <Image
             src="/images/feature-1.webp"
-            alt="Product screenshot"
-            quality={50}
+              alt="Product screenshot"
             className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
             width={1200}
             height={800}
@@ -232,12 +233,11 @@ function LeftImage() {
           </div>
           <div className="flex items-start justify-end lg:order-first " >
             <Image
-              src="/images/feature-2.webp"
+                src="/images/feature-3.webp"
               alt="Product screenshot"
               className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]"
               width={1200}
-              height={800}
-              quality={50}
+                height={800}
             />
 
           </div>

@@ -12,6 +12,7 @@ import PrimaryButton from "~/components/form/button";
 import Head from "next/head";
 import { toDate } from "date-fns";
 import Image from "next/image";
+import CommonSEO from "~/components/seo/Common";
 
 const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ orgJson, projectJson }) => {
 
@@ -47,6 +48,7 @@ const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string 
           <>
             <Head>
               <title>{convos.length} Conversation(s)  {from && to ? new Date(from).toLocaleString() + ' - ' + new Date(to).toLocaleString() : ''}</title>
+              <CommonSEO />
             </Head>
             <div className="w-[768px] mx-auto my-4 p-3 md:p-0">
               {

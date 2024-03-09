@@ -1,0 +1,183 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://docsai.app</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://docsai.app/pricing</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://docsai.app/docs/faq</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+   <url>
+    <loc>https://docsai.app/docs/getting-started</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/integrations</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/integrations-web</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/integrations-iframe</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/integrations-api</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/integrations-slack</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/docs/release-notes</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/overview</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/organization</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/project</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/documents</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+   
+  <url>
+    <loc>https://docsai.app/features/documents/website</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://docsai.app/features/documents/text</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/documents/files</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/documents/notion</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/documents/confluence</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+    <url>
+    <loc>https://docsai.app/features/talkToYourDocs</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
+  <url>
+    <loc>https://docsai.app/features/botAppearence</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://docsai.app/features/chatHistory</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
+  <url>
+    <loc>https://docsai.app/features/projectSettings</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+   <url>
+    <loc>https://docsai.app/features/installDocsai</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
+   <url>
+    <loc>https://docsai.app/terms</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+   <url>
+    <loc>https://docsai.app/privacy</loc>
+    <lastmod>2024-03-06T15:02:24.021Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+</urlset>

@@ -10,6 +10,7 @@ import { Sentiment } from "../dashboard/[orgname]/[projectSlug]/chats";
 import { ConvoRating } from "@prisma/client";
 import Footer from "~/containers/Footer";
 import { ShareButton } from "~/components/form/button";
+import DynamicSEO from "~/components/seo/Dynamic";
 
 const ConvoPage: NextPage<{ session: boolean }> = ({ session = false }) => {
 
@@ -21,18 +22,8 @@ const ConvoPage: NextPage<{ session: boolean }> = ({ session = false }) => {
   return (
     <>
       <Head>
-        <title>{data?.conversation?.firstMsg} | DocsAI</title>
-        <meta property="og:title" content={data?.conversation?.firstMsg} />
-        <meta name="description" content="Docs AI lets you share your conversations. Share Conversations, Train Documents and chat with your documents." />
-        <meta property="og:image" content="https://docsai.app/images/og-app.jpeg" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="twitter:title" content={data?.conversation?.firstMsg} />
-        <meta property="og:url" content="https://docsai.app"></meta>
-        <meta property="twitter:description" content="Docs AI lets you share your conversations. Share Conversations, Train Documents and chat with your documents." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content="https://docsai.app/images/og-app.jpeg" />
-        <meta property="og:type" content="website"></meta>
+        <title>{data?.conversation?.firstMsg}  DocsAI</title>
+        <DynamicSEO pageTitle={data?.conversation?.firstMsg} pageDesc="Docs AI lets you share your conversations. Share Conversations, Train Documents and chat with your documents." />
       </Head>
       <HomeNav />
       <hr></hr>

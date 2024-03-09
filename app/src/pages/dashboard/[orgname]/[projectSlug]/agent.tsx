@@ -27,6 +27,7 @@ import { ScrollArea } from "~/components/ui/ScrollArea";
 import { ChatV2 } from "~/containers/Chat/ChatV2";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/Alert";
 import { RocketIcon } from "lucide-react";
+import CommonSEO from "~/components/seo/Common";
 
 
 export const socialLinksSchema = z.object({
@@ -102,7 +103,8 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   return (
     <>
       <Head>
-        <title>Docs AI - Appearance</title>
+        <title>Docs AI | Appearance</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="h-full flex">
@@ -281,9 +283,9 @@ const BotSetting: React.FC<{ project: Project, setProject: Dispatch<SetStateActi
     <section id="projectForm" className="max-w-xl">
       <Alert variant='default' className="my-4 pb-4">
         <RocketIcon className="h-4 w-4" />
-        <AlertTitle>Chatbot v2 beta is now available</AlertTitle>
-        <AlertDescription> All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024.
-          <Link href={`/docs/integrations/integration-web`} target="_blank" className="font-semibold underline">  Learn more </Link>
+        <AlertTitle>Chatbot v2 is now available</AlertTitle>
+        <AlertDescription>You can use the v2 currently by adding an attribute <b> version-number=&quot;2&quot;</b>
+          <Link href={`/docs/integrations/integration-web`} target="_blank" className="font-semibold underline">  Learn more about embedding chatbot </Link>
         </AlertDescription>
 
       </Alert>

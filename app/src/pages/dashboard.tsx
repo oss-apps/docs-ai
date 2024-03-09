@@ -2,7 +2,7 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import Nav from "~/containers/Nav/Nav";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type User, type Org } from "@prisma/client";
+import { type User } from "@prisma/client";
 import { CreateOrg } from "~/containers/CreateOrg";
 import superjson from "superjson";
 

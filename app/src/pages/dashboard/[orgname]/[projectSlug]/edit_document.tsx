@@ -13,6 +13,7 @@ import NavBack from "~/components/NavBack";
 import { type ParsedUrls } from "~/types";
 import { NotionDocument } from "~/containers/NewDocument/NotionDocument";
 import { ConfluenceDocument } from "~/containers/NewDocument/ConfluenceDocument";
+import CommonSEO from "~/components/seo/Common";
 
 const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string, documentJson: string }> = ({ user, orgJson, projectJson, documentJson }) => {
   const router = useRouter()
@@ -37,7 +38,8 @@ const EditDocument: NextPage<{ user: User, orgJson: string, projectJson: string,
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
+        <title>Docs AI | Dashboard</title>
+        <CommonSEO />
       </Head>
       <main className="h-full ">
         <div className="w-full flex">

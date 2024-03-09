@@ -1,18 +1,15 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
-import Pricing from "~/containers/Pricing";
 import HomeNav from "~/containers/Nav/HomeNav";
 import { getProviders, signIn, type ClientSafeProvider, type LiteralUnion } from "next-auth/react";
 import { type BuiltInProviderType } from "next-auth/providers";
-import PrimaryButton from "~/components/form/button";
 import { getServerAuthSession } from "~/server/auth";
-import Image from "next/image";
-import { Input, Label } from "~/components/form/input";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Footer from "~/containers/Footer";
 import { IconEmailDC } from "~/components/icons/icons";
+import CommonSEO from "~/components/seo/Common";
 
 const signInSchema = z.object({
   email: z.string(),
@@ -36,7 +33,8 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
   return (
     <>
       <Head>
-        <title>Docs AI</title>
+        <title>Docs AI | Verify email</title>
+        <CommonSEO />
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <HomeNav />

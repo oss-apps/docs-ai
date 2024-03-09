@@ -62,6 +62,7 @@
     "micro": "^10.0.1",
     "next": "13.1.6",
     "next-auth": "^4.19.0",
+    "next-nprogress-bar": "^2.3.4",
     "next-themes": "^0.2.1",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",

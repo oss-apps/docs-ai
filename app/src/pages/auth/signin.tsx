@@ -13,6 +13,7 @@ import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Footer from "~/containers/Footer";
+import CommonSEO from "~/components/seo/Common";
 
 const signInSchema = z.object({
   email: z.string(),
@@ -39,7 +40,9 @@ const SignIn: NextPage<{ providers: Record<LiteralUnion<BuiltInProviderType, str
   return (
     <>
       <Head>
-        <title>Docs AI</title>
+        <title>Docs AI | Login</title>
+        <CommonSEO />
+
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <HomeNav />

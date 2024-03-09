@@ -7,7 +7,7 @@ import { type ProjectToken, type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { Input, Label, TextArea } from "~/components/form/input";
-import PrimaryButton, { SmallButton, SmallSecondaryButton } from "~/components/form/button";
+import PrimaryButton, { SmallSecondaryButton } from "~/components/form/button";
 import { z } from "zod";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import { toast } from "react-hot-toast";
 import { IconLink, IconUpdate } from "~/components/icons/icons";
 import { DEFAULT_PROMPT } from "~/server/constants";
 import Link from "next/link";
+import CommonSEO from "~/components/seo/Common";
 
 
 const projectSchema = z.object({
@@ -83,7 +84,8 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
   return (
     <>
       <Head>
-        <title>Docs AI - Settings</title>
+        <title>Docs AI | Settings</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="h-full flex">
@@ -92,6 +94,8 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
             <div className="mt-10 p-2 sm:p-5">
               <div className="max-w-5xl mx-auto">
                 <div>
+                  <div className="flex items-center text-gray-800 text-lg gap-2 lg:mb-10 mb-4 pb-2">Project Id  <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span>
+                  </div>
                   <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">Integrations
                   </div>
                   <div className="m-2 mt-4 p-3 bg-gray-100 rounded-md flex items-center justify-between">
@@ -111,6 +115,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
                         </div>
                     )}
                   </div>
+
                   <div className="mt-10">
                     <p className="text-gray-800 text-lg border-b-2 pb-2">Project settings</p>
                     <div className="flex gap-10">

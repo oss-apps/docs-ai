@@ -5,6 +5,7 @@ import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import Avatar from "~/components/Avatar";
 import { ChatBox } from "~/containers/Chat/Chat";
+import CommonSEO from "~/components/seo/Common";
 
 // Hide chat widget for chat page
 if (typeof window !== "undefined") {
@@ -36,6 +37,7 @@ const QnAPage: NextPage<{ orgJson: string | null, projectJson: string | null }> 
     <>
       <Head>
         <title>{org.name}</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="h-full flex">

@@ -4,17 +4,14 @@ import { Steps } from 'nextra/components'
 
 
 
-# Embed Chatbot in your website
+# Add AI Chatbot to your website
 
-## Chatbot v2 beta 
+## Chatbot v2 
 We have made changes to the chatbot that lets you configre `Data hub` and `Contact us` sections. You can use the v2 currently by adding an attribute **`version-number="2"`** in the `<script>`
 
 ```html /version-number/ copy
 <script src="https://docsai.app/embed.min.js" version-number="2" project-id="<your_project_id>"  async></script>
 ```
-<Callout type="warning">
-All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For assistance reach us at hey@docsai.app 
-</Callout>
 
 
 ## Custom Coded Websites
@@ -33,7 +30,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
     - Paste the script just before the **`</head>`** tag.
     
     ```html copy
-    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    <script src="https://docsai.app/embed.min.js" version-number="2" project-id="<your_project_id>" async></script>
     ```
     - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
     - Your chatbot will be embedded in your website. Visitors to your website will be able to click on the chatbot icon to start a conversation.
@@ -79,7 +76,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
     - Paste the script just before the **`</head>`** tag.
 
     ```html copy
-    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async></script>
     ```
 
     - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
@@ -162,7 +159,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
       return (
         <>
           <Helmet>
-            <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+            <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async>
             </script>
           </Helmet>
         </>
@@ -209,7 +206,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
     return (
       <>
         <Helmet>
-          <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+          <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async>
           </script>
         </Helmet>
       </>
@@ -232,7 +229,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
     - Paste the script just before the **`</Head>`** tag.
 
     ```html copy
-    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+    <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async></script>
     ```
 
     - Replace the **`<your_project_id>`** placeholder with your own chatbot's project ID.
@@ -278,7 +275,7 @@ All existings chatbots will be migrated to v2 automatically on Apr 1 , 2024. For
 
     return ( 
       <Head> 
-        <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async>
+        <script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async>
         </script>
       </Head> 
     )
@@ -320,7 +317,7 @@ In this we're going to use [WPCode](https://wordpress.com/plugins/insert-headers
 For [visual references](https://wordpress.com/go/website-building/how-to-properly-add-javascript-to-wordpress-3-top-methods/)  use docs from official website.
 
 ```html copy
-<script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" async></script>
+<script src="https://docsai.app/embed.min.js" project-id="<your_project_id>" version-number="2" async></script>
 ```
 
 ## Integrators

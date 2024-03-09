@@ -5,6 +5,7 @@ import HomeNav from "~/containers/Nav/HomeNav";
 import Footer from "~/containers/Footer";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
+import DynamicSEO from "~/components/seo/Dynamic";
 
 const PricingPage: NextPage<{ props: any }> = ({ props }) => {
 
@@ -12,18 +13,9 @@ const PricingPage: NextPage<{ props: any }> = ({ props }) => {
   return (
     <>
       <Head>
-        <title>Docs AI - Pricing</title>
-        <meta name="description" content="Parity pricing for all: Making our products affordable for people around the world." />
-        <meta property="og:image" content="https://docsai.app/images/og-pricing.png" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="twitter:title" content="DocsAI - Pricing" />
-        <meta property="og:url" content="https://docsai.app/pricing"></meta>
-        <meta property="twitter:description" content="Parity pricing for all: Making our products affordable for people around the world." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content="https://docsai.app/images/og-pricing.png" />
-        <meta property="og:type" content="website"></meta>
-        <link rel="icon" href="/images/favicon.ico" />
+        <title>Docs AI | Pricing</title>
+        <DynamicSEO pageTitle="DocsAI | Pricing" pageDesc="Parity pricing for all: Making our products affordable for people around the world."
+          pageImg="https://docsai.app/images/og-pricing.png" />
         <script src='https://cdn.paritydeals.com/banner.js' async></script>
       </Head>
       <HomeNav />

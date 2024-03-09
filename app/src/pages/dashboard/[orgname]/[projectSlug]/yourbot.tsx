@@ -13,6 +13,7 @@ import { MarkDown } from "~/components/MarkDown";
 import Link from "next/link";
 import { IconCustomize, IconEmbed, IconLink, IconShare } from "~/components/icons/icons";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/Dialog"
+import CommonSEO from "~/components/seo/Common";
 
 
 
@@ -41,7 +42,8 @@ const YourBot: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   return (
     <>
       <Head>
-        <title>Docs AI - Talk to your docs</title>
+        <title>Docs AI | Talk to your docs</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="flex">

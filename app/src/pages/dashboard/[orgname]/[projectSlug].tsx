@@ -11,6 +11,7 @@ import { isAbovePro } from "~/utils/license";
 import { Button } from "~/components/form/button";
 import Link from "next/link";
 import { IconChatHistory } from "~/components/icons/icons";
+import CommonSEO from "~/components/seo/Common";
 
 
 const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -32,7 +33,8 @@ const ProjectDashboard: NextPage<{ user: User, orgJson: string, projectJson: str
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
+        <title>Docs AI | Dashboard</title>
+        <CommonSEO />
       </Head>
       <main >
         <div className=" flex">

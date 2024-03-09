@@ -5,7 +5,7 @@ import Image from "next/image";
 import Nav from "~/containers/Nav/Nav";
 import { prisma } from "~/server/db";
 import { getServerAuthSession } from "~/server/auth";
-import { type OrgUser, type Org, type Project } from "@prisma/client";
+import { type OrgUser, type Org } from "@prisma/client";
 import superjson from "superjson";
 import { Input, Label, TextArea } from "~/components/form/input";
 import PrimaryButton from "~/components/form/button";
@@ -13,12 +13,10 @@ import { api } from "~/utils/api";
 import { type FieldValues, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import Snackbar from "~/components/SnackBar";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import NavBack from "~/components/NavBack";
-import { IconAdd, IconNewProject } from "~/components/icons/icons";
+import { IconAdd } from "~/components/icons/icons";
+import CommonSEO from "~/components/seo/Common";
 
 
 const projectSchema = z.object({
@@ -50,6 +48,7 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
     <div className="h-full">
       <Head>
         <title>  New Project | {org.org.displayName}</title>
+        <CommonSEO />
       </Head>
       <Nav />
       <main>

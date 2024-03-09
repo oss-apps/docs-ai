@@ -15,6 +15,7 @@ import { IconAdd, IconChatHistory, IconConfluence, IconNotion } from "~/componen
 import { Clock, Files, FileText, Globe } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns'
 import Image from "next/image";
+import CommonSEO from "~/components/seo/Common";
 
 const Status = ({ status }: { status: IndexStatus }) => {
   switch (status) {
@@ -69,7 +70,8 @@ const Documents: NextPage<{ user: User, orgJson: string, projectJson: string }> 
   return (
     <>
       <Head>
-        <title>Docs AI - Documents</title>
+        <title>Docs AI | Documents</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="h-full flex">

@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import CommonSEO from "~/components/seo/Common";
 import Footer from "~/containers/Footer";
 import HomeNav from "~/containers/Nav/HomeNav";
 
@@ -10,7 +11,7 @@ const Terms: NextPage = () => {
     <>
       <Head>
         <title>Docs AI</title>
-        <link rel="icon" href="/images/favicon.ico" />
+        <CommonSEO />
       </Head>
       <div>
         <HomeNav />

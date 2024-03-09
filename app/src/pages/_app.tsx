@@ -10,6 +10,7 @@ import { env } from "~/env.mjs";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 import SetUserInWindow from "~/components/SetUserInWindow";
+import { PagesProgressBar as ProgressBar } from 'next-nprogress-bar';
 
 
 
@@ -23,18 +24,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
-        <meta property="og:title" content="The AI Companion you always wanted" />
-        <meta name="description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
-        <meta property="og:image" content="https://docsai.app/images/og-app.jpeg" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="twitter:title" content="The AI Companion you always wanted" />
-        <meta property="og:url" content="https://docsai.app"></meta>
-        <meta property="twitter:description" content="Train your documents, chat with your documents, and create chatbots that solves queries for you and your users." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:image" content="https://docsai.app/images/og-app.jpeg" />
-        <meta property="og:type" content="website"></meta>
         <link rel="icon" href="/images/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
 
@@ -45,12 +34,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
         {showChatBotIcon && env.NEXT_PUBLIC_NODE_ENV === "production" ? (
           <script src="/embed.min.js" project-id="clfp5tn2a0007mc0ub8qch4x2" version-number="2" async></script>
         ) : showChatBotIcon && env.NEXT_PUBLIC_NODE_ENV !== "production" ? (
-            <script src="/embed.js" project-id="clszlhcir001n1j5093d3ufkl" version-number="2" docs-url="http://192.168.1.9:3000" async></script>
+            <script src="/embed.js" project-id="clt05df0g00041j59rfn6w117" version-number="2" docs-url="http://localhost:3000" async></script>
         ) : null}
       </Head>
       <Toaster position="bottom-center" />
       <SessionProvider session={session}>
         <Component {...pageProps} />
+        <ProgressBar
+          height="6px"
+          color="#0c0a09"
+          delay={200}
+          options={{ showSpinner: true }}
+          shallowRouting
+        />
         <SetUserInWindow />
       </SessionProvider>
     </>

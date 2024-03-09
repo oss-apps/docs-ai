@@ -7,6 +7,7 @@ import { type Org, type Project } from "@prisma/client";
 import superjson from "superjson";
 import AppNav from "~/containers/Nav/AppNav";
 import { QnA } from "~/containers/QnA/QnA";
+import CommonSEO from "~/components/seo/Common";
 
 
 const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({ user, orgJson, projectJson }) => {
@@ -17,7 +18,8 @@ const QnAPage: NextPage<{ user: User, orgJson: string, projectJson: string }> = 
   return (
     <>
       <Head>
-        <title>Docs AI - Dashboard</title>
+        <title>Docs AI | Dashboard</title>
+        <CommonSEO />
       </Head>
       <main className="h-full">
         <div className="h-full flex">
