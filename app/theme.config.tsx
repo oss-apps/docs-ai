@@ -53,7 +53,7 @@ const config: DocsThemeConfig = {
   search: {
     component: null
   },
-  darkMode: true,
+  darkMode: false,
   footer: {
     component: <Footer />
   },
@@ -68,6 +68,7 @@ const config: DocsThemeConfig = {
   },
   nextThemes: {
     defaultTheme: 'light',
+    forcedTheme : 'light'
   },
   banner: {
     key: '2.0-release',
