@@ -41,7 +41,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session}>
         <Component {...pageProps} />
         <ProgressBar
-          height="6px"
+          height="3px"
           color="#0c0a09"
           delay={200}
           options={{ showSpinner: true }}
