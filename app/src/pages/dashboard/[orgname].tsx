@@ -15,7 +15,6 @@ import CommonSEO from "~/components/seo/Common";
 
 
 const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson }) => {
-
   const org: (OrgUser & {
     org: Org & {
       projects: Project[];
@@ -28,7 +27,7 @@ const OrgDashboard: NextPage<{ user: User, orgJson: string }> = ({ user, orgJson
         <title>Docs AI - Dashboard</title>
         <CommonSEO />
       </Head>
-      <Nav org={org?.org} />
+      <Nav org={org?.org} image={user?.image} />
       <main className="h-full p-3 sm:p-5">
         <div className="max-w-6xl mx-auto mt-10">
           {org ? (

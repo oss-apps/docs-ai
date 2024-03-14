@@ -94,8 +94,7 @@ const SettingsPage: NextPage<{ user: User, orgJson: string, projectJson: string 
             <div className="mt-10 p-2 sm:p-5">
               <div className="max-w-5xl mx-auto">
                 <div>
-                  <div className="flex items-center text-gray-800 text-lg gap-2 lg:mb-10 mb-4 pb-2">Project Id  <span className="text-zinc-700 font-semibold bg-zinc-100 p-1 rounded-md">{project.id}</span>
-                  </div>
+
                   <div className="flex items-center text-gray-800 text-lg gap-2 border-b-2 pb-2">Integrations
                   </div>
                   <div className="m-2 mt-4 p-3 bg-gray-100 rounded-md flex items-center justify-between">

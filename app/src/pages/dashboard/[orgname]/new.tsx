@@ -71,7 +71,7 @@ const NewProject: NextPage<{ user: User, orgJson: string }> = ({ orgJson }) => {
 
               <Label className="mt-6">Description</Label>
               <TextArea
-                rows={2}
+                rows={4}
                 error={errors.description?.message?.toString()}
                 placeholder="When his parents leave for the weekend, an unpopular teenager and his two friends plan to throw one epic party that will change their lives forever."
                 {...register('description')}

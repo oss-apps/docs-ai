@@ -254,7 +254,7 @@ export const ChatV2: React.FC<{ org: Org, project: Project, showFooter: boolean 
               </div>
               {showFooter &&
                 <p className="text-xs text-center fixed bottom-0 w-full bg-white p-1 border rounded-t-lg text-slate-900">Powered by
-                  <span className="px-2 rounded bg-black text-white ml-2">DocsAI</span></p>
+                  <a href="https://docsai.app" target="_blank" rel="noreferrer" className="px-2 rounded bg-black text-white ml-2">DocsAI</a></p>
               }
             </ScrollArea>
           </> :
@@ -280,7 +280,7 @@ export const ChatV2: React.FC<{ org: Org, project: Project, showFooter: boolean 
             <ChatWidget org={org} project={project} userDetails={userDetails} convoId={prevConvoId} />
             {showFooter &&
               <p className="text-xs text-center bg-white   bottom-0 fixed w-full p-1  text-slate-900">Powered by
-                <span className="px-2 rounded bg-black text-white ml-2">DocsAI</span>
+                <a href="https://docsai.app" target="_blank" rel="noreferrer" className="px-2 rounded bg-black text-white ml-2">DocsAI</a>
               </p>
             }
           </>
