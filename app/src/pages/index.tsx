@@ -33,9 +33,12 @@ const Home: NextPage = () => {
           <motion.div {...animations}>
           <Landing />
           <section className="my-16 rounded-lg  flex justify-center ">
-            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                <Image src="/images/app.webp" alt="App" width={1200} height={800} className="rounded-lg relative border" priority></Image>
-            </div>
+              <div className="-m-2 hidden lg:block rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Image src="/images/app.webp" alt="App" width={1200} height={800} className="rounded-lg relative border"></Image>
+              </div>
+              <div className="-m-2  block lg:hidden rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Image src="/images/app-mob.webp" alt="App" width={1200} height={800} className="rounded-lg relative border"></Image>
+              </div>
           </section>
           </motion.div>
         </main>

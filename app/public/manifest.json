@@ -3,7 +3,7 @@
   "name": "Docs AI | Chat with your docs",
   "description": "Train your documents, chat with your documents, and create chatbots that solves queries for you and your users",
   "id": "/?source=pwa",
-  "start_url": "/?source=pwa",
+  "start_url": "/dashboard?source=pwa",
   "background_color": "#FFF",
   "display": "standalone",
   "scope": "/",
