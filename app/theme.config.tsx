@@ -17,7 +17,7 @@ const config: DocsThemeConfig = {
     const url =
       'https://docsai.app' +
       (defaultLocale === locale ? asPath : `/${locale}${asPath}`)
-    const ogImage = `https://ogdynamic.vercel.app/og/docs?dark=true&title=${title}&sub=Build your Personalized AI Chatbot&name=DocsAI&website=https://docsai.app`;
+    const ogImage = `https://dynamicog.com/og/docs?dark=true&title=${title}&sub=Build your Personalized AI Chatbot&name=DocsAI&website=https://docsai.app&logo=https://docsai.app/images/logo.png`;
     return (
       <>
         <title>{title}</title>
