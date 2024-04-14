@@ -5,6 +5,7 @@ import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
 import Footer from "./Footer";
 import { motion } from 'framer-motion';
+import { RocketIcon } from "lucide-react";
 
 const Pricing: React.FC<{
   org?: Org,
@@ -69,50 +70,10 @@ const Pricing: React.FC<{
           </button>
           </div>
         </div>
-        <p className="text-center mt-1"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans. </p>
+        <p className="text-center mt-3 max-w-md mx-auto"> Save <span className="text-zinc-800 font-semibold">🎉 2 months</span> on yearly plans.
+          Free plan includes 30 Credits and 2MB of storage </p>
 
-        <div className="mt-12 space-y-4 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-2 gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
-
-
-          <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 0.5, repeatType: 'reverse' }} exit={{ scale: 1 }}
-            className="bg-white rounded-md border-2   hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
-
-            <div className="p-6">
-              <h2 className="text-3xl leading-6 font-semibold">
-                Free
-              </h2>
-              <p className="mt-2 text-zinc-500">You are just trying out</p>
-              <hr className="my-2"></hr>
-              <div className="mt-5 h-60">
-                <div className="flex items-start gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p>1 Project</p>
-                </div>
-                <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p>2 MB storage</p>
-                </div>
-                <div className="flex items-start gap-2 mt-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 shrink-0 mt-1 text-zinc-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                  <p >30 Messages/Month</p>
-                </div>
-              </div>
-              <p className="mt-8">
-                <span className="text-5xl font-extrabold white">
-                  $0
-                </span>
-                <span className="text-base font-medium">
-                  /{billingInterval}
-                </span>
-              </p>
-            </div>
-          </motion.div >
+        <div className="mt-12 space-y-2 sm:mt-26 sm:space-y-0 sm:grid sm:grid-cols-1 gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 md:grid-cols-2 lg:grid-cols-3">
 
           <motion.div animate={{ scale: 1.08 }} transition={{ duration: 0.4, repeat: 1, delay: 0.9, repeatType: 'reverse' }} exit={{ scale: 1 }}
             className="bg-white rounded-md border-2 hover:border-gray-200 hover:shadow-gray-200 hover:shadow-2xl duration-500 ">
@@ -120,10 +81,10 @@ const Pricing: React.FC<{
               <h2 className="text-3xl leading-6 font-semibold">
                 Basic
               </h2>
-              <p className="mt-2 text-zinc-500">You have a small website</p>
+              <p className="mt-2 text-zinc-500 text-sm">You have a small website</p>
               <hr className="my-2"></hr>
 
-              <div className="mt-5 h-60">
+              <div className="mt-5 md:h-72">
                 <div className="flex items-start gap-2">
                   <IconTick />
                   <p>2 Projects</p>
@@ -134,11 +95,16 @@ const Pricing: React.FC<{
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
-                  <p >1000 Messages/Month</p>
+                  <p >1000 Credits/Month</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
                   <p >API Integration</p>
+                </div>
+
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p> Freedom credits *</p>
                 </div>
               </div>
               <p className="mt-8">
@@ -165,10 +131,10 @@ const Pricing: React.FC<{
               <h2 className="text-3xl leading-6 font-semibold">
                 Professional
               </h2>
-              <p className="mt-2 text-zinc-500">You have startups</p>
+              <p className="mt-2 text-zinc-500 text-sm">You have startups</p>
               <hr className="my-2"></hr>
 
-              <div className="mt-5 h-60">
+              <div className="mt-5 md:h-72">
                 <div className="flex items-start gap-2">
                   <IconTick />
                   <p>5 Projects</p>
@@ -179,11 +145,15 @@ const Pricing: React.FC<{
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
-                  <p >5000 Messages/Month</p>
+                  <p >5000 Credits/Month</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
                   <p >API Integration</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p> Freedom credits *</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
@@ -219,10 +189,10 @@ const Pricing: React.FC<{
               <h2 className="text-3xl leading-6 font-semibold align-middle">
                 Enterprise
               </h2>
-              <p className="mt-2 text-zinc-500">You have big companies</p>
+              <p className="mt-2 text-zinc-500 text-sm">You have big companies</p>
               <hr className="my-2"></hr>
 
-              <div className="mt-5 h-60">
+              <div className="mt-5 md:h-72">
                 <div className="flex items-start gap-2">
                   <IconTick />
                   <p>Unlimited Projects</p>
@@ -233,11 +203,15 @@ const Pricing: React.FC<{
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
-                  <p >12000 Messages/Month</p>
+                  <p >12000 Credits/Month</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
                   <p >API Integration</p>
+                </div>
+                <div className="flex items-start gap-2 mt-3">
+                  <IconTick />
+                  <p> Freedom credits *</p>
                 </div>
                 <div className="flex items-start gap-2 mt-3">
                   <IconTick />
@@ -267,6 +241,12 @@ const Pricing: React.FC<{
           </motion.div>
         </div>
       </div>
+
+      <p className="text-center mt-4 lg:mt-8 text-base ">
+        * Freedom credits! They&apos;re yours to keep forever when you pay.
+        Use them as you need, and if things change, simply cancel your subscription.
+        You&apos;ll still have access to all the credits you&apos;ve already purchased.
+      </p>
       <Footer />
     </div>
   )

@@ -1,13 +1,12 @@
-import { GetServerSidePropsContext, type NextPage } from "next";
+import { type GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
 import Pricing from "~/containers/Pricing";
 import HomeNav from "~/containers/Nav/HomeNav";
-import Footer from "~/containers/Footer";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 import DynamicSEO from "~/components/seo/Dynamic";
 
-const PricingPage: NextPage<{ props: any }> = ({ props }) => {
+const PricingPage: NextPage<{ props: any }> = ({ }) => {
 
 
   return (
