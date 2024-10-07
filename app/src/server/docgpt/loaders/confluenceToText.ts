@@ -3,9 +3,7 @@ import { type Document as lcDocument } from "langchain/document"
 import { type Document } from "@prisma/client";
 import { confluenceSchema } from "~/utils/confluence";
 
-const username = "shriharipapa@gmail.com";
-const accessToken = "ATATT3xFfGF0BevFg14ufodEkhOZD14hqXV_Uw_SWwcdhr6nYaDiOWQR2rUgmmBIN0-d_Bev4oC-Em-80bwHYVYGIjDzjNo4rhRPAr2N2STUHK5SAZ_XsoOiARJH5VmbQNRPo5XFi8yPYUuq6yosaZdX3b-ydJVHvX6lRlbYBTqKytvFRD7iWFk=F17A2411";
-
+// These accessToken is revoked so no problem .
 
 const conflLoader = async (doc: Document) => {
   console.log("🫤 ~ confl ~ conflLoader:")
@@ -17,7 +15,7 @@ const conflLoader = async (doc: Document) => {
 
   for (const key of Object.keys(conflDetails.skippedUrls)) {
     if (conflDetails.skippedUrls[key]) {
-      if (username && accessToken) {
+      if (conflDetails.email && conflDetails.accessToken) {
         const loader = new ConfluencePagesLoader({
           baseUrl: conflDetails.baseUrl + '/wiki',
           spaceKey: key,
