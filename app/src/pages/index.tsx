@@ -74,9 +74,9 @@ function Landing() {
         </div>
         <div className="mx-auto max-w-2xl pt-16 sm:pt-24 lg:pt-32">
           <div className="hidden  sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-700 ring-1 ring-gray-700 hover:ring-gray-900/20">
               <a href="/features/overview" target='_blank'>
-                Discover the key features of DocsAI &nbsp;
+                DocsAI is now open source
               </a>
             </div>
           </div>
@@ -290,8 +290,8 @@ const features3 = [
   },
   {
     name: 'Open source',
-    description: <p>It&apos;s harder to maintain than a company, So 100 ⭐️ and we open source it.
-      <a href="https://github.com/docs-ai/docs-ai" target="_blank" className="text-black font-bold  ml-1" rel="noreferrer"> Star on Github <IconLink className="inline w-4 mb-1" /></a></p>,
+    description: <p>It&apos;s harder to maintain than a company, DocsAI is now open source!
+      <a href="https://github.com/oss-apps/docs-ai" target="_blank" className="text-black font-bold  ml-1" rel="noreferrer"> Star on Github <IconLink className="inline w-4 mb-1" /></a></p>,
     icon: <IconLockOpen className="w-6 h-6  sm:w-10 sm:h-10" />
     ,
   },
@@ -333,9 +333,9 @@ function MoreFeatures() {
               Learn more
             </Link>
           </PrimaryButton>
-          <SecondaryButton className="w-[150px] justify-center">
+          <SecondaryButton className="w-[160px] justify-center">
             <Link href="/pricing" className="font-semibold ">
-              View Pricing <span aria-hidden="true">→</span>
+              View Source <span aria-hidden="true">→</span>
             </Link>
           </SecondaryButton>
         </div>

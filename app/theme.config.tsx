@@ -71,10 +71,10 @@ const config: DocsThemeConfig = {
     forcedTheme : 'light'
   },
   banner: {
-    key: '2.0-release',
+    key: '3.0-release',
     text: (
-      <a href="/docs/integrations/integration-web" target="_blank">
-        🎉 Chatbot v2.0 is released. Read more →
+      <a href="https://github.com/oss-apps/docs-ai" target="_blank">
+        🎉 DocsAI is now open source. Read more →
       </a>
     )
   }
