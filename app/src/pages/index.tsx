@@ -75,7 +75,7 @@ function Landing() {
         <div className="mx-auto max-w-2xl pt-16 sm:pt-24 lg:pt-32">
           <div className="hidden  sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-700 ring-1 ring-gray-700 hover:ring-gray-900/20">
-              <a href="/features/overview" target='_blank'>
+              <a href="https://github.com/oss-apps/docs-ai" rel="noreferrer" target="_blank">
                 DocsAI is now open source
               </a>
             </div>

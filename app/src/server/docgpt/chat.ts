@@ -36,10 +36,10 @@ const getChatHistoryStr = (chatHistory: Array<{ role: MessageUser, content: stri
   return history
 }
 
-export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUser, content: string }>, question: string) => {
+export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUser, content: string }>, question: string, modelName : string) => {
   if (chatHistory.length === 0) return { question, tokens: 0 }
 
-  const chat = new ChatOpenAI({ temperature: 0 });
+  const chat = new ChatOpenAI({ temperature: 0 , modelName  });
   const history = getChatHistoryStr(chatHistory)
   const prompt = (await CONDENSE_PROMPT.format({ question, chat_history: history })).text
 
@@ -51,6 +51,13 @@ export const getStandaloneQuestion = async (chatHistory: Array<{ role: MessageUs
 
 export const getChat = async (orgId: string, projectId: string, question: string, chatHistory: Array<{ role: MessageUser, content: string }>, botName: string, prompt = DEFAULT_PROMPT, cb?: ChatCallback) => {
   const org = await prisma.org.findUnique({ where: { id: orgId } })
+
+  if ( !org) {
+    console.log("Search only mode is not possible for free or basic plans. OrgId: ", orgId)
+    cb?.('Sorry limit reached. Contact owner of the site')
+    return { tokens: 0, answer: 'Sorry limit reached. Contact owner of the site', sources: '', limitReached: true }
+  }
+
   const vectorDb = await getVectorDB(projectId)
 
   if (org && org?.chatCredits < 1) {
@@ -73,8 +80,8 @@ export const getChat = async (orgId: string, projectId: string, question: string
       return { tokens: 0, answer, sources: Object.keys(sources).join(','), limitReached: true }
     }
   }
-
-  const { question: stdQuestion, tokens: stdTokens } = await getStandaloneQuestion(chatHistory, question)
+  const modelName = org.model as string
+  const { question: stdQuestion, tokens: stdTokens } = await getStandaloneQuestion(chatHistory, question, modelName)
 
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })
 
@@ -86,14 +93,13 @@ export const getChat = async (orgId: string, projectId: string, question: string
     }
   })
 
-  const callbackManager = CallbackManager.fromHandlers({
+  const callbackManager = CallbackManager.fromHandlers({  
     handleLLMNewToken(token: string) {
       cb?.(token)
       return Promise.resolve();
     },
   });
-
-  const chat = new ChatOpenAI({ temperature: 0, streaming: true, callbackManager });
+  const chat = new ChatOpenAI({ temperature: 0, streaming: true, callbackManager, modelName});
   const chain = new StuffDocumentsChain({ documentVariableName: 'summaries' });
   const { summaries } = await chain.call({ input_documents: documents, question: stdQuestion }) as { summaries: string }
 

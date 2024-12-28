@@ -24,7 +24,6 @@ const Pricing: React.FC<{
 
   const onSubscribeClick = async (price: string, _plan: Plan) => {
     if (manage) {
-      console.log("🔥 ~ onSubscribeClick ~ if:")
       await manage()
       return
     }
@@ -44,7 +43,14 @@ const Pricing: React.FC<{
   return (
     <div className="mt-5" >
       <div className="sm:flex sm:flex-col sm:align-center">
-        <h1 className="text-3xl sm:text-6xl font-semibold  text-center">
+        <div className="hidden  sm:flex sm:justify-center">
+          <div className="relative rounded-full px-2 py-0.5 text-xs leading-6 text-gray-700 ring-1 ring-gray-700 hover:ring-gray-900/20">
+            <a href="https://github.com/oss-apps/docs-ai" rel="noreferrer" target='_blank'>
+              DocsAI is now open source
+            </a>
+          </div>
+        </div>
+        <h1 className="text-2xl sm:text-4xl mt-2 font-medium  text-center">
           Pricing
         </h1>
         {/* <p className="text-base text-zinc-700 text-center my-2"> No hidden fees, no surprises</p> */}

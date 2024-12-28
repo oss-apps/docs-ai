@@ -312,12 +312,12 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
             </div>
           ) : null}
 
-          <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`} />
+          <LeftChat key={project.initialQuestion} sentence={project.initialQuestion || `Hi, I am ${project.botName}. How can I help?`}  showSources={project.showSources}/>
 
           {conversation?.messages.map((m, i) => (
             m.user == 'user' ?
               <RightChat key={m.id} sentence={m.message} backgroundColor={backgroundColor} color={textColor} />
-              : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback, onShare }} />
+              : <LeftChat key={m.id} sentence={m.message} showSupportEmail={project.supportEmail} sources={m.sources} feedback={{ selected: m.feedback, id: m.id, index: i, isLoading: updatefeedback.isLoading, handleFeedback, onShare }} showSources={project.showSources} />
           ))}
 
 
@@ -345,11 +345,11 @@ export const ChatBox: React.FC<{ org: Org, project: Project, isPublic?: boolean,
 
 
           {answer ? (
-            <LeftChat key={answer} sentence={answer} />
+            <LeftChat key={answer} sentence={answer} showSources={project.showSources} />
           ) : null}
 
           {thinking ? (
-            <LeftChat key="thinking" isThinking={true} />
+            <LeftChat key="thinking" isThinking={true} showSources={project.showSources} />
           ) : null}
         </div>
         {project.defaultQuestion &&
@@ -418,7 +418,7 @@ export const RightArrow: React.FC<{ backgroundColor: string }> = ({ backgroundCo
 
 
 // This LeftChat applicable only for streaming / chat purposes . Not for static display. Use Plain Chat for that.
-export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, onShare: () => void, id?: string, index?: number, isLoading?: boolean } | null }> = ({ showSupportEmail = null, isThinking = false, sentence = null, sources = null, feedback = null }) => {
+export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?: boolean, sentence?: string | null, sources?: string | null, feedback?: { selected?: boolean | null, handleFeedback?: (feedback: boolean, id?: string, index?: number) => void, onShare: () => void, id?: string, index?: number, isLoading?: boolean } | null , showSources : boolean }> = ({ showSupportEmail = null, isThinking = false, sentence = null, sources = null, feedback = null  , showSources = true}) => {
   const copySupportEmail = () => {
     if (!showSupportEmail) return
     navigator.clipboard.writeText(showSupportEmail).then(() => {
@@ -436,7 +436,7 @@ export const LeftChat: React.FC<{ showSupportEmail?: string | null, isThinking?:
 
           {sentence && <div>
           <MarkDown markdown={sentence} />
-            {sources && <AnswerSources sources={sources} />}
+            {sources && <AnswerSources sources={sources} showSources={showSources} />}
         </div>}
         </div>
       </div>
@@ -485,10 +485,10 @@ export const RightChat: React.FC<{ sentence: string, backgroundColor: string, co
   )
 }
 
-export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = null }) => {
+export const AnswerSources: React.FC<{ sources: string | null, showSources : boolean }> = ({ sources = null , showSources = true }) => {
   return (
     <>
-      {sources ? (
+      {(sources && showSources) ? (
         <div className="pt-4">
           <div className="flex items-center gap-2 flex-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-green-500">
@@ -510,14 +510,14 @@ export const AnswerSources: React.FC<{ sources: string | null }> = ({ sources = 
   )
 }
 
-export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string, feedback?: { selected: boolean | null } }> = ({ sentence = null, sources = null, backgroundColor, color, feedback }) => {
+export const PlainChat: React.FC<{ sentence?: string | null, sources?: string | null, backgroundColor?: string, color?: string, feedback?: { selected: boolean | null }, showSources : boolean }> = ({ sentence = null, sources = null, backgroundColor, color, feedback, showSources = true }) => {
   return (
     <div className="m-2 lg:m-4 mt-2">
       <div className="rounded-md relative bg-zinc-100 p-2" style={{ backgroundColor, color }}>
         {sentence && <div>
           <MarkDown markdown={sentence} />
 
-          {sources && <AnswerSources sources={sources} />}
+          {sources && <AnswerSources sources={sources} showSources />}
           {<div className="flex justify-start gap-1">
             <div className="flex gap-2 mt-2 items-center">
               {feedback?.selected == null ? '' : feedback.selected ? <> <IconThumb className="w-4 h-4 stroke-green-500 " /><span>Feedback</span> </> : <><IconThumb className="w-4 h-4 rotate-180 stroke-red-500" />  <span> Feedback</span> </>}
