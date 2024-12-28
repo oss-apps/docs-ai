@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const Snackbar: React.FC<{ 
     message: string, duration?: number, show: boolean, setShow: (show: boolean) => void, isError: boolean

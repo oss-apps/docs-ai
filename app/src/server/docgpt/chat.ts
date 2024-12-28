@@ -80,7 +80,7 @@ export const getChat = async (orgId: string, projectId: string, question: string
       return { tokens: 0, answer, sources: Object.keys(sources).join(','), limitReached: true }
     }
   }
-  const modelName = org.model as string
+  const modelName = org.model
   const { question: stdQuestion, tokens: stdTokens } = await getStandaloneQuestion(chatHistory, question, modelName)
 
   const documents = await vectorDb.similaritySearch(stdQuestion, 4, { projectId })

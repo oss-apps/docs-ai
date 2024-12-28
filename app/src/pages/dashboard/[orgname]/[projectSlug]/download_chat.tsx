@@ -71,10 +71,10 @@ const DownloadChat: NextPage<{ user: User, orgJson: string, projectJson: string 
                       {convo?.messages.map((m, i) => (
 
                         m.user != 'user' ?
-                          <PlainChat key={m.id} sentence={m.message} feedback={{ selected: m.feedback }} sources={m.sources} />
+                          <PlainChat key={m.id} sentence={m.message} feedback={{ selected: m.feedback }} sources={m.sources} showSources={true} />
                           :
                           <div className="flex items-center" key={i}>
-                            <PlainChat key={m.id} sentence={m.message} color="#000" backgroundColor="#FFF" />
+                            <PlainChat key={m.id} sentence={m.message} color="#000" backgroundColor="#FFF" showSources={true} />
                             ({i / 2 + 1})
                           </div>
 

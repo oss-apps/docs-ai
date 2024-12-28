@@ -5,7 +5,6 @@ import { IconTick } from "~/components/icons/icons";
 import { api } from "~/utils/api";
 import Footer from "./Footer";
 import { motion } from 'framer-motion';
-import { RocketIcon } from "lucide-react";
 
 const Pricing: React.FC<{
   org?: Org,

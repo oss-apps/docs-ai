@@ -1,6 +1,4 @@
 import { useSession } from "next-auth/react";
-import { useEffect } from "react"
-
 declare global {
   interface Window {
     DOCS_AI: TDOCS_AI;

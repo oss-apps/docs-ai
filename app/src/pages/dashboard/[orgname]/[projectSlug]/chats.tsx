@@ -542,7 +542,7 @@ const Chats: NextPage<{ user: User, orgJson: string, projectJson: string }> = ({
                         {
                           viewFeedbackOnly(currentChat?.conversation?.messages).map(m => (
                             m.user === MessageUser.assistant ?
-                              <PlainChat key={m.id} sentence={m.message} sources={m.sources} feedback={{ selected: m.feedback }} />
+                              <PlainChat key={m.id} sentence={m.message} sources={m.sources} feedback={{ selected: m.feedback }}  showSources={true}/>
                               :
                               <RightChat key={m.id} sentence={m.message} backgroundColor={project.primaryColor} color={textColor} />
                           ))}</div>
